@@ -11,6 +11,8 @@ export type ThemeId =
   | 'claude-slate-light'
   | 'scifi'
   | 'scifi-light'
+  | 'berlai'
+  | 'berlai-light'
 
 export const THEMES: Array<{
   id: ThemeId
@@ -18,6 +20,18 @@ export const THEMES: Array<{
   description: string
   icon: string
 }> = [
+  {
+    id: 'berlai',
+    label: 'BerlAI',
+    description: 'Deep black with vivid violet accent — derived from design-discovery taste graph',
+    icon: '◈',
+  },
+  {
+    id: 'berlai-light',
+    label: 'BerlAI Light',
+    description: 'Purple-tinted paper white with vivid violet accents',
+    icon: '◈',
+  },
   {
     id: 'claude-nous',
     label: 'Nous',
@@ -93,23 +107,25 @@ export const THEMES: Array<{
 ]
 
 const STORAGE_KEY = 'claude-theme'
-const DEFAULT_THEME: ThemeId = 'claude-nous'
+const DEFAULT_THEME: ThemeId = 'berlai'
 const THEME_SET = new Set<ThemeId>(THEMES.map((theme) => theme.id))
 const LIGHT_THEME_MAP: Record<
   Exclude<ThemeId, `${string}-light`>,
   Extract<ThemeId, `${string}-light`>
 > = {
+  berlai: 'berlai-light',
   'claude-nous': 'claude-nous-light',
   matrix: 'matrix-light',
   'claude-official': 'claude-official-light',
   'claude-classic': 'claude-classic-light',
   'claude-slate': 'claude-slate-light',
-  'scifi': 'scifi-light',
+  scifi: 'scifi-light',
 }
 const DARK_THEME_MAP: Record<
   Extract<ThemeId, `${string}-light`>,
   Exclude<ThemeId, `${string}-light`>
 > = {
+  'berlai-light': 'berlai',
   'claude-nous-light': 'claude-nous',
   'matrix-light': 'matrix',
   'claude-official-light': 'claude-official',
@@ -119,6 +135,7 @@ const DARK_THEME_MAP: Record<
 }
 
 const LIGHT_THEMES = new Set<ThemeId>([
+  'berlai-light',
   'claude-nous-light',
   'matrix-light',
   'claude-official-light',

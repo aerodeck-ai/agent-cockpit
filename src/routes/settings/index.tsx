@@ -190,6 +190,20 @@ const THEME_PREVIEWS: Record<
     accent: '#00f0ff',
     text: '#e0f7fa',
   },
+  'berlai': {
+    bg: '#08080c',
+    panel: '#161930',
+    border: 'rgba(151,103,253,0.22)',
+    accent: '#9767fd',
+    text: '#f2f6f6',
+  },
+  'berlai-light': {
+    bg: '#f8f7fc',
+    panel: '#ffffff',
+    border: 'rgba(106,38,252,0.18)',
+    accent: '#6a26fc',
+    text: '#08080c',
+  },
   'scifi-light': {
     bg: '#EEF1F5',
     panel: '#FFFFFF',
