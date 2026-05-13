@@ -43,13 +43,6 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     match: (p: string) => p.startsWith('/dashboard'),
   },
   {
-    id: 'playground',
-    label: 'HermesWorld',
-    icon: Castle02Icon,
-    to: '/playground',
-    match: (p: string) => p.startsWith('/playground'),
-  },
-  {
     id: 'terminal',
     label: 'Terminal',
     icon: CommandLineIcon,
