@@ -7,6 +7,8 @@ import {
 } from './-send-stream-live-tools'
 import { resolveSessionKey } from '../../server/session-utils'
 import { isAuthenticated, isAuthenticatedWithCFAccess } from "../../server/auth-middleware"
+import { resolveTenantFromRequest } from "../../lib/auth/tenants"
+import { emitToolCallSpan } from "../../server/laminar"
 import { requireJsonContentType } from '../../server/rate-limit'
 import { publishChatEvent } from '../../server/chat-event-bus'
 import { loadWorkspaceCatalog } from './workspace'
@@ -335,6 +337,18 @@ export const Route = createFileRoute('/api/send-stream')({
           })
           sessionKey = resolved.sessionKey
           resolvedFriendlyId = resolved.sessionKey
+          // Laminar — fire-and-forget chat.turn marker; never blocks
+          try {
+            const __tenant = resolveTenantFromRequest(request)?.tenant ?? "unknown"
+            emitToolCallSpan({
+              sessionId: sessionKey,
+              tenant: __tenant,
+              name: "chat.turn.start",
+              args: { messageLen: message.length, attachments: attachments?.length ?? 0 },
+              durationMs: 0,
+              status: "ok",
+            })
+          } catch {}
         } catch (err) {
           const errorMsg = normalizeClaudeErrorMessage(err)
           if (errorMsg === 'session not found') {

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorldRouteImport } from './routes/world'
 import { Route as VtCapitalRouteImport } from './routes/vt-capital'
+import { Route as TracesRouteImport } from './routes/traces'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as Swarm2RouteImport } from './routes/swarm2'
@@ -163,6 +164,11 @@ const WorldRoute = WorldRouteImport.update({
 const VtCapitalRoute = VtCapitalRouteImport.update({
   id: '/vt-capital',
   path: '/vt-capital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TracesRoute = TracesRouteImport.update({
+  id: '/traces',
+  path: '/traces',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TerminalRoute = TerminalRouteImport.update({
@@ -908,6 +914,7 @@ export interface FileRoutesByFullPath {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/traces': typeof TracesRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -1054,6 +1061,7 @@ export interface FileRoutesByTo {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/traces': typeof TracesRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -1202,6 +1210,7 @@ export interface FileRoutesById {
   '/swarm2': typeof Swarm2Route
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
+  '/traces': typeof TracesRoute
   '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
@@ -1351,6 +1360,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/traces'
     | '/vt-capital'
     | '/world'
     | '/api/artifacts'
@@ -1497,6 +1507,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/traces'
     | '/vt-capital'
     | '/world'
     | '/api/artifacts'
@@ -1644,6 +1655,7 @@ export interface FileRouteTypes {
     | '/swarm2'
     | '/tasks'
     | '/terminal'
+    | '/traces'
     | '/vt-capital'
     | '/world'
     | '/api/artifacts'
@@ -1792,6 +1804,7 @@ export interface RootRouteChildren {
   Swarm2Route: typeof Swarm2Route
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
+  TracesRoute: typeof TracesRoute
   VtCapitalRoute: typeof VtCapitalRoute
   WorldRoute: typeof WorldRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
@@ -1904,6 +1917,13 @@ declare module '@tanstack/react-router' {
       path: '/vt-capital'
       fullPath: '/vt-capital'
       preLoaderRoute: typeof VtCapitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/traces': {
+      id: '/traces'
+      path: '/traces'
+      fullPath: '/traces'
+      preLoaderRoute: typeof TracesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terminal': {
@@ -3118,6 +3138,7 @@ const rootRouteChildren: RootRouteChildren = {
   Swarm2Route: Swarm2Route,
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
+  TracesRoute: TracesRoute,
   VtCapitalRoute: VtCapitalRoute,
   WorldRoute: WorldRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
