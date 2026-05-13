@@ -306,3 +306,49 @@ export function createSessionCookie(token: string): string {
   attrs.push('SameSite=Strict', 'Path=/', `Max-Age=${30 * 24 * 60 * 60}`)
   return `claude-auth=${token}; ${attrs.join('; ')}`
 }
+
+// ---------------------------------------------------------------------------
+// CF Access identity passthrough (feat/multi-user-cos)
+// ---------------------------------------------------------------------------
+
+/**
+ * Whether to trust the `cf-access-authenticated-user-email` header.
+ *
+ * Set TRUST_CF_ACCESS=1 in .env when running behind Cloudflare Access.
+ * Off by default so local-dev + loopback calls are unaffected.
+ */
+export function isCFAccessTrusted(): boolean {
+  const v = (process.env.TRUST_CF_ACCESS || '').trim().toLowerCase()
+  return v === '1' || v === 'true' || v === 'yes'
+}
+
+/**
+ * Extract the CF Access email from the request if trusted.
+ * Returns null when TRUST_CF_ACCESS is off or header absent.
+ */
+export function getCFAccessEmail(request: Request): string | null {
+  if (!isCFAccessTrusted()) return null
+  return request.headers.get('cf-access-authenticated-user-email')
+}
+
+/**
+ * Whether the request is authenticated via CF Access.
+ * Requires TRUST_CF_ACCESS=1 AND the header to be present AND the email to be
+ * in the tenant allowlist.
+ */
+export function isAuthenticatedViaCFAccess(request: Request): boolean {
+  const email = getCFAccessEmail(request)
+  if (!email) return false
+  // Lazy-import to avoid circular deps — resolveTenantFromEmail is pure
+  const { resolveTenantFromEmail } = require('../lib/auth/tenants') as typeof import('../lib/auth/tenants')
+  return resolveTenantFromEmail(email) !== null
+}
+
+/**
+ * Extended isAuthenticated that also accepts CF Access identity.
+ * Replaces the original isAuthenticated where both paths are needed.
+ */
+export function isAuthenticatedWithCFAccess(request: Request): boolean {
+  if (isAuthenticatedViaCFAccess(request)) return true
+  return isAuthenticated(request)
+}

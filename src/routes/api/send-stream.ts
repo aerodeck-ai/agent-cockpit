@@ -6,7 +6,7 @@ import {
   createSyntheticLiveToolTracker,
 } from './-send-stream-live-tools'
 import { resolveSessionKey } from '../../server/session-utils'
-import { isAuthenticated } from '../../server/auth-middleware'
+import { isAuthenticated, isAuthenticatedWithCFAccess } from "../../server/auth-middleware"
 import { requireJsonContentType } from '../../server/rate-limit'
 import { publishChatEvent } from '../../server/chat-event-bus'
 import { loadWorkspaceCatalog } from './workspace'
@@ -285,7 +285,7 @@ export const Route = createFileRoute('/api/send-stream')({
     handlers: {
       POST: async ({ request }) => {
         // Auth check
-        if (!isAuthenticated(request)) {
+        if (!isAuthenticatedWithCFAccess(request)) {
           return new Response(
             JSON.stringify({ ok: false, error: 'Unauthorized' }),
             { status: 401, headers: { 'Content-Type': 'application/json' } },

@@ -2,8 +2,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import {
   isAuthenticated,
+  isAuthenticatedWithCFAccess,
   isPasswordProtectionEnabled,
 } from '../../server/auth-middleware'
+import { resolveTenantFromRequest } from '../../lib/auth/tenants'
 import { ensureGatewayProbed } from '../../server/gateway-capabilities'
 
 export const Route = createFileRoute('/api/auth-check')({
@@ -44,11 +46,14 @@ export const Route = createFileRoute('/api/auth-check')({
         }
 
         const authRequired = isPasswordProtectionEnabled()
-        const authenticated = isAuthenticated(request)
+        const authenticated = isAuthenticatedWithCFAccess(request)
 
+        const tenantInfo = resolveTenantFromRequest(request)
         return json({
           authenticated,
           authRequired,
+          tenant: tenantInfo?.tenant ?? null,
+          tenantDisplayName: tenantInfo?.displayName ?? null,
         })
       },
     },
