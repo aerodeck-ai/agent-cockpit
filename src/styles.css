@@ -1711,7 +1711,7 @@ code {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 200px;
+  width: 168px;
   flex-shrink: 0;
   border-right: 1px solid var(--theme-border-subtle);
   background-color: var(--theme-sidebar);
