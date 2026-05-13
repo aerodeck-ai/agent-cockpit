@@ -1531,3 +1531,173 @@ code {
    Tailwind oklch values and .system dark mode overrides.
    ═══════════════════════════════════════════════════════════════════ */
 @import './scifi-theme.css';
+
+/* ════════════════════════════════════════════════════════════════════
+   BerlAI Theme — derived from design-discovery taste graph
+   Source items: 356, 358, 359, 360, 361, 362, 363, 366, 369, 370, 371, 372
+   Dominant palette signals:
+     Dark surfaces: #08080c (item 371, 63% dom.), #0f0f0f (item 370, 4%)
+     Blues: #1c2858/#305bde (item 371), #2b61e3/#51a3da (item 356)
+     Purples: #9767fd/#6a26fc/#c9b2fd (item 370) — highest sat non-neutral
+     Text: #f2f6f6 (item 371, 21%)
+   Accent bias: neon/synthwave (46+31 tags) → #9767fd vivid violet
+   ════════════════════════════════════════════════════════════════════ */
+
+[data-theme='berlai'] {
+  --theme-bg: #08080c;
+  --theme-sidebar: #0d0e18;
+  --theme-panel: #11132a;
+  --theme-card: #161930;
+  --theme-card2: #1c1f3a;
+  --theme-border: rgba(151, 103, 253, 0.22);
+  --theme-border-subtle: rgba(151, 103, 253, 0.11);
+  --theme-text: #f2f6f6;
+  --theme-muted: rgba(242, 246, 246, 0.55);
+  --theme-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.72);
+  --theme-shadow-2: 0 6px 20px rgba(0, 0, 0, 0.62);
+  --theme-shadow-3: 0 16px 48px rgba(0, 0, 0, 0.72);
+  --theme-glass: rgba(8, 8, 12, 0.88);
+  --theme-focus: #9767fd;
+  --theme-accent: #9767fd;
+  --theme-accent-secondary: #c9b2fd;
+  --theme-accent-subtle: rgba(151, 103, 253, 0.14);
+  --theme-accent-border: rgba(151, 103, 253, 0.35);
+  --theme-active: #9767fd;
+  --theme-link: #c9b2fd;
+  --theme-success: #63d0a6;
+  --theme-warning: #f59e0b;
+  --theme-danger: #ef4444;
+  --theme-stripe: rgba(151, 103, 253, 0.055);
+  --theme-header-bg: #0d0e18;
+  --theme-header-border: rgba(151, 103, 253, 0.2);
+  --chat-user-bg: #181a38;
+  --chat-user-border: rgba(151, 103, 253, 0.32);
+  --chat-user-foreground: #f2f6f6;
+  --chat-assistant-bg: #11132a;
+  --chat-assistant-border: rgba(151, 103, 253, 0.14);
+  --chat-assistant-foreground: #f2f6f6;
+  --composer-bg: #0d0e18;
+  --composer-border: rgba(151, 103, 253, 0.28);
+  --composer-placeholder: rgba(242, 246, 246, 0.4);
+  --tool-card-bg: #11132a;
+  --tool-card-border: rgba(151, 103, 253, 0.18);
+  --tool-card-title: #f2f6f6;
+  --tool-card-muted: rgba(242, 246, 246, 0.52);
+  --code-bg: #06060e;
+  --code-border: rgba(151, 103, 253, 0.16);
+  --code-foreground: #c9b2fd;
+  --theme-input: #11132a;
+}
+
+[data-theme='berlai-light'] {
+  --theme-bg: #f8f7fc;
+  --theme-sidebar: #f2f0f9;
+  --theme-panel: #f5f3fa;
+  --theme-card: #ffffff;
+  --theme-card2: #f0edf8;
+  --theme-border: rgba(106, 38, 252, 0.18);
+  --theme-border-subtle: rgba(106, 38, 252, 0.09);
+  --theme-text: #08080c;
+  --theme-muted: rgba(8, 8, 12, 0.52);
+  --theme-shadow-1: 0 1px 2px rgba(8, 8, 12, 0.06);
+  --theme-shadow-2: 0 8px 24px rgba(8, 8, 12, 0.08);
+  --theme-shadow-3: 0 18px 40px rgba(8, 8, 12, 0.12);
+  --theme-glass: rgba(248, 247, 252, 0.92);
+  --theme-focus: #6a26fc;
+  --theme-accent: #6a26fc;
+  --theme-accent-secondary: #9767fd;
+  --theme-accent-subtle: rgba(106, 38, 252, 0.08);
+  --theme-accent-border: rgba(106, 38, 252, 0.22);
+  --theme-active: #6a26fc;
+  --theme-link: #6a26fc;
+  --theme-success: #16a34a;
+  --theme-warning: #d97706;
+  --theme-danger: #dc2626;
+  --theme-stripe: rgba(106, 38, 252, 0.04);
+  --theme-header-bg: #f5f3fa;
+  --theme-header-border: rgba(106, 38, 252, 0.14);
+  --chat-user-bg: #ede9fc;
+  --chat-user-border: rgba(106, 38, 252, 0.22);
+  --chat-user-foreground: #08080c;
+  --chat-assistant-bg: #ffffff;
+  --chat-assistant-border: rgba(106, 38, 252, 0.1);
+  --chat-assistant-foreground: #08080c;
+  --composer-bg: #fdfcff;
+  --composer-border: rgba(106, 38, 252, 0.2);
+  --composer-placeholder: rgba(8, 8, 12, 0.38);
+  --tool-card-bg: #f5f3fa;
+  --tool-card-border: rgba(106, 38, 252, 0.14);
+  --tool-card-title: #08080c;
+  --tool-card-muted: rgba(8, 8, 12, 0.52);
+  --code-bg: #f0edf8;
+  --code-border: rgba(106, 38, 252, 0.14);
+  --code-foreground: #08080c;
+  --theme-input: #ffffff;
+}
+
+/* html/body/root resets for berlai themes */
+[data-theme='berlai'] html,
+[data-theme='berlai'] body,
+[data-theme='berlai'] #root,
+[data-theme='berlai'] .dark {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+[data-theme='berlai-light'] html,
+[data-theme='berlai-light'] body,
+[data-theme='berlai-light'] #root,
+[data-theme='berlai-light'] .light {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+/* Tailwind primary token remaps */
+[data-theme='berlai'] {
+  --color-primary-50: var(--theme-panel);
+  --color-primary-100: var(--theme-card);
+  --color-primary-200: var(--theme-border);
+  --color-primary-300: var(--theme-border-subtle);
+  --color-primary-400: var(--theme-muted);
+  --color-primary-500: var(--theme-muted);
+  --color-primary-600: var(--theme-muted);
+  --color-primary-700: var(--theme-text);
+  --color-primary-800: var(--theme-text);
+  --color-primary-900: var(--theme-text);
+  --color-primary-950: var(--theme-text);
+  --color-surface: var(--theme-bg);
+  --color-surface-deep: var(--theme-bg);
+  --color-ink: var(--theme-text);
+  --color-accent-400: var(--theme-accent-secondary);
+  --color-accent-500: var(--theme-accent);
+  --color-accent-600: var(--theme-accent);
+}
+
+[data-theme='berlai-light'] {
+  color-scheme: light !important;
+  --color-primary-50: var(--theme-card) !important;
+  --color-primary-100: var(--theme-card2) !important;
+  --color-primary-200: var(--theme-border) !important;
+  --color-primary-300: var(--theme-border-subtle) !important;
+  --color-primary-400: var(--theme-muted) !important;
+  --color-primary-500: var(--theme-muted) !important;
+  --color-primary-600: var(--theme-muted) !important;
+  --color-primary-700: var(--theme-text) !important;
+  --color-primary-800: var(--theme-text) !important;
+  --color-primary-900: var(--theme-text) !important;
+  --color-primary-950: var(--theme-text) !important;
+  --color-surface: var(--theme-bg) !important;
+  --color-surface-deep: var(--theme-bg) !important;
+  --color-ink: var(--theme-text) !important;
+  --color-accent-400: var(--theme-accent-secondary) !important;
+  --color-accent-500: var(--theme-accent) !important;
+  --color-accent-600: var(--theme-accent) !important;
+}
+
+/* KPI hover glow for berlai dark */
+[data-theme='berlai'] .kpi-card:hover {
+  border-color: var(--theme-accent-border);
+  box-shadow:
+    var(--theme-shadow-2),
+    0 0 22px color-mix(in srgb, var(--theme-accent) 26%, transparent);
+}
