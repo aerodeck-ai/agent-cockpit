@@ -26,6 +26,7 @@ import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
+import { Route as GuardrailsRouteImport } from './routes/guardrails'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as EvalsRouteImport } from './routes/evals'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
@@ -147,6 +148,9 @@ import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/gr
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesPersonalProbeRouteImport } from './routes/api/hermes/personal-probe'
+import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
+import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
+import { Route as ApiGuardrailsPiiClassifierRouteImport } from './routes/api/guardrails/pii-classifier'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
@@ -241,6 +245,11 @@ const JobsRoute = JobsRouteImport.update({
 const HermesWorldRoute = HermesWorldRouteImport.update({
   id: '/hermes-world',
   path: '/hermes-world',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardrailsRoute = GuardrailsRouteImport.update({
+  id: '/guardrails',
+  path: '/guardrails',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FilesRoute = FilesRouteImport.update({
@@ -850,6 +859,22 @@ const ApiHermesPersonalProbeRoute = ApiHermesPersonalProbeRouteImport.update({
   path: '/api/hermes/personal-probe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGuardrailsTirithRoute = ApiGuardrailsTirithRouteImport.update({
+  id: '/api/guardrails/tirith',
+  path: '/api/guardrails/tirith',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGuardrailsScopeDenyRoute = ApiGuardrailsScopeDenyRouteImport.update({
+  id: '/api/guardrails/scope-deny',
+  path: '/api/guardrails/scope-deny',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGuardrailsPiiClassifierRoute =
+  ApiGuardrailsPiiClassifierRouteImport.update({
+    id: '/api/guardrails/pii-classifier',
+    path: '/api/guardrails/pii-classifier',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   id: '/api/dashboard/overview',
   path: '/api/dashboard/overview',
@@ -913,6 +938,7 @@ export interface FileRoutesByFullPath {
   '/early-access': typeof EarlyAccessRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/guardrails': typeof GuardrailsRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
@@ -1009,6 +1035,9 @@ export interface FileRoutesByFullPath {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
+  '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
+  '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1063,6 +1092,7 @@ export interface FileRoutesByTo {
   '/early-access': typeof EarlyAccessRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/guardrails': typeof GuardrailsRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
@@ -1158,6 +1188,9 @@ export interface FileRoutesByTo {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
+  '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
+  '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1213,6 +1246,7 @@ export interface FileRoutesById {
   '/early-access': typeof EarlyAccessRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/guardrails': typeof GuardrailsRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
@@ -1309,6 +1343,9 @@ export interface FileRoutesById {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
+  '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
+  '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1365,6 +1402,7 @@ export interface FileRouteTypes {
     | '/early-access'
     | '/evals'
     | '/files'
+    | '/guardrails'
     | '/hermes-world'
     | '/jobs'
     | '/mcp'
@@ -1461,6 +1499,9 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/guardrails/pii-classifier'
+    | '/api/guardrails/scope-deny'
+    | '/api/guardrails/tirith'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1515,6 +1556,7 @@ export interface FileRouteTypes {
     | '/early-access'
     | '/evals'
     | '/files'
+    | '/guardrails'
     | '/hermes-world'
     | '/jobs'
     | '/mcp'
@@ -1610,6 +1652,9 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/guardrails/pii-classifier'
+    | '/api/guardrails/scope-deny'
+    | '/api/guardrails/tirith'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1664,6 +1709,7 @@ export interface FileRouteTypes {
     | '/early-access'
     | '/evals'
     | '/files'
+    | '/guardrails'
     | '/hermes-world'
     | '/jobs'
     | '/mcp'
@@ -1760,6 +1806,9 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/guardrails/pii-classifier'
+    | '/api/guardrails/scope-deny'
+    | '/api/guardrails/tirith'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1815,6 +1864,7 @@ export interface RootRouteChildren {
   EarlyAccessRoute: typeof EarlyAccessRoute
   EvalsRoute: typeof EvalsRoute
   FilesRoute: typeof FilesRoute
+  GuardrailsRoute: typeof GuardrailsRoute
   HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
   McpRoute: typeof McpRoute
@@ -1905,6 +1955,9 @@ export interface RootRouteChildren {
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
+  ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
+  ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
+  ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
   ApiHermesPersonalProbeRoute: typeof ApiHermesPersonalProbeRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
@@ -2048,6 +2101,13 @@ declare module '@tanstack/react-router' {
       path: '/hermes-world'
       fullPath: '/hermes-world'
       preLoaderRoute: typeof HermesWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guardrails': {
+      id: '/guardrails'
+      path: '/guardrails'
+      fullPath: '/guardrails'
+      preLoaderRoute: typeof GuardrailsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/files': {
@@ -2897,6 +2957,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesPersonalProbeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/guardrails/tirith': {
+      id: '/api/guardrails/tirith'
+      path: '/api/guardrails/tirith'
+      fullPath: '/api/guardrails/tirith'
+      preLoaderRoute: typeof ApiGuardrailsTirithRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/guardrails/scope-deny': {
+      id: '/api/guardrails/scope-deny'
+      path: '/api/guardrails/scope-deny'
+      fullPath: '/api/guardrails/scope-deny'
+      preLoaderRoute: typeof ApiGuardrailsScopeDenyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/guardrails/pii-classifier': {
+      id: '/api/guardrails/pii-classifier'
+      path: '/api/guardrails/pii-classifier'
+      fullPath: '/api/guardrails/pii-classifier'
+      preLoaderRoute: typeof ApiGuardrailsPiiClassifierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dashboard/overview': {
       id: '/api/dashboard/overview'
       path: '/api/dashboard/overview'
@@ -3165,6 +3246,7 @@ const rootRouteChildren: RootRouteChildren = {
   EarlyAccessRoute: EarlyAccessRoute,
   EvalsRoute: EvalsRoute,
   FilesRoute: FilesRoute,
+  GuardrailsRoute: GuardrailsRoute,
   HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
   McpRoute: McpRoute,
@@ -3255,6 +3337,9 @@ const rootRouteChildren: RootRouteChildren = {
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
+  ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
+  ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
+  ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
   ApiHermesPersonalProbeRoute: ApiHermesPersonalProbeRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
