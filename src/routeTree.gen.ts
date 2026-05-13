@@ -162,6 +162,9 @@ import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
+import { Route as ApiOauthRouterAccountsRouteImport } from './routes/api/oauth-router/accounts'
+import { Route as ApiOauthRouterActiveRouteImport } from './routes/api/oauth-router/active'
+import { Route as ApiOauthRouterEventsRouteImport } from './routes/api/oauth-router/events'
 
 const WorldRoute = WorldRouteImport.update({
   id: '/world',
@@ -932,6 +935,22 @@ const ApiHermesworldReservationsConfirmRoute =
     getParentRoute: () => ApiHermesworldReservationsRoute,
   } as any)
 
+const ApiOauthRouterAccountsRoute = ApiOauthRouterAccountsRouteImport.update({
+  id: '/api/oauth-router/accounts',
+  path: '/api/oauth-router/accounts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOauthRouterActiveRoute = ApiOauthRouterActiveRouteImport.update({
+  id: '/api/oauth-router/active',
+  path: '/api/oauth-router/active',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOauthRouterEventsRoute = ApiOauthRouterEventsRouteImport.update({
+  id: '/api/oauth-router/events',
+  path: '/api/oauth-router/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
@@ -1086,6 +1105,9 @@ export interface FileRoutesByFullPath {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/oauth-router/accounts': typeof ApiOauthRouterAccountsRoute
+  '/api/oauth-router/active': typeof ApiOauthRouterActiveRoute
+  '/api/oauth-router/events': typeof ApiOauthRouterEventsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1240,6 +1262,9 @@ export interface FileRoutesByTo {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/oauth-router/accounts': typeof ApiOauthRouterAccountsRoute
+  '/api/oauth-router/active': typeof ApiOauthRouterActiveRoute
+  '/api/oauth-router/events': typeof ApiOauthRouterEventsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1396,6 +1421,9 @@ export interface FileRoutesById {
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
+  '/api/oauth-router/accounts': typeof ApiOauthRouterAccountsRoute
+  '/api/oauth-router/active': typeof ApiOauthRouterActiveRoute
+  '/api/oauth-router/events': typeof ApiOauthRouterEventsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1553,6 +1581,9 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/oauth-router/accounts'
+    | '/api/oauth-router/active'
+    | '/api/oauth-router/events'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1707,6 +1738,9 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/oauth-router/accounts'
+    | '/api/oauth-router/active'
+    | '/api/oauth-router/events'
   id:
     | '__root__'
     | '/'
@@ -1862,6 +1896,9 @@ export interface FileRouteTypes {
     | '/api/mcp/hub-sources/$id'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
+    | '/api/oauth-router/accounts'
+    | '/api/oauth-router/active'
+    | '/api/oauth-router/events'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1990,6 +2027,9 @@ export interface RootRouteChildren {
   ApiVoiceChatRoute: typeof ApiVoiceChatRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
+  ApiOauthRouterAccountsRoute: typeof ApiOauthRouterAccountsRoute
+  ApiOauthRouterActiveRoute: typeof ApiOauthRouterActiveRoute
+  ApiOauthRouterEventsRoute: typeof ApiOauthRouterEventsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -3060,6 +3100,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesworldReservationsConfirmRouteImport
       parentRoute: typeof ApiHermesworldReservationsRoute
     }
+    '/api/oauth-router/accounts': {
+      id: '/api/oauth-router/accounts'
+      path: '/api/oauth-router/accounts'
+      fullPath: '/api/oauth-router/accounts'
+      preLoaderRoute: typeof ApiOauthRouterAccountsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/oauth-router/active': {
+      id: '/api/oauth-router/active'
+      path: '/api/oauth-router/active'
+      fullPath: '/api/oauth-router/active'
+      preLoaderRoute: typeof ApiOauthRouterActiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/oauth-router/events': {
+      id: '/api/oauth-router/events'
+      path: '/api/oauth-router/events'
+      fullPath: '/api/oauth-router/events'
+      preLoaderRoute: typeof ApiOauthRouterEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -3375,6 +3436,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceChatRoute: ApiVoiceChatRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
+  ApiOauthRouterAccountsRoute: ApiOauthRouterAccountsRoute,
+  ApiOauthRouterActiveRoute: ApiOauthRouterActiveRoute,
+  ApiOauthRouterEventsRoute: ApiOauthRouterEventsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

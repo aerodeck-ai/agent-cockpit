@@ -29,6 +29,7 @@ import { useChatSessions } from '@/screens/chat/hooks/use-chat-sessions'
 import { useWorkspaceStore } from '@/stores/workspace-store'
 import { SIDEBAR_TOGGLE_EVENT } from '@/hooks/use-global-shortcuts'
 import { ProfileSwitcher } from '@/components/profile-switcher'
+import { AccountSwitcher } from '@/components/shell/AccountSwitcher'
 import { RelayWidget } from '@/components/relay-widget'
 import { useSwipeNavigation } from '@/hooks/use-swipe-navigation'
 import { ChatPanel } from '@/components/chat-panel'
@@ -317,9 +318,10 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         style={shellStyle}
       >
         <ClaudeReconnectBanner enabled={authState.checked} />
-        {/* Profile switcher — top-right, desktop only, not on chrome-free surfaces */}
+        {/* Profile + Account switchers — top-right, desktop only */}
         {!isChromeFreeSurface && !isMobile && (
           <div className="absolute top-2 right-3 z-50 flex items-center gap-2">
+            <AccountSwitcher />
             <ProfileSwitcher />
           </div>
         )}
