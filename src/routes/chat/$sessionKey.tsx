@@ -138,6 +138,7 @@ function ChatRoute() {
         }
       >
         <ChatScreen
+          embedded={true}
           activeFriendlyId={activeFriendlyId}
           isNewChat={isNewChat}
           forcedSessionKey={forcedSessionKey}
