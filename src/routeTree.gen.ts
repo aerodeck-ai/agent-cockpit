@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorldRouteImport } from './routes/world'
-import { Route as VtCapitalRouteImport } from './routes/vt-capital'
 import { Route as TracesRouteImport } from './routes/traces'
 import { Route as TerminalRouteImport } from './routes/terminal'
 import { Route as TasksRouteImport } from './routes/tasks'
@@ -41,7 +40,6 @@ import { Route as SettingsProvidersRouteImport } from './routes/settings/provide
 import { Route as ReserveConfirmRouteImport } from './routes/reserve/confirm'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
-import { Route as ApiVtCapitalRouteImport } from './routes/api/vt-capital'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
@@ -78,8 +76,6 @@ import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
-import { Route as ApiPlaygroundNpcRouteImport } from './routes/api/playground-npc'
-import { Route as ApiPlaygroundAdminRouteImport } from './routes/api/playground-admin'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
@@ -167,9 +163,6 @@ const WorldRoute = WorldRouteImport.update({
   path: '/world',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VtCapitalRoute = VtCapitalRouteImport.update({
-  id: '/vt-capital',
-  path: '/vt-capital',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TracesRoute = TracesRouteImport.update({
@@ -320,11 +313,6 @@ const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   id: '/api/workspace',
   path: '/api/workspace',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiVtCapitalRoute = ApiVtCapitalRouteImport.update({
-  id: '/api/vt-capital',
-  path: '/api/vt-capital',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTerminalStreamRoute = ApiTerminalStreamRouteImport.update({
@@ -506,16 +494,6 @@ const ApiPreviewFileRoute = ApiPreviewFileRouteImport.update({
 const ApiPluginsRoute = ApiPluginsRouteImport.update({
   id: '/api/plugins',
   path: '/api/plugins',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPlaygroundNpcRoute = ApiPlaygroundNpcRouteImport.update({
-  id: '/api/playground-npc',
-  path: '/api/playground-npc',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPlaygroundAdminRoute = ApiPlaygroundAdminRouteImport.update({
-  id: '/api/playground-admin',
-  path: '/api/playground-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPingRoute = ApiPingRouteImport.update({
@@ -954,7 +932,6 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
-  '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -985,8 +962,6 @@ export interface FileRoutesByFullPath {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
-  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
-  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1023,7 +998,6 @@ export interface FileRoutesByFullPath {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1107,7 +1081,6 @@ export interface FileRoutesByTo {
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
-  '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1138,8 +1111,6 @@ export interface FileRoutesByTo {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
-  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
-  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1176,7 +1147,6 @@ export interface FileRoutesByTo {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1262,7 +1232,6 @@ export interface FileRoutesById {
   '/tasks': typeof TasksRoute
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
-  '/vt-capital': typeof VtCapitalRoute
   '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
@@ -1293,8 +1262,6 @@ export interface FileRoutesById {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
-  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
-  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1331,7 +1298,6 @@ export interface FileRoutesById {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1418,7 +1384,6 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/terminal'
     | '/traces'
-    | '/vt-capital'
     | '/world'
     | '/api/artifacts'
     | '/api/auth'
@@ -1449,8 +1414,6 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
-    | '/api/playground-admin'
-    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1487,7 +1450,6 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
-    | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1571,7 +1533,6 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/terminal'
     | '/traces'
-    | '/vt-capital'
     | '/world'
     | '/api/artifacts'
     | '/api/auth'
@@ -1602,8 +1563,6 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
-    | '/api/playground-admin'
-    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1640,7 +1599,6 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
-    | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1725,7 +1683,6 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/terminal'
     | '/traces'
-    | '/vt-capital'
     | '/world'
     | '/api/artifacts'
     | '/api/auth'
@@ -1756,8 +1713,6 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
-    | '/api/playground-admin'
-    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1794,7 +1749,6 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
-    | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1880,7 +1834,6 @@ export interface RootRouteChildren {
   TasksRoute: typeof TasksRoute
   TerminalRoute: typeof TerminalRoute
   TracesRoute: typeof TracesRoute
-  VtCapitalRoute: typeof VtCapitalRoute
   WorldRoute: typeof WorldRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
@@ -1911,8 +1864,6 @@ export interface RootRouteChildren {
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
-  ApiPlaygroundAdminRoute: typeof ApiPlaygroundAdminRoute
-  ApiPlaygroundNpcRoute: typeof ApiPlaygroundNpcRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
   ApiProviderUsageRoute: typeof ApiProviderUsageRoute
@@ -1949,7 +1900,6 @@ export interface RootRouteChildren {
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
-  ApiVtCapitalRoute: typeof ApiVtCapitalRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
@@ -1991,11 +1941,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/vt-capital': {
-      id: '/vt-capital'
-      path: '/vt-capital'
-      fullPath: '/vt-capital'
-      preLoaderRoute: typeof VtCapitalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/traces': {
@@ -2206,13 +2151,6 @@ declare module '@tanstack/react-router' {
       path: '/api/workspace'
       fullPath: '/api/workspace'
       preLoaderRoute: typeof ApiWorkspaceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/vt-capital': {
-      id: '/api/vt-capital'
-      path: '/api/vt-capital'
-      fullPath: '/api/vt-capital'
-      preLoaderRoute: typeof ApiVtCapitalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/terminal-stream': {
@@ -2465,20 +2403,6 @@ declare module '@tanstack/react-router' {
       path: '/api/plugins'
       fullPath: '/api/plugins'
       preLoaderRoute: typeof ApiPluginsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/playground-npc': {
-      id: '/api/playground-npc'
-      path: '/api/playground-npc'
-      fullPath: '/api/playground-npc'
-      preLoaderRoute: typeof ApiPlaygroundNpcRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/playground-admin': {
-      id: '/api/playground-admin'
-      path: '/api/playground-admin'
-      fullPath: '/api/playground-admin'
-      preLoaderRoute: typeof ApiPlaygroundAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/ping': {
@@ -3262,7 +3186,6 @@ const rootRouteChildren: RootRouteChildren = {
   TasksRoute: TasksRoute,
   TerminalRoute: TerminalRoute,
   TracesRoute: TracesRoute,
-  VtCapitalRoute: VtCapitalRoute,
   WorldRoute: WorldRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
@@ -3293,8 +3216,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,
-  ApiPlaygroundAdminRoute: ApiPlaygroundAdminRoute,
-  ApiPlaygroundNpcRoute: ApiPlaygroundNpcRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
   ApiProviderUsageRoute: ApiProviderUsageRoute,
@@ -3331,7 +3252,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
-  ApiVtCapitalRoute: ApiVtCapitalRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
