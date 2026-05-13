@@ -2339,9 +2339,18 @@ export function ChatScreen({
           attachmentPayload,
         )
         appendHistoryMessage(queryClient, threadId, threadId, optimisticMessage)
+        // FIX 2026-05-13: also mirror the optimistic message under the
+        // activeFriendlyId cache slot so the pre-resolution display window
+        // (where the chat reads from `activeFriendlyId='new'`) sees it.
+        if (activeFriendlyId && activeFriendlyId !== threadId) {
+          appendHistoryMessage(queryClient, activeFriendlyId, activeFriendlyId, optimisticMessage)
+        }
         upsertSessionInCache(threadId, optimisticMessage)
         setPendingGeneration(true)
         setSending(true)
+        // FIX 2026-05-13: prime sessionKeyForWaiting so setWaitingForResponse
+        // isn't a no-op before resolvedSessionKey lands.
+        sessionKeyForWaiting.current = threadId
         setWaitingForResponse(true)
 
         if (!isPortableMode) {
