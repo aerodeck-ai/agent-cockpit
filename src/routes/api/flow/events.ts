@@ -12,6 +12,7 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
+import { existsSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 import { resolveTenantFromRequest } from '../../../lib/auth/tenants'
@@ -35,6 +36,24 @@ export type TraceEvent = {
   pane_id?: number | null
   mcp_server?: string | null
   tool_name?: string | null
+}
+
+// Per-profile hermes_events.db root (same resolution as /api/observe/spans)
+const HERMES_PROFILES_DIR =
+  process.env.HERMES_PROFILES_DIR ??
+  (process.env.HERMES_HOME
+    ? join(process.env.HERMES_HOME, 'profiles')
+    : join(process.env.HOME ?? homedir(), '.hermes', 'profiles'))
+
+function discoverSpanProfiles(): string[] {
+  if (!existsSync(HERMES_PROFILES_DIR)) return []
+  try {
+    return readdirSync(HERMES_PROFILES_DIR, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name)
+  } catch {
+    return []
+  }
 }
 
 // hermes.db is the shared findings store; symlink hermes.db.hermes_findings -> hermes.db
@@ -124,8 +143,76 @@ export const Route = createFileRoute('/api/flow/events')({
 
           db.close()
 
+          // ── Merge Hermes spans from per-profile hermes_events.db ────────────
+          // Each span row is mapped to the same TraceEvent shape.
+          const spanRows: TraceEvent[] = []
+          const spanProfiles = discoverSpanProfiles()
+
+          if (spanProfiles.length > 0) {
+            for (const profile of spanProfiles) {
+              const spanDbPath = join(HERMES_PROFILES_DIR, profile, 'hermes_events.db')
+              if (!existsSync(spanDbPath)) continue
+
+              try {
+                const spanDb = new Database(spanDbPath, {
+                  readonly: true,
+                  fileMustExist: true,
+                })
+
+                const spanTenantFilter = isMally
+                  ? `AND (${MALLY_SOURCES.map(() => `LOWER(source_app) LIKE ?`).join(' OR ')})`
+                  : `AND NOT (${MALLY_SOURCES.map(() => `LOWER(source_app) LIKE ?`).join(' OR ')})`
+
+                const profileSpans = spanDb
+                  .prepare(
+                    `
+                    SELECT
+                      rowid                      AS id,
+                      ts,
+                      COALESCE(source_app, ?)    AS source,
+                      COALESCE(kind, 'span')     AS kind,
+                      COALESCE(status, 'ok')     AS status,
+                      COALESCE(label, kind, '')  AS label,
+                      error_message              AS detail,
+                      model_req,
+                      model_used,
+                      provider,
+                      input_tokens,
+                      output_tokens,
+                      cost_usd,
+                      NULL                       AS pane_id,
+                      mcp_server,
+                      tool_name,
+                      COALESCE(intent_id, 'span_' || strftime('%Y%m%d_%H', ts)) AS trace_id
+                    FROM hermes_events
+                    WHERE ts >= datetime('now', ?)
+                    ${spanTenantFilter}
+                    ORDER BY ts DESC
+                    LIMIT ?
+                  `,
+                  )
+                  .all(
+                    profile,
+                    `-${hours} hours`,
+                    ...tenantParams,
+                    limit,
+                  ) as TraceEvent[]
+
+                spanDb.close()
+                spanRows.push(...profileSpans)
+              } catch {
+                // Individual profile DB failure — skip
+              }
+            }
+          }
+
+          // Merge findings + spans, sort by ts DESC, cap at limit
+          const allRows = [...rows, ...spanRows]
+          allRows.sort((a, b) => (b.ts > a.ts ? 1 : b.ts < a.ts ? -1 : 0))
+          const merged = allRows.slice(0, limit)
+
           // Reverse so oldest first (canvas reads chronologically)
-          const events = rows.reverse()
+          const events = merged.reverse()
 
           return new Response(JSON.stringify({ events, count: events.length }), {
             headers: {
