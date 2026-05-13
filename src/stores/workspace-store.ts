@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+export type ActiveProfile = 'cos' | 'personal' | 'mally'
+
 type WorkspaceState = {
   sidebarCollapsed: boolean
   fileExplorerCollapsed: boolean
@@ -15,6 +17,8 @@ type WorkspaceState = {
   mobileKeyboardOpen: boolean
   mobileKeyboardInset: number
   mobileComposerFocused: boolean
+  /** Active Hermes profile: cos = henry chief-of-staff, personal = henry personal, mally = mally */
+  activeProfile: ActiveProfile
   toggleSidebar: () => void
   setSidebarCollapsed: (collapsed: boolean) => void
   toggleFileExplorer: () => void
@@ -28,6 +32,7 @@ type WorkspaceState = {
   setMobileKeyboardOpen: (open: boolean) => void
   setMobileKeyboardInset: (inset: number) => void
   setMobileComposerFocused: (focused: boolean) => void
+  setActiveProfile: (profile: ActiveProfile) => void
 }
 
 export const useWorkspaceStore = create<WorkspaceState>()(
@@ -42,6 +47,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       mobileKeyboardOpen: false,
       mobileKeyboardInset: 0,
       mobileComposerFocused: false,
+      activeProfile: 'cos' as ActiveProfile,
       toggleSidebar: () =>
         set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
       setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
@@ -59,6 +65,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       setMobileKeyboardInset: (inset) => set({ mobileKeyboardInset: inset }),
       setMobileComposerFocused: (focused) =>
         set({ mobileComposerFocused: focused }),
+      setActiveProfile: (profile) => set({ activeProfile: profile }),
       setChatPanelSessionKey: (key) => set({ chatPanelSessionKey: key }),
     }),
     {
