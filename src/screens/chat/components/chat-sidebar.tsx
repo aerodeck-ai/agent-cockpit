@@ -587,6 +587,7 @@ function ChatSidebarComponent({
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
+  const isPromptsActive = pathname === '/prompts'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
@@ -877,6 +878,13 @@ function ChatSidebarComponent({
       icon: UserMultipleIcon,
       label: t('nav.profiles'),
       active: pathname === '/profiles',
+    },
+    {
+      kind: 'link',
+      to: '/prompts',
+      icon: PencilEdit02Icon,
+      label: 'Prompts',
+      active: isPromptsActive,
     },
   ]
 
