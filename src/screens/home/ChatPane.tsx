@@ -52,8 +52,35 @@ export function ChatPane() {
 
   const handleSessionResolved = useCallback(
     (payload: { friendlyId: string; sessionKey: string }) => {
-      const sourceFriendlyId = activeFriendlyId
-      const sourceSessionKey = forcedSessionKey ?? activeFriendlyId
+      // Bug fix: when a new chat sends its first message, ChatScreen uses a
+      // random UUID threadId (not 'new') as the cache key for the optimistic
+      // message. ChatPane's activeFriendlyId is still 'new' at this point, so
+      // hardcoding the source as 'new'/'new' misses the actual cache entry.
+      // Solution: scan all history cache entries and find the one containing
+      // optimistic (in-flight) messages — that is the real source to move.
+      const historyQueries = queryClient.getQueriesData<{ messages?: unknown[] }>({
+        queryKey: ['chat', 'history'],
+      })
+      let sourceFriendlyId = activeFriendlyId
+      let sourceSessionKey = forcedSessionKey ?? activeFriendlyId
+      for (const [queryKey, data] of historyQueries) {
+        const messages = Array.isArray(data?.messages) ? data.messages : []
+        const hasOptimistic = messages.some((m: unknown) => {
+          const raw = m as Record<string, unknown>
+          return (
+            raw.role === 'user' &&
+            (raw.status === 'sending' ||
+              (typeof raw.__optimisticId === 'string' && raw.__optimisticId.length > 0) ||
+              (typeof raw.clientId === 'string' && raw.clientId.length > 0))
+          )
+        })
+        if (hasOptimistic && Array.isArray(queryKey) && queryKey.length >= 4) {
+          // queryKey shape: ['chat', 'history', friendlyId, sessionKey]
+          sourceFriendlyId = String(queryKey[2])
+          sourceSessionKey = String(queryKey[3])
+          break
+        }
+      }
 
       moveHistoryMessages(
         queryClient,
