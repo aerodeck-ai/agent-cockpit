@@ -479,6 +479,19 @@ const config = defineConfig(({ mode, command }) => {
       port: process.env.PORT ? Number(process.env.PORT) : 3000,
       strictPort: false, // allow fallback if port is taken, but log clearly
       allowedHosts: true,
+      // HMR through Cloudflare Tunnel — without this, the browser tries
+      // ws://localhost:<port>/ which is blocked or refused, and the page
+      // shows the SSR shell but never hydrates with real content.
+      // Set PUBLIC_HOST=atc-dev.berl.ai (or the prod equivalent) in
+      // .env.local on Oracle to enable. Falls back to default Vite HMR
+      // behaviour for local dev (no env var = same-origin ws://).
+      hmr: process.env.PUBLIC_HOST
+        ? {
+            protocol: 'wss',
+            host: process.env.PUBLIC_HOST,
+            clientPort: 443,
+          }
+        : undefined,
       watch: {
         ignored: [
           // NOTE: the generated TanStack route tree must NOT be added to this
