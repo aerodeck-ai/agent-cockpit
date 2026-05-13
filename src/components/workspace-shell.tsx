@@ -106,6 +106,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (path.startsWith('/mcp')) return 8
     if (path.startsWith('/profiles')) return 9
     if (path.startsWith('/settings')) return 10
+    if (path.startsWith('/evals')) return 11
     return -1
   }, [])
 
@@ -180,6 +181,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (pathname.startsWith('/mcp')) return 'MCP'
     if (pathname.startsWith('/profiles')) return 'Profiles'
     if (pathname.startsWith('/settings')) return 'Settings'
+    if (pathname.startsWith('/evals')) return 'Evals'
     if (pathname.startsWith('/debug')) return 'Debug'
     if (pathname.startsWith('/activity')) return 'Activity'
     return null

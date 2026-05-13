@@ -580,6 +580,7 @@ function ChatSidebarComponent({
     pathname === '/new' || pathname.startsWith('/chat/new')
   const _isSettingsActive = pathname === '/settings'
   const isSkillsActive = pathname === '/skills'
+  const isEvalsActive = pathname === '/evals'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
   const isPlaygroundActive = pathname === '/playground'
@@ -594,7 +595,7 @@ function ChatSidebarComponent({
   const isFlowActive = pathname === '/flow'
   const isModelsActive = pathname === '/models'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
-  const knowledgeRoutes = ['/memory', '/skills']
+  const knowledgeRoutes = ['/memory', '/skills', '/evals']
   const systemRoutes = ['/settings', '/logs']
 
   useEffect(() => {
@@ -890,6 +891,13 @@ function ChatSidebarComponent({
       icon: UserMultipleIcon,
       label: t('nav.profiles'),
       active: pathname === '/profiles',
+    },
+    {
+      kind: 'link',
+      to: '/evals',
+      icon: CheckListIcon,
+      label: 'Evals',
+      active: isEvalsActive,
     },
     {
       kind: 'link',

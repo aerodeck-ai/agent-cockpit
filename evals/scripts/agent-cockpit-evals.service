@@ -1,0 +1,16 @@
+[Unit]
+Description=Agent Cockpit nightly eval suite (Promptfoo + Laminar)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/apps/agent-cockpit/evals/scripts/run-evals.sh
+WorkingDirectory=/home/ubuntu/apps/agent-cockpit
+StandardOutput=journal
+StandardError=journal
+# Give evals up to 30 minutes
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=default.target
