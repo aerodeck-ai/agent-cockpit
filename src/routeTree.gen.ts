@@ -19,6 +19,7 @@ import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReserveRouteImport } from './routes/reserve'
+import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
@@ -74,6 +75,7 @@ import { Route as ApiSessionHistoryRouteImport } from './routes/api/session-hist
 import { Route as ApiSendStreamRouteImport } from './routes/api/send-stream'
 import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
+import { Route as ApiPromptsRouteImport } from './routes/api/prompts'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
 import { Route as ApiPlaygroundNpcRouteImport } from './routes/api/playground-npc'
@@ -116,6 +118,8 @@ import { Route as ApiSkillsInstallRouteImport } from './routes/api/skills/instal
 import { Route as ApiSkillsHubSearchRouteImport } from './routes/api/skills/hub-search'
 import { Route as ApiSessionsSendRouteImport } from './routes/api/sessions/send'
 import { Route as ApiRelayMessagesRouteImport } from './routes/api/relay/messages'
+import { Route as ApiPromptsAssignRouteImport } from './routes/api/prompts/assign'
+import { Route as ApiPromptsIdRouteImport } from './routes/api/prompts/$id'
 import { Route as ApiProfilesUpdateRouteImport } from './routes/api/profiles/update'
 import { Route as ApiProfilesRenameRouteImport } from './routes/api/profiles/rename'
 import { Route as ApiProfilesReadRouteImport } from './routes/api/profiles/read'
@@ -204,6 +208,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const ReserveRoute = ReserveRouteImport.update({
   id: '/reserve',
   path: '/reserve',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PromptsRoute = PromptsRouteImport.update({
+  id: '/prompts',
+  path: '/prompts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfilesRoute = ProfilesRouteImport.update({
@@ -482,6 +491,11 @@ const ApiProviderUsageRoute = ApiProviderUsageRouteImport.update({
   path: '/api/provider-usage',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPromptsRoute = ApiPromptsRouteImport.update({
+  id: '/api/prompts',
+  path: '/api/prompts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPreviewFileRoute = ApiPreviewFileRouteImport.update({
   id: '/api/preview-file',
   path: '/api/preview-file',
@@ -691,6 +705,16 @@ const ApiRelayMessagesRoute = ApiRelayMessagesRouteImport.update({
   id: '/api/relay/messages',
   path: '/api/relay/messages',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPromptsAssignRoute = ApiPromptsAssignRouteImport.update({
+  id: '/assign',
+  path: '/assign',
+  getParentRoute: () => ApiPromptsRoute,
+} as any)
+const ApiPromptsIdRoute = ApiPromptsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiPromptsRoute,
 } as any)
 const ApiProfilesUpdateRoute = ApiProfilesUpdateRouteImport.update({
   id: '/api/profiles/update',
@@ -907,6 +931,7 @@ export interface FileRoutesByFullPath {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/prompts': typeof PromptsRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
@@ -949,6 +974,7 @@ export interface FileRoutesByFullPath {
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/prompts': typeof ApiPromptsRouteWithChildren
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1024,6 +1050,8 @@ export interface FileRoutesByFullPath {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/prompts/$id': typeof ApiPromptsIdRoute
+  '/api/prompts/assign': typeof ApiPromptsAssignRoute
   '/api/relay/messages': typeof ApiRelayMessagesRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
@@ -1055,6 +1083,7 @@ export interface FileRoutesByTo {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/prompts': typeof PromptsRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -1096,6 +1125,7 @@ export interface FileRoutesByTo {
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/prompts': typeof ApiPromptsRouteWithChildren
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1171,6 +1201,8 @@ export interface FileRoutesByTo {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/prompts/$id': typeof ApiPromptsIdRoute
+  '/api/prompts/assign': typeof ApiPromptsAssignRoute
   '/api/relay/messages': typeof ApiRelayMessagesRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
@@ -1203,6 +1235,7 @@ export interface FileRoutesById {
   '/operations': typeof OperationsRoute
   '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
+  '/prompts': typeof PromptsRoute
   '/reserve': typeof ReserveRouteWithChildren
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
@@ -1245,6 +1278,7 @@ export interface FileRoutesById {
   '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/prompts': typeof ApiPromptsRouteWithChildren
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1320,6 +1354,8 @@ export interface FileRoutesById {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/prompts/$id': typeof ApiPromptsIdRoute
+  '/api/prompts/assign': typeof ApiPromptsAssignRoute
   '/api/relay/messages': typeof ApiRelayMessagesRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
@@ -1353,6 +1389,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/prompts'
     | '/reserve'
     | '/settings'
     | '/skills'
@@ -1395,6 +1432,7 @@ export interface FileRouteTypes {
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/prompts'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1470,6 +1508,8 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/prompts/$id'
+    | '/api/prompts/assign'
     | '/api/relay/messages'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
@@ -1501,6 +1541,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/prompts'
     | '/reserve'
     | '/skills'
     | '/swarm'
@@ -1542,6 +1583,7 @@ export interface FileRouteTypes {
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/prompts'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1617,6 +1659,8 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/prompts/$id'
+    | '/api/prompts/assign'
     | '/api/relay/messages'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
@@ -1648,6 +1692,7 @@ export interface FileRouteTypes {
     | '/operations'
     | '/playground'
     | '/profiles'
+    | '/prompts'
     | '/reserve'
     | '/settings'
     | '/skills'
@@ -1690,6 +1735,7 @@ export interface FileRouteTypes {
     | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/prompts'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1765,6 +1811,8 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/prompts/$id'
+    | '/api/prompts/assign'
     | '/api/relay/messages'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
@@ -1797,6 +1845,7 @@ export interface RootRouteChildren {
   OperationsRoute: typeof OperationsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
+  PromptsRoute: typeof PromptsRoute
   ReserveRoute: typeof ReserveRouteWithChildren
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
@@ -1839,6 +1888,7 @@ export interface RootRouteChildren {
   ApiPlaygroundNpcRoute: typeof ApiPlaygroundNpcRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
+  ApiPromptsRoute: typeof ApiPromptsRouteWithChildren
   ApiProviderUsageRoute: typeof ApiProviderUsageRoute
   ApiSendRoute: typeof ApiSendRoute
   ApiSendStreamRoute: typeof ApiSendStreamRoute
@@ -1973,6 +2023,13 @@ declare module '@tanstack/react-router' {
       path: '/reserve'
       fullPath: '/reserve'
       preLoaderRoute: typeof ReserveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prompts': {
+      id: '/prompts'
+      path: '/prompts'
+      fullPath: '/prompts'
+      preLoaderRoute: typeof PromptsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profiles': {
@@ -2360,6 +2417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiProviderUsageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/prompts': {
+      id: '/api/prompts'
+      path: '/api/prompts'
+      fullPath: '/api/prompts'
+      preLoaderRoute: typeof ApiPromptsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/preview-file': {
       id: '/api/preview-file'
       path: '/api/preview-file'
@@ -2653,6 +2717,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/relay/messages'
       preLoaderRoute: typeof ApiRelayMessagesRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/prompts/assign': {
+      id: '/api/prompts/assign'
+      path: '/assign'
+      fullPath: '/api/prompts/assign'
+      preLoaderRoute: typeof ApiPromptsAssignRouteImport
+      parentRoute: typeof ApiPromptsRoute
+    }
+    '/api/prompts/$id': {
+      id: '/api/prompts/$id'
+      path: '/$id'
+      fullPath: '/api/prompts/$id'
+      preLoaderRoute: typeof ApiPromptsIdRouteImport
+      parentRoute: typeof ApiPromptsRoute
     }
     '/api/profiles/update': {
       id: '/api/profiles/update'
@@ -3055,6 +3133,20 @@ const ApiMemoryRouteWithChildren = ApiMemoryRoute._addFileChildren(
   ApiMemoryRouteChildren,
 )
 
+interface ApiPromptsRouteChildren {
+  ApiPromptsIdRoute: typeof ApiPromptsIdRoute
+  ApiPromptsAssignRoute: typeof ApiPromptsAssignRoute
+}
+
+const ApiPromptsRouteChildren: ApiPromptsRouteChildren = {
+  ApiPromptsIdRoute: ApiPromptsIdRoute,
+  ApiPromptsAssignRoute: ApiPromptsAssignRoute,
+}
+
+const ApiPromptsRouteWithChildren = ApiPromptsRoute._addFileChildren(
+  ApiPromptsRouteChildren,
+)
+
 interface ApiSessionsRouteChildren {
   ApiSessionsSendRoute: typeof ApiSessionsSendRoute
   ApiSessionsSessionKeyActiveRunRoute: typeof ApiSessionsSessionKeyActiveRunRoute
@@ -3131,6 +3223,7 @@ const rootRouteChildren: RootRouteChildren = {
   OperationsRoute: OperationsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
+  PromptsRoute: PromptsRoute,
   ReserveRoute: ReserveRouteWithChildren,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
@@ -3173,6 +3266,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPlaygroundNpcRoute: ApiPlaygroundNpcRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
+  ApiPromptsRoute: ApiPromptsRouteWithChildren,
   ApiProviderUsageRoute: ApiProviderUsageRoute,
   ApiSendRoute: ApiSendRoute,
   ApiSendStreamRoute: ApiSendStreamRoute,

@@ -7,8 +7,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { json } from '@tanstack/react-start'
 import { existsSync } from 'node:fs'
-import { isAuthenticatedWithCFAccess } from '../../../../server/auth-middleware'
-import { resolveTenantFromRequest } from '../../../../lib/auth/tenants'
+import { isAuthenticatedWithCFAccess } from '../../../server/auth-middleware'
+import { resolveTenantFromRequest } from '../../../lib/auth/tenants'
 
 const DB_PATH =
   process.env.PROMPTS_DB_PATH ??

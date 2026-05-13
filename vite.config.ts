@@ -458,6 +458,7 @@ const config = defineConfig(({ mode, command }) => {
         'playwright-core',
         'playwright-extra',
         'puppeteer-extra-plugin-stealth',
+        'better-sqlite3',
       ],
     },
     optimizeDeps: {
@@ -466,6 +467,7 @@ const config = defineConfig(({ mode, command }) => {
         'playwright-core',
         'playwright-extra',
         'puppeteer-extra-plugin-stealth',
+        'better-sqlite3',
       ],
     },
     server: {

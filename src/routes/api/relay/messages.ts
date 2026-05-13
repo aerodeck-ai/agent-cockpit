@@ -46,7 +46,8 @@ export const Route = createFileRoute('/api/relay/messages')({
         try {
           // Dynamic import — node:sqlite is only available in Node 22+
           // and may not be available in all environments.
-          const Database = (await import("better-sqlite3")).default
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const Database = require("better-sqlite3") as typeof import("better-sqlite3")
           const db = new Database(RELAY_DB_PATH, { readonly: true, fileMustExist: true })
 
           // Get last 10 warroom sessions with their reply counts
