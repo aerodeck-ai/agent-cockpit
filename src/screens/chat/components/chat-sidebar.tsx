@@ -24,6 +24,7 @@ import {
   Sun02Icon,
   UserGroupIcon,
   UserMultipleIcon,
+  Mic01Icon,
   Activity01Icon,
   KnightShieldIcon,
   CpuIcon,
@@ -592,6 +593,7 @@ function ChatSidebarComponent({
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
+  const isVoiceActive = pathname === '/voice'
   const isPromptsActive = pathname === '/prompts'
   const isFlowActive = pathname === '/flow'
   const isModelsActive = pathname === '/models'
@@ -852,6 +854,13 @@ function ChatSidebarComponent({
       icon: UserGroupIcon,
       label: 'Swarm',
       active: isSwarmActive,
+    },
+    {
+      kind: 'link',
+      to: '/voice',
+      icon: Mic01Icon,
+      label: 'Voice',
+      active: isVoiceActive,
     },
     {
       kind: 'link',

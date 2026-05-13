@@ -2,6 +2,7 @@ import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   BrainIcon,
+  Mic01Icon,
   Building01Icon,
   Chat01Icon,
   Clock01Icon,
@@ -95,6 +96,13 @@ export const MOBILE_NAV_TABS: Array<TabItem> = [
     icon: BrainIcon,
     to: '/memory',
     match: (p) => p.startsWith('/memory'),
+  },
+  {
+    id: 'voice',
+    label: 'Voice',
+    icon: Mic01Icon,
+    to: '/voice',
+    match: (p) => p === '/voice',
   },
   {
     id: 'skills',
