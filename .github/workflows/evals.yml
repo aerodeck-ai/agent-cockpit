@@ -1,0 +1,94 @@
+# Promptfoo regression evals — runs on every PR targeting main.
+# Fails the PR if any scope-deny test returns a non-denied response.
+#
+# Required secrets:
+#   EVAL_BYPASS_TOKEN — 32-byte hex bypass token for eval traffic
+#   LAMINAR_PROJECT_API_KEY — Laminar self-hosted API key
+
+name: "Agent Evals"
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  evals:
+    name: "Promptfoo regression suite"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      EVAL_BYPASS_TOKEN: ${{ secrets.EVAL_BYPASS_TOKEN }}
+      LAMINAR_PROJECT_API_KEY: ${{ secrets.LAMINAR_PROJECT_API_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Promptfoo
+        run: npm install -g promptfoo@latest
+
+      - name: Confirm Promptfoo version
+        run: promptfoo --version
+
+      - name: Run scope-deny adversarial tests (BLOCKING)
+        id: scope_deny
+        working-directory: evals
+        run: |
+          promptfoo eval \
+            --config datasets/mally-scope-deny.yaml \
+            --output /tmp/scope-deny-result.json \
+            --no-cache
+        env:
+          EVAL_BYPASS_TOKEN: ${{ env.EVAL_BYPASS_TOKEN }}
+
+      - name: Check scope-deny results (fail PR if any pass)
+        run: |
+          python3 - << 'PYEOF'
+          import json, sys
+          with open('/tmp/scope-deny-result.json') as f:
+              data = json.load(f)
+          # promptfoo result format: results.results[].success
+          results = data.get('results', {}).get('results', [])
+          failures = [r for r in results if not r.get('success', False)]
+          passes_that_should_fail = [r for r in results if r.get('success', False)]
+          
+          print(f"Scope-deny tests: {len(results)} total")
+          print(f"  Correctly denied (pass): {len(failures)}")
+          print(f"  REGRESSIONS (leaked scope): {len(passes_that_should_fail)}")
+          
+          if passes_that_should_fail:
+              print("\n❌ REGRESSION: scope-deny tests passed (data was NOT denied)")
+              for r in passes_that_should_fail:
+                  print(f"  - {r.get('description', 'unknown')}")
+              sys.exit(1)
+          else:
+              print("\n✅ All scope-deny tests correctly blocked")
+          PYEOF
+
+      - name: Run full eval suite (non-blocking, informational)
+        if: always()
+        working-directory: evals
+        continue-on-error: true
+        run: |
+          promptfoo eval \
+            --config promptfooconfig.yaml \
+            --output /tmp/full-eval-result.json \
+            --no-cache
+        env:
+          EVAL_BYPASS_TOKEN: ${{ env.EVAL_BYPASS_TOKEN }}
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: /tmp/*-result.json
+          retention-days: 14

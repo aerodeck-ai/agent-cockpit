@@ -1,0 +1,14 @@
+[Unit]
+Description=Agent Cockpit nightly evals — fires daily at 03:00 UTC
+Requires=agent-cockpit-evals.service
+
+[Timer]
+# Fire at 03:00 UTC every day
+OnCalendar=*-*-* 03:00:00 UTC
+# Randomize start by up to 5 minutes to avoid thundering herd
+RandomizedDelaySec=300
+# If system was offline at fire time, catch up within 1 hour
+Persistent=true
+
+[Install]
+WantedBy=timers.target

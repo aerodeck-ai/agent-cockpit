@@ -27,6 +27,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as FilesRouteImport } from './routes/files'
+import { Route as EvalsRouteImport } from './routes/evals'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
@@ -91,6 +92,7 @@ import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-statu
 import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
+import { Route as ApiEvalsRouteImport } from './routes/api/evals'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
@@ -244,6 +246,11 @@ const HermesWorldRoute = HermesWorldRouteImport.update({
 const FilesRoute = FilesRouteImport.update({
   id: '/files',
   path: '/files',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvalsRoute = EvalsRouteImport.update({
+  id: '/evals',
+  path: '/evals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EarlyAccessRoute = EarlyAccessRouteImport.update({
@@ -565,6 +572,11 @@ const ApiFilesRoute = ApiFilesRouteImport.update({
 const ApiEventsRoute = ApiEventsRouteImport.update({
   id: '/api/events',
   path: '/api/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEvalsRoute = ApiEvalsRouteImport.update({
+  id: '/api/evals',
+  path: '/api/evals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCrewStatusRoute = ApiCrewStatusRouteImport.update({
@@ -899,6 +911,7 @@ export interface FileRoutesByFullPath {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -932,6 +945,7 @@ export interface FileRoutesByFullPath {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/evals': typeof ApiEvalsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
@@ -1047,6 +1061,7 @@ export interface FileRoutesByTo {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -1079,6 +1094,7 @@ export interface FileRoutesByTo {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/evals': typeof ApiEvalsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
@@ -1195,6 +1211,7 @@ export interface FileRoutesById {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
@@ -1228,6 +1245,7 @@ export interface FileRoutesById {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/evals': typeof ApiEvalsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
@@ -1345,6 +1363,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/evals'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1378,6 +1397,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/evals'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-reprobe'
@@ -1493,6 +1513,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/evals'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1525,6 +1546,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/evals'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-reprobe'
@@ -1640,6 +1662,7 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/evals'
     | '/files'
     | '/hermes-world'
     | '/jobs'
@@ -1673,6 +1696,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/evals'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-reprobe'
@@ -1789,6 +1813,7 @@ export interface RootRouteChildren {
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
+  EvalsRoute: typeof EvalsRoute
   FilesRoute: typeof FilesRoute
   HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
@@ -1822,6 +1847,7 @@ export interface RootRouteChildren {
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
+  ApiEvalsRoute: typeof ApiEvalsRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
@@ -2029,6 +2055,13 @@ declare module '@tanstack/react-router' {
       path: '/files'
       fullPath: '/files'
       preLoaderRoute: typeof FilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evals': {
+      id: '/evals'
+      path: '/evals'
+      fullPath: '/evals'
+      preLoaderRoute: typeof EvalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/early-access': {
@@ -2477,6 +2510,13 @@ declare module '@tanstack/react-router' {
       path: '/api/events'
       fullPath: '/api/events'
       preLoaderRoute: typeof ApiEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/evals': {
+      id: '/api/evals'
+      path: '/api/evals'
+      fullPath: '/api/evals'
+      preLoaderRoute: typeof ApiEvalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/crew-status': {
@@ -3123,6 +3163,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
+  EvalsRoute: EvalsRoute,
   FilesRoute: FilesRoute,
   HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
@@ -3156,6 +3197,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
   ApiCrewStatusRoute: ApiCrewStatusRoute,
+  ApiEvalsRoute: ApiEvalsRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
