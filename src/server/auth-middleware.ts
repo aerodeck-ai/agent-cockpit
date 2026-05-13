@@ -258,6 +258,14 @@ export function isAuthenticated(request: Request): boolean {
     return true
   }
 
+  // CF Access pre-authentication (multi-user mode): trust the email header +
+  // tenant allowlist. Allows every API route that previously only checked
+  // password sessions to work for users coming through CF Access.
+  if (process.env.TRUST_CF_ACCESS === '1') {
+    const email = getCFAccessEmail(request)
+    if (email && resolveTenantFromEmail(email) !== null) return true
+  }
+
   // Check for valid session token
   const cookieHeader = request.headers.get('cookie')
   const token = getSessionTokenFromCookie(cookieHeader)
