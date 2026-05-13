@@ -44,6 +44,7 @@ import { useMobileKeyboard } from '@/hooks/use-mobile-keyboard'
 import { SystemMetricsFooter } from '@/components/system-metrics-footer'
 import { CommandPalette } from '@/components/command-palette'
 import { useSettings } from '@/hooks/use-settings'
+import { LeftNav } from '@/components/shell/LeftNav'
 // ActivityTicker moved to dashboard-only (too noisy for global header)
 
 const TerminalWorkspace = lazy(() =>
@@ -351,12 +352,25 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
         <div
           className={cn(
             'grid h-full grid-cols-1 grid-rows-[minmax(0,1fr)] overflow-hidden',
-            hideChatSidebar || isChromeFreeSurface ? 'md:grid-cols-1' : 'md:grid-cols-[auto_1fr]',
+            isChromeFreeSurface
+              ? 'md:grid-cols-1'
+              // LeftNav always + ChatSidebar only on chat routes (unless focus mode)
+              : !isMobile && isOnChatRoute && !hideChatSidebar
+                ? 'md:grid-cols-[auto_auto_1fr]'
+                : !isMobile
+                  ? 'md:grid-cols-[auto_1fr]'
+                  : 'md:grid-cols-1',
           )}
         >
           {/* Activity ticker bar */}
-          {/* Persistent sidebar */}
-          {!isChromeFreeSurface && !isMobile && !hideChatSidebar && (
+          {/* D3 LeftNav — slim 5-entry cockpit strip, always visible on desktop */}
+          {!isChromeFreeSurface && !isMobile && (
+            <div className="relative z-30 h-full">
+              <LeftNav />
+            </div>
+          )}
+          {/* Persistent chat sessions sidebar (hidden on non-chat routes when collapsed) */}
+          {!isChromeFreeSurface && !isMobile && !hideChatSidebar && isOnChatRoute && (
             <div className="relative z-30">
               <ChatSidebar
                 sessions={sessions}
