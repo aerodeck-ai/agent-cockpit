@@ -7,13 +7,15 @@ import { InstallConfirmationDialog } from './components/install-confirmation-dia
 import { useMcpCapabilityMode } from './hooks/use-mcp-capability-mode'
 import { useMcpServers } from './hooks/use-mcp-servers'
 import { useMcpHub } from './hooks/use-mcp-hub'
+import { useMcpHistory } from './hooks/use-mcp-history'
 import { SourcesManagerDialog } from './components/sources-manager-dialog'
 import type { HubMcpEntry } from './hooks/use-mcp-hub'
+import type { McpInvocation, McpInvocationStatus } from './hooks/use-mcp-history'
 import type { McpClientInput, McpServer } from '@/types/mcp'
 import { Tabs, TabsList, TabsPanel, TabsTab } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 
-type Tab = 'installed' | 'marketplace'
+type Tab = 'installed' | 'marketplace' | 'history'
 
 const TOOLBAR_FIELD =
   'h-9 w-full min-w-0 rounded-lg border border-primary-200 bg-primary-100/60 px-3 text-sm text-ink outline-none transition-colors focus:border-primary sm:min-w-[220px]'
@@ -41,7 +43,7 @@ export function McpScreen() {
   const hubQuery = useMcpHub(tab === 'marketplace' ? search : '')
 
   function handleTabChange(next: string | number | null) {
-    if (next === 'installed' || next === 'marketplace') {
+    if (next === 'installed' || next === 'marketplace' || next === 'history') {
       setTab(next)
       setSearch('')
     }
@@ -50,7 +52,9 @@ export function McpScreen() {
   const totalLabel =
     tab === 'marketplace'
       ? `${(hubQuery.data?.total ?? 0).toLocaleString()} results`
-      : `${servers.length.toLocaleString()} servers`
+      : tab === 'history'
+        ? 'invocation history'
+        : `${servers.length.toLocaleString()} servers`
 
   return (
     <div className="min-h-full overflow-y-auto bg-surface text-ink">
@@ -104,18 +108,23 @@ export function McpScreen() {
                 <TabsTab value="marketplace" className="min-w-[120px]">
                   Marketplace
                 </TabsTab>
+                <TabsTab value="history" className="min-w-[90px]">
+                  History
+                </TabsTab>
               </TabsList>
 
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={
-                  tab === 'marketplace'
-                    ? 'Search MCP catalog…'
-                    : 'Search servers by name'
-                }
-                className={`${TOOLBAR_FIELD} flex-1`}
-              />
+              {tab !== 'history' ? (
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder={
+                    tab === 'marketplace'
+                      ? 'Search MCP catalog…'
+                      : 'Search servers by name'
+                  }
+                  className={`${TOOLBAR_FIELD} flex-1`}
+                />
+              ) : null}
 
               {tab === 'installed' ? (
                 <select
@@ -205,6 +214,9 @@ export function McpScreen() {
                   </Button>
                 </div>
               ) : null}
+            </TabsPanel>
+            <TabsPanel value="history" className="pt-3">
+              <HistoryPanel />
             </TabsPanel>
           </Tabs>
         </section>
@@ -443,6 +455,124 @@ function MarketplaceGrid({
           )
         })}
       </AnimatePresence>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// HistoryPanel — MCP tool invocation history (Phase 4 hardening)
+// ---------------------------------------------------------------------------
+
+const STATUS_ROW: Record<McpInvocationStatus | 'all', string> = {
+  all: '',
+  ok: 'text-emerald-700',
+  error: 'text-red-700',
+}
+
+function formatRelative(ts: number): string {
+  const diffMs = Date.now() - ts
+  const secs = Math.floor(diffMs / 1000)
+  if (secs < 60) return `${secs}s ago`
+  const mins = Math.floor(secs / 60)
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  return new Date(ts).toLocaleDateString()
+}
+
+function HistoryPanel() {
+  const [serverFilter, setServerFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState<McpInvocationStatus | 'all'>('all')
+
+  const query = useMcpHistory({
+    server: serverFilter || undefined,
+    status: statusFilter === 'all' ? undefined : statusFilter,
+    limit: 100,
+  })
+
+  const invocations = query.data?.invocations ?? []
+
+  return (
+    <div className="space-y-3">
+      {query.data?.note ? (
+        <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-800 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-200">
+          {query.data.note}
+        </p>
+      ) : null}
+
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          value={serverFilter}
+          onChange={(e) => setServerFilter(e.target.value)}
+          placeholder="Filter by server…"
+          className="h-8 min-w-[180px] rounded-lg border border-primary-200 bg-primary-100/60 px-3 text-xs text-ink outline-none transition-colors focus:border-primary"
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) =>
+            setStatusFilter(e.target.value as McpInvocationStatus | 'all')
+          }
+          className="h-8 rounded-lg border border-primary-200 bg-primary-100/60 px-3 text-xs text-ink outline-none"
+        >
+          <option value="all">All status</option>
+          <option value="ok">OK</option>
+          <option value="error">Error</option>
+        </select>
+        <span className="ml-auto text-xs text-primary-500 tabular-nums">
+          {invocations.length} invocations
+        </span>
+      </div>
+
+      {query.isLoading ? (
+        <div className="rounded-xl border border-dashed border-primary-200 bg-primary-50/80 px-4 py-10 text-center text-xs text-primary-500">
+          Loading…
+        </div>
+      ) : query.isError ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-6 text-center text-xs text-red-700 dark:border-red-700 dark:bg-red-950/40 dark:text-red-200">
+          Failed to load history: {query.error instanceof Error ? query.error.message : 'Unknown error'}
+        </div>
+      ) : invocations.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-primary-200 bg-primary-50/80 px-4 py-10 text-center">
+          <p className="text-sm font-medium text-ink">No invocations recorded yet</p>
+          <p className="mt-1 text-xs text-primary-500">
+            Use the Test button on a server card to record the first invocation.
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-primary-200">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-primary-200 bg-primary-50/80 text-left text-primary-500">
+                <th className="px-3 py-2 font-medium">Server</th>
+                <th className="px-3 py-2 font-medium">Tool</th>
+                <th className="px-3 py-2 font-medium">Status</th>
+                <th className="px-3 py-2 font-medium tabular-nums">Latency</th>
+                <th className="px-3 py-2 font-medium">When</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invocations.map((inv: McpInvocation) => (
+                <tr
+                  key={inv.id}
+                  className="border-b border-primary-200/60 last:border-0 hover:bg-primary-50/40"
+                >
+                  <td className="px-3 py-2 font-medium text-ink">{inv.server}</td>
+                  <td className="px-3 py-2 font-mono text-primary-600">{inv.tool}</td>
+                  <td className={`px-3 py-2 font-medium ${STATUS_ROW[inv.status]}`}>
+                    {inv.status}
+                  </td>
+                  <td className="px-3 py-2 tabular-nums text-primary-500">
+                    {inv.latencyMs != null ? `${inv.latencyMs}ms` : '—'}
+                  </td>
+                  <td className="px-3 py-2 text-primary-500">
+                    {formatRelative(inv.calledAt)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }
