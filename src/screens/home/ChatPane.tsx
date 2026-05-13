@@ -133,7 +133,12 @@ export function ChatPane() {
             activeFriendlyId={activeFriendlyId}
             isNewChat={isNewChat}
             forcedSessionKey={forcedSessionKey}
-            embedded={true}
+            // FIX 2026-05-13: embedded=false so ChatScreen navigates to
+            // /chat/$sessionKey on first send. Embedded mode suppressed
+            // the navigate, leaving isNewChat=true forever, which made
+            // useRealtimeChatHistory read streamingState['new'] while
+            // chunks dispatched under streamingState[resolved-uuid].
+            embedded={false}
             onSessionResolved={
               isNewChat || activeFriendlyId === 'main'
                 ? handleSessionResolved
