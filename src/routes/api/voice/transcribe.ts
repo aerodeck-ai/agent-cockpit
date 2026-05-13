@@ -11,8 +11,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../../server/auth-middleware'
 
-const STT_PRIMARY   = 'http://127.0.0.1:8770'
-const STT_FALLBACK  = 'http://127.0.0.1:8771'
+// Mac MLX Whisper via Tailscale (canonical big-model host per
+// feedback_model_allocation_discipline.md). Override with env vars for local dev.
+const STT_PRIMARY  = process.env.VOICE_STT_PRIMARY  ?? 'http://100.89.244.20:8770'
+const STT_FALLBACK = process.env.VOICE_STT_FALLBACK ?? 'http://100.89.244.20:8771'
 
 async function pickSttBase(): Promise<string> {
   try {
