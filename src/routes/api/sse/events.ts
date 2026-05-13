@@ -3,14 +3,20 @@
  *
  * Server-Sent Events stream of HookEvent objects.
  *
- * Primary source: Laminar OTEL ingestion at Oracle :8001
- *   → GET http://localhost:8001/api/hook-events/stream (or equivalent)
+ * Source: tail ~/.claude/logs/events-{YYYY-MM-DD}.jsonl
+ *   (written by ~/.claude/hooks/claude-event-emitter.py on every CC hook fire)
  *
- * Fallback: tail ~/.claude/logs/events-{YYYY-MM-DD}.jsonl
- *   (written by the agent A4 JSONL emitter hook)
+ * Laminar OTEL context (track 1 discovery, 2026-05-13):
+ *   Laminar self-hosted exposes two servers:
+ *   - HTTP on :8000  → POST /v1/traces (protobuf ExportTraceServiceRequest)
+ *   - gRPC on :8001  → TraceServiceServer / LogsServiceServer (proto, not HTTP)
+ *   There is NO HTTP SSE stream for hook events in Laminar's app-server.
+ *   The SSE realtime endpoint (/api/v1/projects/{id}/sse) is for Laminar's own
+ *   frontend signals, not for Claude Code hook payloads.
+ *   → LAMINAR_SSE_URL must be unset (or point to a custom bridge) for this to work.
  *
- * If both sources are unavailable, the stream stays open and sends only
- * keepalives — clients reconnect via EventSource auto-retry.
+ * If LAMINAR_SSE_URL is set, tries that first; falls back to JSONL tail.
+ * If both sources are unavailable, the stream stays open and sends keepalives.
  *
  * Event types emitted:
  *   event: connected  data: { ts: number }
@@ -22,8 +28,8 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { createReadStream, existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
+import { createReadStream, existsSync, watch } from 'node:fs'
+import { readdir, stat, mkdir } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { createInterface } from 'node:readline'
@@ -31,8 +37,9 @@ import { isAuthenticatedWithCFAccess } from '../../../server/auth-middleware'
 
 // ── Config ───────────────────────────────────────────────────────────────────
 
-const LAMINAR_BASE =
-  process.env.LAMINAR_SSE_URL ?? 'http://localhost:8001'
+// Only attempt Laminar proxy if LAMINAR_SSE_URL is explicitly set.
+// Laminar :8001 is gRPC-only — no HTTP SSE. Default: empty = skip Laminar.
+const LAMINAR_BASE = process.env.LAMINAR_SSE_URL ?? ''
 
 const JSONL_LOG_DIR =
   process.env.CLAUDE_LOGS_DIR ??
@@ -71,8 +78,16 @@ function todayJsonlPath(): string {
 
 /**
  * Try to find the most recent JSONL log file.
+ * Also ensures the log directory exists (emitter may not have run yet).
  */
 async function findLatestJsonl(): Promise<string | null> {
+  // Ensure log dir exists so fs.watch can target it even before first event
+  try {
+    await mkdir(JSONL_LOG_DIR, { recursive: true })
+  } catch {
+    // ignore
+  }
+
   // Check today's file first
   const today = todayJsonlPath()
   if (existsSync(today)) return today
@@ -152,8 +167,50 @@ async function tryLaminarProxy(
 }
 
 /**
- * Tail a JSONL file from the end and emit new lines as events.
- * Reads the last N lines immediately, then polls for new lines.
+ * Emit JSONL lines from startOffset to current EOF, returning new EOF.
+ */
+async function readNewLines(
+  controller: ReadableStreamDefaultController,
+  encoder: TextEncoder,
+  filePath: string,
+  startOffset: number,
+  tenant: string,
+): Promise<number> {
+  try {
+    const s = await stat(filePath)
+    if (s.size <= startOffset) return startOffset
+
+    const stream = createReadStream(filePath, {
+      encoding: 'utf8',
+      start: startOffset,
+      end: s.size - 1,
+    })
+    const rl = createInterface({ input: stream, crlfDelay: Infinity })
+    for await (const line of rl) {
+      if (!line.trim()) continue
+      try {
+        const evt = JSON.parse(line) as HookEvent
+        if (!matchesTenant(evt, tenant)) continue
+        controller.enqueue(
+          encoder.encode(`event: hook_event\ndata: ${JSON.stringify(evt)}\n\n`),
+        )
+      } catch {
+        // skip malformed lines
+      }
+    }
+    return s.size
+  } catch {
+    return startOffset
+  }
+}
+
+/**
+ * Tail a JSONL file from the end and emit new lines as SSE events.
+ *
+ * Strategy:
+ *   1. Backfill the last 50 lines immediately so the tab isn't blank.
+ *   2. Use fs.watch for instant change notification (sub-100ms latency).
+ *   3. Fall back to a 2s poll if fs.watch is unavailable (networked FS).
  */
 async function tailJsonl(
   controller: ReadableStreamDefaultController,
@@ -162,7 +219,7 @@ async function tailJsonl(
   tenant: string,
   signal: AbortSignal,
 ): Promise<void> {
-  // Emit recent events from the file first
+  // ── 1. Backfill last 50 lines ─────────────────────────────────────────────
   try {
     const rl = createInterface({
       input: createReadStream(filePath, { encoding: 'utf8' }),
@@ -172,78 +229,80 @@ async function tailJsonl(
     for await (const line of rl) {
       if (line.trim()) lines.push(line)
     }
-    // Emit last 50 lines as backfill
-    const backfill = lines.slice(-50)
-    for (const line of backfill) {
+    for (const line of lines.slice(-50)) {
       try {
         const evt = JSON.parse(line) as HookEvent
         if (!matchesTenant(evt, tenant)) continue
         controller.enqueue(
-          encoder.encode(
-            `event: hook_event\ndata: ${JSON.stringify(evt)}\n\n`,
-          ),
+          encoder.encode(`event: hook_event\ndata: ${JSON.stringify(evt)}\n\n`),
         )
       } catch {
         // skip malformed
       }
     }
   } catch {
-    // File unreadable
+    // File not yet readable — that's fine, watcher will catch first write
   }
 
-  // Poll for new content every 2s by tracking file size
+  // ── 2. Track current file size so we only read new bytes ─────────────────
   let lastSize = 0
   try {
-    const { stat } = await import('node:fs/promises')
     const s = await stat(filePath)
     lastSize = s.size
   } catch {
-    return
+    lastSize = 0
   }
 
-  const pollInterval = setInterval(async () => {
-    if (signal.aborted) {
-      clearInterval(pollInterval)
-      return
-    }
-    try {
-      const { stat } = await import('node:fs/promises')
-      const s = await stat(filePath)
-      if (s.size <= lastSize) return
+  // ── 3. Watch for changes ──────────────────────────────────────────────────
+  let watcher: ReturnType<typeof watch> | null = null
+  let pollFallback: ReturnType<typeof setInterval> | null = null
 
-      const { createReadStream: crs } = await import('node:fs')
-      const stream = crs(filePath, {
-        encoding: 'utf8',
-        start: lastSize,
-        end: s.size,
-      })
-      lastSize = s.size
+  async function onFileChange() {
+    if (signal.aborted) return
+    lastSize = await readNewLines(controller, encoder, filePath, lastSize, tenant)
+  }
 
-      const rl = createInterface({ input: stream, crlfDelay: Infinity })
-      for await (const line of rl) {
-        if (!line.trim()) continue
-        try {
-          const evt = JSON.parse(line) as HookEvent
-          if (!matchesTenant(evt, tenant)) continue
-          controller.enqueue(
-            encoder.encode(
-              `event: hook_event\ndata: ${JSON.stringify(evt)}\n\n`,
-            ),
-          )
-        } catch {
-          // skip
+  try {
+    watcher = watch(filePath, async (event) => {
+      if (event === 'change') await onFileChange()
+    })
+    // Also watch the dir so we notice when today's file is created for the first time
+    const dirWatcher = watch(JSONL_LOG_DIR, async (_event, filename) => {
+      if (filename && filename.startsWith('events-') && filename.endsWith('.jsonl')) {
+        // A new day file appeared — switch to it
+        const newPath = join(JSONL_LOG_DIR, filename)
+        if (newPath !== filePath && existsSync(newPath)) {
+          lastSize = 0
+          lastSize = await readNewLines(controller, encoder, newPath, 0, tenant)
         }
       }
-    } catch {
-      // file rotated or gone — stop polling
-      clearInterval(pollInterval)
-    }
-  }, 2_000)
+    })
+    signal.addEventListener(
+      'abort',
+      () => {
+        watcher?.close()
+        dirWatcher.close()
+      },
+      { once: true },
+    )
+  } catch {
+    // fs.watch unavailable (e.g. networked FS) — fall back to 2s poll
+    pollFallback = setInterval(async () => {
+      if (signal.aborted) {
+        if (pollFallback) clearInterval(pollFallback)
+        return
+      }
+      lastSize = await readNewLines(controller, encoder, filePath, lastSize, tenant)
+    }, 2_000)
 
-  // Clean up on abort
-  signal.addEventListener('abort', () => clearInterval(pollInterval), {
-    once: true,
-  })
+    signal.addEventListener(
+      'abort',
+      () => {
+        if (pollFallback) clearInterval(pollFallback)
+      },
+      { once: true },
+    )
+  }
 }
 
 // ── Route ─────────────────────────────────────────────────────────────────────
@@ -276,19 +335,23 @@ export const Route = createFileRoute('/api/sse/events')({
               ),
             )
 
-            // 2. Try Laminar first
-            const laminarCleanup = await tryLaminarProxy(
-              controller,
-              encoder,
-              tenant,
-              abortController.signal,
-            )
+            // 2. Try Laminar only if LAMINAR_SSE_URL is explicitly set.
+            //    Default is empty — Laminar :8001 is gRPC-only, no HTTP SSE.
+            const laminarCleanup = LAMINAR_BASE
+              ? await tryLaminarProxy(
+                  controller,
+                  encoder,
+                  tenant,
+                  abortController.signal,
+                )
+              : null
 
             if (!laminarCleanup) {
-              // 3. Laminar unreachable — fall back to JSONL tail
+              // 3. JSONL tail — primary source when Laminar is not configured.
+              //    findLatestJsonl also ensures the log dir exists.
               const jsonlPath = await findLatestJsonl()
               if (jsonlPath) {
-                // Don't await — runs in background via polling
+                // Don't await — runs in background via fs.watch
                 tailJsonl(
                   controller,
                   encoder,
@@ -296,6 +359,36 @@ export const Route = createFileRoute('/api/sse/events')({
                   tenant,
                   abortController.signal,
                 ).catch(() => {})
+              } else {
+                // Log dir exists but no file yet — watch the dir for first create
+                ;(async () => {
+                  try {
+                    const dirWatcher = watch(JSONL_LOG_DIR, async (_evt, filename) => {
+                      if (
+                        filename &&
+                        filename.startsWith('events-') &&
+                        filename.endsWith('.jsonl')
+                      ) {
+                        dirWatcher.close()
+                        const p = join(JSONL_LOG_DIR, filename)
+                        await tailJsonl(
+                          controller,
+                          encoder,
+                          p,
+                          tenant,
+                          abortController.signal,
+                        )
+                      }
+                    })
+                    abortController.signal.addEventListener(
+                      'abort',
+                      () => dirWatcher.close(),
+                      { once: true },
+                    )
+                  } catch {
+                    // fs.watch not available — nothing to do, keepalives keep stream alive
+                  }
+                })().catch(() => {})
               }
             }
 
