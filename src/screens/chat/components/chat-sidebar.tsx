@@ -24,6 +24,7 @@ import {
   Sun02Icon,
   UserGroupIcon,
   UserMultipleIcon,
+  Activity01Icon,
   KnightShieldIcon,
   CpuIcon,
 } from '@hugeicons/core-free-icons'
@@ -590,6 +591,7 @@ function ChatSidebarComponent({
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
+  const isFlowActive = pathname === '/flow'
   const isModelsActive = pathname === '/models'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
@@ -848,6 +850,13 @@ function ChatSidebarComponent({
       icon: UserGroupIcon,
       label: 'Swarm',
       active: isSwarmActive,
+    },
+    {
+      kind: 'link',
+      to: '/flow',
+      icon: Activity01Icon,
+      label: 'Flow',
+      active: isFlowActive,
     },
 
   ]
