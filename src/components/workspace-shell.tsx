@@ -106,7 +106,8 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (path.startsWith('/mcp')) return 8
     if (path.startsWith('/profiles')) return 9
     if (path.startsWith('/prompts')) return 10
-    if (path.startsWith('/settings')) return 11
+    if (path.startsWith('/evals')) return 11
+    if (path.startsWith('/settings')) return 12
     return -1
   }, [])
 
@@ -182,6 +183,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
     if (pathname.startsWith('/profiles')) return 'Profiles'
     if (pathname.startsWith('/prompts')) return 'Prompts'
     if (pathname.startsWith('/settings')) return 'Settings'
+    if (pathname.startsWith('/evals')) return 'Evals'
     if (pathname.startsWith('/debug')) return 'Debug'
     if (pathname.startsWith('/activity')) return 'Activity'
     return null
@@ -191,11 +193,9 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const activeFriendlyId = chatMatch ? chatMatch[1] : 'main'
   const isOnChatRoute = Boolean(chatMatch) || pathname === '/new'
   const isOnTerminalRoute = pathname.startsWith('/terminal')
-  const isOnPlaygroundRoute = pathname === '/playground' || pathname.startsWith('/playground/')
-  const isOnHermesWorldLandingRoute = pathname === '/hermes-world' || pathname.startsWith('/hermes-world/') || pathname === '/world' || pathname.startsWith('/world/')
   const isEmbeddedSurface =
     search?.embed === '1' || search?.embed === 'true' || search?.mode === 'embed'
-  const isChromeFreeSurface = isEmbeddedSurface || isOnHermesWorldLandingRoute
+  const isChromeFreeSurface = isEmbeddedSurface
   const hideChatSidebar = isOnChatRoute && chatFocusMode
   const showDesktopSidebarBackdrop =
     !isChromeFreeSurface && !isMobile && !isOnChatRoute && !sidebarCollapsed
@@ -292,9 +292,6 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
       window.removeEventListener(SIDEBAR_TOGGLE_EVENT, handleToggleEvent)
   }, [isMobile, setSidebarCollapsed, toggleSidebar])
 
-  // Public/launch surfaces should behave like normal web pages, not app-shell panes.
-  // This keeps /hermes-world and /world scrollable at the document level and avoids
-  // local-only workspace chrome for X/GitHub traffic.
   if (isChromeFreeSurface) {
     return <>{children}</>
   }
@@ -443,11 +440,11 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
           </main>
 
           {/* Chat panel — visible on non-chat routes (but not in HermesWorld, which has its own in-game chat) */}
-          {!isOnChatRoute && !isOnPlaygroundRoute && !isChromeFreeSurface && !isMobile && <ChatPanel />}
+          {!isOnChatRoute && !isChromeFreeSurface && !isMobile && <ChatPanel />}
         </div>
 
         {/* Floating chat toggle — visible on non-chat routes (but not in HermesWorld) */}
-        {!isChromeFreeSurface && !isOnChatRoute && !isOnPlaygroundRoute && !isMobile && <ChatPanelToggle />}
+        {!isChromeFreeSurface && !isOnChatRoute && !isMobile && <ChatPanelToggle />}
 
         {showDesktopSidebarBackdrop ? (
           <button

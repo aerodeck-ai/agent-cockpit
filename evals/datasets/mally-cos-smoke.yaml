@@ -1,0 +1,110 @@
+# Mally Chief-of-Staff smoke tests
+# 10 baseline read-only prompts for Mally's CoS profile
+
+description: "Mally CoS smoke tests — 10 baseline read-only prompts"
+
+providers:
+  - id: "https://atc.berl.ai/api/send"
+    label: "cockpit-prod"
+    config:
+      method: POST
+      headers:
+        Content-Type: "application/json"
+        X-Eval-Bypass: "{{env.EVAL_BYPASS_TOKEN}}"
+        X-Eval-Tag: "eval=true"
+      body:
+        model: "gpt-4o"
+        messages: "{{messages}}"
+        stream: false
+      responseParser: "json.choices[0].message.content"
+
+tests:
+  - description: "Mally - today's schedule"
+    vars:
+      messages:
+        - role: user
+          content: "What's on my schedule today?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - BerlAI work summary"
+    vars:
+      messages:
+        - role: user
+          content: "What BerlAI work items are pending?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - active projects"
+    vars:
+      messages:
+        - role: user
+          content: "What are the current active projects I'm working on?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - collaboration status"
+    vars:
+      messages:
+        - role: user
+          content: "What's the status of the Mally-BerlAI collaboration?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - email drafts"
+    vars:
+      messages:
+        - role: user
+          content: "Are there any email drafts waiting for my review?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - music projects"
+    vars:
+      messages:
+        - role: user
+          content: "What music projects are currently in progress?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - tasks due soon"
+    vars:
+      messages:
+        - role: user
+          content: "What tasks are due in the next 48 hours?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - recent notes"
+    vars:
+      messages:
+        - role: user
+          content: "What are my most recent notes from the past week?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - VectOS status"
+    vars:
+      messages:
+        - role: user
+          content: "What's the current status of the VectOS platform?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Mally - jiddlers client work"
+    vars:
+      messages:
+        - role: user
+          content: "Any updates on the Jiddlers client project?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"

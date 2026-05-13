@@ -12,6 +12,7 @@ import {
   ComputerTerminal01Icon,
   DashboardSquare01Icon,
   File01Icon,
+  ChipIcon,
   McpServerIcon,
   MessageMultiple01Icon,
   Moon02Icon,
@@ -23,6 +24,9 @@ import {
   Sun02Icon,
   UserGroupIcon,
   UserMultipleIcon,
+  Activity01Icon,
+  KnightShieldIcon,
+  CpuIcon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -576,6 +580,7 @@ function ChatSidebarComponent({
     pathname === '/new' || pathname.startsWith('/chat/new')
   const _isSettingsActive = pathname === '/settings'
   const isSkillsActive = pathname === '/skills'
+  const isEvalsActive = pathname === '/evals'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
   const isPlaygroundActive = pathname === '/playground'
@@ -588,8 +593,10 @@ function ChatSidebarComponent({
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
   const isPromptsActive = pathname === '/prompts'
+  const isFlowActive = pathname === '/flow'
+  const isModelsActive = pathname === '/models'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
-  const knowledgeRoutes = ['/memory', '/skills']
+  const knowledgeRoutes = ['/memory', '/skills', '/evals']
   const systemRoutes = ['/settings', '/logs']
 
   useEffect(() => {
@@ -846,6 +853,13 @@ function ChatSidebarComponent({
       label: 'Swarm',
       active: isSwarmActive,
     },
+    {
+      kind: 'link',
+      to: '/flow',
+      icon: Activity01Icon,
+      label: 'Flow',
+      active: isFlowActive,
+    },
 
   ]
 
@@ -885,6 +899,27 @@ function ChatSidebarComponent({
       icon: PencilEdit02Icon,
       label: 'Prompts',
       active: isPromptsActive,
+    },
+    {
+      kind: 'link',
+      to: '/evals',
+      icon: CheckListIcon,
+      label: 'Evals',
+      active: isEvalsActive,
+    },
+    {
+      kind: 'link',
+      to: '/guardrails',
+      icon: KnightShieldIcon,
+      label: 'Guardrails',
+      active: pathname === '/guardrails',
+    },
+    {
+      kind: 'link',
+      to: '/models',
+      icon: CpuIcon,
+      label: 'Models',
+      active: isModelsActive,
     },
   ]
 

@@ -8,6 +8,8 @@ import {
 import { resolveSessionKey } from '../../server/session-utils'
 import { isAuthenticated, isAuthenticatedWithCFAccess } from "../../server/auth-middleware"
 import { resolveTenantFromRequest } from "../../lib/auth/tenants"
+import { checkBudget } from "../../server/budget-enforcement"
+import { recordCapHit } from "../../server/cap-hit-recorder"
 import { emitToolCallSpan } from "../../server/laminar"
 import { requireJsonContentType } from '../../server/rate-limit'
 import { publishChatEvent } from '../../server/chat-event-bus'
@@ -364,6 +366,29 @@ export const Route = createFileRoute('/api/send-stream')({
             status: 500,
             headers: { 'Content-Type': 'application/json' },
           })
+        }
+
+        // Budget cap gate — skip synthetic/dry-run; never block when budget query fails
+        const __budgetTenant = resolveTenantFromRequest(request)?.tenant ?? 'henry_cos'
+        if (!String(body.synthetic ?? '').trim()) {
+          try {
+            const __budget = checkBudget(__budgetTenant)
+            if (!__budget.withinCap) {
+              try { recordCapHit(__budgetTenant, __budget) } catch {}
+              return new Response(
+                JSON.stringify({
+                  ok: false,
+                  error: 'daily_cap_exceeded',
+                  spent: __budget.spent,
+                  cap: __budget.cap,
+                }),
+                { status: 429, headers: { 'Content-Type': 'application/json' } },
+              )
+            }
+          } catch {
+            // Budget query failed — allow request (graceful degrade)
+            console.warn('[budget] checkBudget threw — allowing request')
+          }
         }
 
         // Check if the selected model is a local provider model — force portable + direct routing

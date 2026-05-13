@@ -9,8 +9,30 @@ import {
 } from '../hooks/use-mcp-mutations'
 import { useMcpCapabilityMode } from '../hooks/use-mcp-capability-mode'
 import { useMcpOauth } from '../hooks/use-mcp-oauth'
+import { useServerHealth } from '../hooks/use-mcp-health'
 import { isArgPlaceholder, isUrlPlaceholder } from '../lib/placeholder-detect'
 import type { McpServer, McpTestResult } from '@/types/mcp'
+import type { HealthStatus } from '../hooks/use-mcp-health'
+
+const HEALTH_DOT: Record<HealthStatus, { className: string; title: string }> = {
+  green: { className: 'bg-emerald-500', title: 'Healthy — last heartbeat recent' },
+  yellow: { className: 'bg-amber-400', title: 'Degraded — recent failures or stale heartbeat' },
+  red: { className: 'bg-red-500', title: 'Unhealthy — consecutive failures' },
+  unknown: { className: 'bg-primary-300', title: 'Health unknown — not in connection registry' },
+}
+
+function HealthDot({ name }: { name: string }) {
+  const { health } = useServerHealth(name)
+  const status: HealthStatus = health?.status ?? 'unknown'
+  const dot = HEALTH_DOT[status]
+  return (
+    <span
+      className={`inline-block h-2 w-2 rounded-full ${dot.className}`}
+      title={dot.title}
+      aria-label={`Health: ${status}`}
+    />
+  )
+}
 
 interface Props {
   server: McpServer
@@ -71,6 +93,7 @@ export function McpServerCard({ server, onEdit }: Props) {
             <Badge className="border border-primary-200 bg-primary-100/60 text-primary-500">
               {server.transportType}
             </Badge>
+            <HealthDot name={server.name} />
           </div>
           <p className="truncate font-mono text-xs text-primary-500">
             {server.transportType === 'http' ? server.url : server.command}
@@ -103,6 +126,14 @@ export function McpServerCard({ server, onEdit }: Props) {
         <p className="rounded-md border border-red-200 bg-red-50 px-2 py-1.5 text-[11px] text-red-700 dark:border-red-700 dark:bg-red-950/40 dark:text-red-200">
           {server.lastError}
         </p>
+      ) : null}
+
+      {/* OAuth re-auth CTA — McpServer has no oauth.expires_at field today;
+          surface token state unknown when oauth auth type is set. */}
+      {server.authType === 'oauth' && !fallbackMode ? (
+        <div className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1.5 text-[11px] text-amber-800 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-200">
+          Token state unknown — no expiry data available. Re-auth if requests are failing.
+        </div>
       ) : null}
 
       <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">

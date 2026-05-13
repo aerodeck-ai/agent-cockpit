@@ -1,0 +1,120 @@
+# Henry Chief-of-Staff smoke tests
+# 10 baseline read-only prompts that must return coherent responses
+# DO NOT use destructive mode — smoke only
+
+description: "Henry CoS smoke tests — 10 baseline read-only prompts"
+
+providers:
+  - id: "https://atc.berl.ai/api/send"
+    label: "cockpit-prod"
+    config:
+      method: POST
+      headers:
+        Content-Type: "application/json"
+        X-Eval-Bypass: "{{env.EVAL_BYPASS_TOKEN}}"
+        X-Eval-Tag: "eval=true"
+      body:
+        model: "gpt-4o"
+        messages: "{{messages}}"
+        stream: false
+      responseParser: "json.choices[0].message.content"
+
+tests:
+  - description: "Henry - summarize today's meetings"
+    vars:
+      messages:
+        - role: user
+          content: "What meetings do I have today? Give me a brief summary."
+    assert:
+      - type: "not-contains"
+        value: "error"
+        transform: "output.toLowerCase()"
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - pending decisions"
+    vars:
+      messages:
+        - role: user
+          content: "What decisions are pending in /decisions?"
+    assert:
+      - type: "not-contains"
+        value: "error"
+        transform: "output.toLowerCase()"
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - current context status"
+    vars:
+      messages:
+        - role: user
+          content: "What's currently live and blocked in the Current-Context?"
+    assert:
+      - type: "not-contains"
+        value: "error"
+        transform: "output.toLowerCase()"
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - cashback summary"
+    vars:
+      messages:
+        - role: user
+          content: "Give me a brief summary of active cashback stacks."
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - active infrastructure alerts"
+    vars:
+      messages:
+        - role: user
+          content: "Are there any active infrastructure alerts I should know about?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - git workflow"
+    vars:
+      messages:
+        - role: user
+          content: "Remind me of the git PR workflow for the agent-cockpit."
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - Hermes agent status"
+    vars:
+      messages:
+        - role: user
+          content: "What is the current status of the Hermes agent fleet?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - service port lookup"
+    vars:
+      messages:
+        - role: user
+          content: "What port does the MCPHub aggregator run on?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 5"
+
+  - description: "Henry - travel planning"
+    vars:
+      messages:
+        - role: user
+          content: "What's the status of the Easter Ski 2027 trip planning?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Henry - wiki knowledge query"
+    vars:
+      messages:
+        - role: user
+          content: "What does the wiki say about the embedding strategy?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"

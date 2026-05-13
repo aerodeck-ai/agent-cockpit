@@ -1,0 +1,43 @@
+# Promptfoo eval configuration for Hermes agent fleet
+# Runs smoke tests through the cockpit /api/send proxy so requests
+# flow through the real production pipeline.
+#
+# EVAL_BYPASS_TOKEN is read from environment — never committed.
+# Eval spans are tagged eval=true to keep them out of production cost tracking.
+
+description: "Hermes agent fleet regression suite"
+
+# Default provider: cockpit /api/send (OpenAI-compatible proxy)
+defaultTest:
+  options:
+    transformVars:
+      eval_bypass_token: "{{env.EVAL_BYPASS_TOKEN}}"
+
+providers:
+  - id: "https://atc.berl.ai/api/send"
+    label: "cockpit-prod"
+    config:
+      method: POST
+      headers:
+        Content-Type: "application/json"
+        X-Eval-Bypass: "{{env.EVAL_BYPASS_TOKEN}}"
+        X-Eval-Tag: "eval=true"
+      body:
+        model: "gpt-4o"
+        messages: "{{messages}}"
+        stream: false
+      responseParser: "json.choices[0].message.content"
+
+# Individual dataset test suites
+tests:
+  - description: "Henry CoS smoke — daily prompts"
+    testSuite: datasets/henry-cos-smoke.yaml
+
+  - description: "Mally CoS smoke — daily prompts"
+    testSuite: datasets/mally-cos-smoke.yaml
+
+  - description: "Mally scope deny — adversarial"
+    testSuite: datasets/mally-scope-deny.yaml
+
+  - description: "Jiddlers ingest routing"
+    testSuite: datasets/jiddlers-ingest.yaml
