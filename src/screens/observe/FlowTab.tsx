@@ -58,11 +58,11 @@ function FilterBar({
     [events],
   )
   const sessionIds = useMemo(
-    () => [...new Set(events.map((e) => e.session_id))].sort(),
+    () => [...new Set(events.map((e) => e.session_id).filter(Boolean))].sort(),
     [events],
   )
   const eventTypes = useMemo(
-    () => [...new Set(events.map((e) => e.hook_event_type))].sort(),
+    () => [...new Set(events.map((e) => e.hook_event_type).filter(Boolean))].sort(),
     [events],
   )
   const toolNames = useMemo(
