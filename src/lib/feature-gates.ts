@@ -68,3 +68,63 @@ export function createCapabilityUnavailablePayload(
     ...extra,
   }
 }
+
+// ---------------------------------------------------------------------------
+// Per-tenant feature gating (feat/multi-user-cos)
+// ---------------------------------------------------------------------------
+
+import type { Tenant } from './auth/tenants'
+
+/**
+ * Features that Mally is allowed to use.
+ * Everything else is henry-only.
+ */
+const MALLY_ALLOWED_FEATURES = new Set<EnhancedFeature>([
+  'sessions',
+  'skills',
+  'memory',
+  'mcp',
+  'mcpFallback',
+])
+
+/**
+ * Whether a given tenant can access the requested feature.
+ *
+ * henry_cos → all features allowed
+ * mally     → MALLY_ALLOWED_FEATURES only
+ */
+export function isTenantAllowed(tenant: Tenant, feature: EnhancedFeature): boolean {
+  if (tenant === 'henry_cos') return true
+  return MALLY_ALLOWED_FEATURES.has(feature)
+}
+
+/**
+ * Whether a given tenant has write access to the scope_deny editor.
+ * Henry → read+write. Mally → read-only.
+ */
+export function canEditScopeDeny(tenant: Tenant): boolean {
+  return tenant === 'henry_cos'
+}
+
+/**
+ * Server-side enforcement helper.
+ * Call in API route handlers before processing Mally requests.
+ * Returns a 403 Response if the tenant is not allowed; null if OK.
+ */
+export function enforceTenantFeatureGate(
+  tenant: Tenant,
+  feature: EnhancedFeature,
+): Response | null {
+  if (isTenantAllowed(tenant, feature)) return null
+  return new Response(
+    JSON.stringify({
+      ok: false,
+      error: 'Forbidden',
+      code: 'tenant_feature_gate',
+      tenant,
+      feature,
+      message: `Tenant "${tenant}" does not have access to feature "${feature}".`,
+    }),
+    { status: 403, headers: { 'Content-Type': 'application/json' } },
+  )
+}
