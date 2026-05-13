@@ -23,6 +23,7 @@ import {
   Sun02Icon,
   UserGroupIcon,
   UserMultipleIcon,
+  Mic01Icon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -587,6 +588,7 @@ function ChatSidebarComponent({
   const isConductorActive = pathname === '/conductor'
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
+  const isVoiceActive = pathname === '/voice'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
@@ -844,6 +846,13 @@ function ChatSidebarComponent({
       icon: UserGroupIcon,
       label: 'Swarm',
       active: isSwarmActive,
+    },
+    {
+      kind: 'link',
+      to: '/voice',
+      icon: Mic01Icon,
+      label: 'Voice',
+      active: isVoiceActive,
     },
 
   ]
