@@ -63,6 +63,9 @@ def main() -> int:
         "timestamp": int(time.time() * 1000),
     }
 
+    serialised = json.dumps(event, separators=(",", ":"))
+
+    # ── Write to local JSONL (always) ────────────────────────────────────────
     log_dir = Path(
         os.environ.get("CLAUDE_LOGS_DIR", str(Path.home() / ".claude" / "logs"))
     )
@@ -73,10 +76,31 @@ def main() -> int:
 
     try:
         with open(log_file, "a", encoding="utf-8") as f:
-            serialised = json.dumps(event, separators=(",", ":"))
             f.write(serialised + "\n")
     except OSError:
         pass  # Never block CC execution on logging failures
+
+    # ── POST to remote cockpit ingest endpoint (optional) ────────────────────
+    # Set COCKPIT_INGEST_URL + COCKPIT_INGEST_TOKEN in .env to enable.
+    # Used when the cockpit runs on a different host (e.g. Oracle) than CC (Mac).
+    ingest_url = os.environ.get("COCKPIT_INGEST_URL", "")
+    ingest_token = os.environ.get("COCKPIT_INGEST_TOKEN", "")
+    if ingest_url and ingest_token:
+        try:
+            import urllib.request
+            req = urllib.request.Request(
+                ingest_url,
+                data=serialised.encode("utf-8"),
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Cockpit-Ingest-Token": ingest_token,
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=2):
+                pass
+        except Exception:
+            pass  # Never block CC execution on delivery failures
 
     return 0
 

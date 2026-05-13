@@ -34,6 +34,7 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { createInterface } from 'node:readline'
 import { isAuthenticatedWithCFAccess } from '../../../server/auth-middleware'
+import { eventBus } from './event-bus'
 
 // ── Config ───────────────────────────────────────────────────────────────────
 
@@ -347,8 +348,39 @@ export const Route = createFileRoute('/api/sse/events')({
               : null
 
             if (!laminarCleanup) {
-              // 3. JSONL tail — primary source when Laminar is not configured.
-              //    findLatestJsonl also ensures the log dir exists.
+              // 3a. In-process event bus — receives events from POST /api/sse/ingest
+              //     (used when emitter hook runs on a different host than the cockpit)
+              //     Backfill recent events, then subscribe for new ones.
+              const recentBusEvents = eventBus.since(Date.now() - 5 * 60_000) // last 5 min
+              for (const evt of recentBusEvents) {
+                if (!matchesTenant(evt as unknown as HookEvent, tenant)) continue
+                try {
+                  controller.enqueue(
+                    encoder.encode(
+                      `event: hook_event\ndata: ${JSON.stringify(evt)}\n\n`,
+                    ),
+                  )
+                } catch {
+                  // stream closed
+                }
+              }
+              const unsubscribe = eventBus.subscribe((evt) => {
+                if (abortController.signal.aborted) return
+                if (!matchesTenant(evt as unknown as HookEvent, tenant)) return
+                try {
+                  controller.enqueue(
+                    encoder.encode(
+                      `event: hook_event\ndata: ${JSON.stringify(evt)}\n\n`,
+                    ),
+                  )
+                } catch {
+                  // stream closed
+                }
+              })
+              abortController.signal.addEventListener('abort', unsubscribe, { once: true })
+
+              // 3b. JSONL tail — local fallback when emitter writes to same host.
+              //     findLatestJsonl also ensures the log dir exists.
               const jsonlPath = await findLatestJsonl()
               if (jsonlPath) {
                 // Don't await — runs in background via fs.watch
