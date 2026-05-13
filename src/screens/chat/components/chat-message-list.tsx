@@ -1294,6 +1294,7 @@ function ChatMessageListComponent({
             simulateStreaming={simulateStreaming}
             streamingKey={signature}
             expandAllToolSections={expandAllToolSections}
+            sessionKey={sessionKey}
           />
         </div>
       )
@@ -1326,6 +1327,7 @@ function ChatMessageListComponent({
         simulateStreaming={simulateStreaming}
         streamingKey={signature}
         expandAllToolSections={expandAllToolSections}
+        sessionKey={sessionKey}
       />
     )
   }
@@ -1772,6 +1774,7 @@ function ChatMessageListComponent({
                         streamingKey={signature}
                         expandAllToolSections={expandAllToolSections}
                         isLastAssistant={forceActionsVisible}
+                        sessionKey={sessionKey}
                       />
                     )
                   })}
