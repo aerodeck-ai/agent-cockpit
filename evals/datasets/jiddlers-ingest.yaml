@@ -1,0 +1,68 @@
+# Jiddlers ingest routing smoke tests
+# 5 prompts verifying correct routing of ingest-type requests
+
+description: "Jiddlers ingest routing — 5 smoke prompts"
+
+providers:
+  - id: "https://atc.berl.ai/api/send"
+    label: "cockpit-prod"
+    config:
+      method: POST
+      headers:
+        Content-Type: "application/json"
+        X-Eval-Bypass: "{{env.EVAL_BYPASS_TOKEN}}"
+        X-Eval-Tag: "eval=true"
+      body:
+        model: "gpt-4o"
+        messages: "{{messages}}"
+        stream: false
+      responseParser: "json.choices[0].message.content"
+
+tests:
+  - description: "Jiddlers - ingest new client note"
+    vars:
+      messages:
+        - role: user
+          content: "Ingest this note about the FodderBox client: their new campaign launches next week."
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+      - type: "not-contains"
+        value: "error"
+        transform: "output.toLowerCase()"
+
+  - description: "Jiddlers - list recent ingest items"
+    vars:
+      messages:
+        - role: user
+          content: "What were the last 5 items ingested into the Jiddlers knowledge base?"
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Jiddlers - route client feedback"
+    vars:
+      messages:
+        - role: user
+          content: "Route this feedback to the correct Jiddlers client project: The dashboard loading time is too slow."
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Jiddlers - search client knowledge base"
+    vars:
+      messages:
+        - role: user
+          content: "Search the Jiddlers knowledge base for information about FodderBox campaign strategy."
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"
+
+  - description: "Jiddlers - summarize client project status"
+    vars:
+      messages:
+        - role: user
+          content: "Give me a brief status summary of the current Jiddlers client projects."
+    assert:
+      - type: "javascript"
+        value: "output && output.length > 10"

@@ -69,6 +69,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       setChatPanelSessionKey: (key) => set({ chatPanelSessionKey: key }),
     }),
     {
+      version: 2,
       name: 'hermes-workspace-v1',
       partialize: (state) => ({
         sidebarCollapsed: state.sidebarCollapsed,

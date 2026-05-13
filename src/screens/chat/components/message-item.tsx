@@ -149,6 +149,7 @@ type MessageItemProps = {
   streamingKey?: string | null
   expandAllToolSections?: boolean
   isLastAssistant?: boolean
+  sessionKey?: string
 }
 
 type InlineToolSection = {
@@ -1987,6 +1988,7 @@ function MessageItemComponent({
   streamingKey: _streamingKey,
   expandAllToolSections = false,
   isLastAssistant = false,
+  sessionKey,
 }: MessageItemProps) {
   const role = message.role || 'assistant'
   const profileDisplayName = useChatSettingsStore(selectChatProfileDisplayName)
@@ -2521,6 +2523,17 @@ function MessageItemComponent({
           </div>
         </div>
       ) : null}
+      {!isUser && !effectiveIsStreaming && finalToolSections.length > 0 && sessionKey ? (
+        <div className="w-full max-w-[var(--chat-content-max-width)] flex">
+          <div className="w-6 shrink-0" aria-hidden />
+          <a
+            href={`/traces?session=${encodeURIComponent(sessionKey)}${wrapperDataMessageId ? `#message-${wrapperDataMessageId}` : ''}`}
+            className="font-mono text-[10px] text-[var(--theme-accent)]/70 hover:text-[var(--theme-accent)] transition-colors py-0.5 leading-none"
+          >
+            View full trace →
+          </a>
+        </div>
+      ) : null}
       {effectiveIsStreaming && hasLifecycleEvents && !hasToolCalls && (
         <div className="w-full max-w-[var(--chat-content-max-width)] flex flex-col gap-1">
           {effectiveLifecycleEvents.map((event, index) => (
@@ -2823,6 +2836,9 @@ function areMessagesEqual(
     return false
   }
   if (prevProps.expandAllToolSections !== nextProps.expandAllToolSections) {
+    return false
+  }
+  if (prevProps.sessionKey !== nextProps.sessionKey) {
     return false
   }
   if (

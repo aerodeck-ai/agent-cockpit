@@ -454,6 +454,7 @@ const config = defineConfig(({ mode, command }) => {
     },
     ssr: {
       external: [
+        'better-sqlite3',
         'playwright',
         'playwright-core',
         'playwright-extra',

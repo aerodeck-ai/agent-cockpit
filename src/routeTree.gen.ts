@@ -27,7 +27,9 @@ import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as HermesWorldRouteImport } from './routes/hermes-world'
+import { Route as GuardrailsRouteImport } from './routes/guardrails'
 import { Route as FilesRouteImport } from './routes/files'
+import { Route as EvalsRouteImport } from './routes/evals'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
@@ -40,7 +42,6 @@ import { Route as SettingsProvidersRouteImport } from './routes/settings/provide
 import { Route as ReserveConfirmRouteImport } from './routes/reserve/confirm'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
-import { Route as ApiVtCapitalRouteImport } from './routes/api/vt-capital'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
@@ -77,8 +78,6 @@ import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
-import { Route as ApiPlaygroundNpcRouteImport } from './routes/api/playground-npc'
-import { Route as ApiPlaygroundAdminRouteImport } from './routes/api/playground-admin'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as ApiPathsRouteImport } from './routes/api/paths'
 import { Route as ApiModelsRouteImport } from './routes/api/models'
@@ -92,6 +91,7 @@ import { Route as ApiGatewayStatusRouteImport } from './routes/api/gateway-statu
 import { Route as ApiGatewayReprobeRouteImport } from './routes/api/gateway-reprobe'
 import { Route as ApiFilesRouteImport } from './routes/api/files'
 import { Route as ApiEventsRouteImport } from './routes/api/events'
+import { Route as ApiEvalsRouteImport } from './routes/api/evals'
 import { Route as ApiCrewStatusRouteImport } from './routes/api/crew-status'
 import { Route as ApiContextUsageRouteImport } from './routes/api/context-usage'
 import { Route as ApiConnectionStatusRouteImport } from './routes/api/connection-status'
@@ -149,6 +149,9 @@ import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/gr
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesPersonalProbeRouteImport } from './routes/api/hermes/personal-probe'
+import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
+import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
+import { Route as ApiGuardrailsPiiClassifierRouteImport } from './routes/api/guardrails/pii-classifier'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
@@ -165,9 +168,6 @@ const WorldRoute = WorldRouteImport.update({
   path: '/world',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VtCapitalRoute = VtCapitalRouteImport.update({
-  id: '/vt-capital',
-  path: '/vt-capital',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VoiceRoute = VoiceRouteImport.update({
@@ -250,9 +250,19 @@ const HermesWorldRoute = HermesWorldRouteImport.update({
   path: '/hermes-world',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuardrailsRoute = GuardrailsRouteImport.update({
+  id: '/guardrails',
+  path: '/guardrails',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FilesRoute = FilesRouteImport.update({
   id: '/files',
   path: '/files',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvalsRoute = EvalsRouteImport.update({
+  id: '/evals',
+  path: '/evals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EarlyAccessRoute = EarlyAccessRouteImport.update({
@@ -313,11 +323,6 @@ const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   id: '/api/workspace',
   path: '/api/workspace',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiVtCapitalRoute = ApiVtCapitalRouteImport.update({
-  id: '/api/vt-capital',
-  path: '/api/vt-capital',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTerminalStreamRoute = ApiTerminalStreamRouteImport.update({
@@ -501,16 +506,6 @@ const ApiPluginsRoute = ApiPluginsRouteImport.update({
   path: '/api/plugins',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPlaygroundNpcRoute = ApiPlaygroundNpcRouteImport.update({
-  id: '/api/playground-npc',
-  path: '/api/playground-npc',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPlaygroundAdminRoute = ApiPlaygroundAdminRouteImport.update({
-  id: '/api/playground-admin',
-  path: '/api/playground-admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPingRoute = ApiPingRouteImport.update({
   id: '/api/ping',
   path: '/api/ping',
@@ -574,6 +569,11 @@ const ApiFilesRoute = ApiFilesRouteImport.update({
 const ApiEventsRoute = ApiEventsRouteImport.update({
   id: '/api/events',
   path: '/api/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEvalsRoute = ApiEvalsRouteImport.update({
+  id: '/api/evals',
+  path: '/api/evals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCrewStatusRoute = ApiCrewStatusRouteImport.update({
@@ -862,6 +862,22 @@ const ApiHermesPersonalProbeRoute = ApiHermesPersonalProbeRouteImport.update({
   path: '/api/hermes/personal-probe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGuardrailsTirithRoute = ApiGuardrailsTirithRouteImport.update({
+  id: '/api/guardrails/tirith',
+  path: '/api/guardrails/tirith',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGuardrailsScopeDenyRoute = ApiGuardrailsScopeDenyRouteImport.update({
+  id: '/api/guardrails/scope-deny',
+  path: '/api/guardrails/scope-deny',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGuardrailsPiiClassifierRoute =
+  ApiGuardrailsPiiClassifierRouteImport.update({
+    id: '/api/guardrails/pii-classifier',
+    path: '/api/guardrails/pii-classifier',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   id: '/api/dashboard/overview',
   path: '/api/dashboard/overview',
@@ -923,7 +939,9 @@ export interface FileRoutesByFullPath {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/guardrails': typeof GuardrailsRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
@@ -957,6 +975,7 @@ export interface FileRoutesByFullPath {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/evals': typeof ApiEvalsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
@@ -970,8 +989,6 @@ export interface FileRoutesByFullPath {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
-  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
-  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1008,7 +1025,6 @@ export interface FileRoutesByFullPath {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1020,6 +1036,9 @@ export interface FileRoutesByFullPath {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
+  '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
+  '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1075,7 +1094,9 @@ export interface FileRoutesByTo {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/guardrails': typeof GuardrailsRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
@@ -1108,6 +1129,7 @@ export interface FileRoutesByTo {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/evals': typeof ApiEvalsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
@@ -1121,8 +1143,6 @@ export interface FileRoutesByTo {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
-  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
-  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1159,7 +1179,6 @@ export interface FileRoutesByTo {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1171,6 +1190,9 @@ export interface FileRoutesByTo {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
+  '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
+  '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1227,7 +1249,9 @@ export interface FileRoutesById {
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
+  '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/guardrails': typeof GuardrailsRoute
   '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
@@ -1261,6 +1285,7 @@ export interface FileRoutesById {
   '/api/connection-status': typeof ApiConnectionStatusRoute
   '/api/context-usage': typeof ApiContextUsageRoute
   '/api/crew-status': typeof ApiCrewStatusRoute
+  '/api/evals': typeof ApiEvalsRoute
   '/api/events': typeof ApiEventsRoute
   '/api/files': typeof ApiFilesRoute
   '/api/gateway-reprobe': typeof ApiGatewayReprobeRoute
@@ -1274,8 +1299,6 @@ export interface FileRoutesById {
   '/api/models': typeof ApiModelsRoute
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
-  '/api/playground-admin': typeof ApiPlaygroundAdminRoute
-  '/api/playground-npc': typeof ApiPlaygroundNpcRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
   '/api/provider-usage': typeof ApiProviderUsageRoute
@@ -1312,7 +1335,6 @@ export interface FileRoutesById {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
-  '/api/vt-capital': typeof ApiVtCapitalRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/reserve/confirm': typeof ReserveConfirmRoute
@@ -1324,6 +1346,9 @@ export interface FileRoutesById {
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
+  '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
+  '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1381,7 +1406,9 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/evals'
     | '/files'
+    | '/guardrails'
     | '/hermes-world'
     | '/jobs'
     | '/mcp'
@@ -1415,6 +1442,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/evals'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-reprobe'
@@ -1428,8 +1456,6 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
-    | '/api/playground-admin'
-    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1466,7 +1492,6 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
-    | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1478,6 +1503,9 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/guardrails/pii-classifier'
+    | '/api/guardrails/scope-deny'
+    | '/api/guardrails/tirith'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1533,7 +1561,9 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/evals'
     | '/files'
+    | '/guardrails'
     | '/hermes-world'
     | '/jobs'
     | '/mcp'
@@ -1566,6 +1596,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/evals'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-reprobe'
@@ -1579,8 +1610,6 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
-    | '/api/playground-admin'
-    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1617,7 +1646,6 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
-    | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1629,6 +1657,9 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/guardrails/pii-classifier'
+    | '/api/guardrails/scope-deny'
+    | '/api/guardrails/tirith'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1684,7 +1715,9 @@ export interface FileRouteTypes {
     | '/conductor'
     | '/dashboard'
     | '/early-access'
+    | '/evals'
     | '/files'
+    | '/guardrails'
     | '/hermes-world'
     | '/jobs'
     | '/mcp'
@@ -1718,6 +1751,7 @@ export interface FileRouteTypes {
     | '/api/connection-status'
     | '/api/context-usage'
     | '/api/crew-status'
+    | '/api/evals'
     | '/api/events'
     | '/api/files'
     | '/api/gateway-reprobe'
@@ -1731,8 +1765,6 @@ export interface FileRouteTypes {
     | '/api/models'
     | '/api/paths'
     | '/api/ping'
-    | '/api/playground-admin'
-    | '/api/playground-npc'
     | '/api/plugins'
     | '/api/preview-file'
     | '/api/provider-usage'
@@ -1769,7 +1801,6 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
-    | '/api/vt-capital'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/reserve/confirm'
@@ -1781,6 +1812,9 @@ export interface FileRouteTypes {
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/guardrails/pii-classifier'
+    | '/api/guardrails/scope-deny'
+    | '/api/guardrails/tirith'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1837,7 +1871,9 @@ export interface RootRouteChildren {
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
+  EvalsRoute: typeof EvalsRoute
   FilesRoute: typeof FilesRoute
+  GuardrailsRoute: typeof GuardrailsRoute
   HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
   McpRoute: typeof McpRoute
@@ -1871,6 +1907,7 @@ export interface RootRouteChildren {
   ApiConnectionStatusRoute: typeof ApiConnectionStatusRoute
   ApiContextUsageRoute: typeof ApiContextUsageRoute
   ApiCrewStatusRoute: typeof ApiCrewStatusRoute
+  ApiEvalsRoute: typeof ApiEvalsRoute
   ApiEventsRoute: typeof ApiEventsRoute
   ApiFilesRoute: typeof ApiFilesRoute
   ApiGatewayReprobeRoute: typeof ApiGatewayReprobeRoute
@@ -1884,8 +1921,6 @@ export interface RootRouteChildren {
   ApiModelsRoute: typeof ApiModelsRoute
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
-  ApiPlaygroundAdminRoute: typeof ApiPlaygroundAdminRoute
-  ApiPlaygroundNpcRoute: typeof ApiPlaygroundNpcRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
   ApiProviderUsageRoute: typeof ApiProviderUsageRoute
@@ -1922,12 +1957,14 @@ export interface RootRouteChildren {
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
-  ApiVtCapitalRoute: typeof ApiVtCapitalRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
+  ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
+  ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
+  ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
   ApiHermesPersonalProbeRoute: typeof ApiHermesPersonalProbeRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
@@ -1964,11 +2001,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/vt-capital': {
-      id: '/vt-capital'
-      path: '/vt-capital'
-      fullPath: '/vt-capital'
-      preLoaderRoute: typeof VtCapitalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/voice': {
@@ -2083,11 +2115,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HermesWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guardrails': {
+      id: '/guardrails'
+      path: '/guardrails'
+      fullPath: '/guardrails'
+      preLoaderRoute: typeof GuardrailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/files': {
       id: '/files'
       path: '/files'
       fullPath: '/files'
       preLoaderRoute: typeof FilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evals': {
+      id: '/evals'
+      path: '/evals'
+      fullPath: '/evals'
+      preLoaderRoute: typeof EvalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/early-access': {
@@ -2172,13 +2218,6 @@ declare module '@tanstack/react-router' {
       path: '/api/workspace'
       fullPath: '/api/workspace'
       preLoaderRoute: typeof ApiWorkspaceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/vt-capital': {
-      id: '/api/vt-capital'
-      path: '/api/vt-capital'
-      fullPath: '/api/vt-capital'
-      preLoaderRoute: typeof ApiVtCapitalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/terminal-stream': {
@@ -2433,20 +2472,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPluginsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/playground-npc': {
-      id: '/api/playground-npc'
-      path: '/api/playground-npc'
-      fullPath: '/api/playground-npc'
-      preLoaderRoute: typeof ApiPlaygroundNpcRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/playground-admin': {
-      id: '/api/playground-admin'
-      path: '/api/playground-admin'
-      fullPath: '/api/playground-admin'
-      preLoaderRoute: typeof ApiPlaygroundAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/ping': {
       id: '/api/ping'
       path: '/api/ping'
@@ -2536,6 +2561,13 @@ declare module '@tanstack/react-router' {
       path: '/api/events'
       fullPath: '/api/events'
       preLoaderRoute: typeof ApiEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/evals': {
+      id: '/api/evals'
+      path: '/api/evals'
+      fullPath: '/api/evals'
+      preLoaderRoute: typeof ApiEvalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/crew-status': {
@@ -2937,6 +2969,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesPersonalProbeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/guardrails/tirith': {
+      id: '/api/guardrails/tirith'
+      path: '/api/guardrails/tirith'
+      fullPath: '/api/guardrails/tirith'
+      preLoaderRoute: typeof ApiGuardrailsTirithRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/guardrails/scope-deny': {
+      id: '/api/guardrails/scope-deny'
+      path: '/api/guardrails/scope-deny'
+      fullPath: '/api/guardrails/scope-deny'
+      preLoaderRoute: typeof ApiGuardrailsScopeDenyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/guardrails/pii-classifier': {
+      id: '/api/guardrails/pii-classifier'
+      path: '/api/guardrails/pii-classifier'
+      fullPath: '/api/guardrails/pii-classifier'
+      preLoaderRoute: typeof ApiGuardrailsPiiClassifierRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dashboard/overview': {
       id: '/api/dashboard/overview'
       path: '/api/dashboard/overview'
@@ -3203,7 +3256,9 @@ const rootRouteChildren: RootRouteChildren = {
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
+  EvalsRoute: EvalsRoute,
   FilesRoute: FilesRoute,
+  GuardrailsRoute: GuardrailsRoute,
   HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
   McpRoute: McpRoute,
@@ -3237,6 +3292,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiConnectionStatusRoute: ApiConnectionStatusRoute,
   ApiContextUsageRoute: ApiContextUsageRoute,
   ApiCrewStatusRoute: ApiCrewStatusRoute,
+  ApiEvalsRoute: ApiEvalsRoute,
   ApiEventsRoute: ApiEventsRoute,
   ApiFilesRoute: ApiFilesRoute,
   ApiGatewayReprobeRoute: ApiGatewayReprobeRoute,
@@ -3250,8 +3306,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiModelsRoute: ApiModelsRoute,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,
-  ApiPlaygroundAdminRoute: ApiPlaygroundAdminRoute,
-  ApiPlaygroundNpcRoute: ApiPlaygroundNpcRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
   ApiProviderUsageRoute: ApiProviderUsageRoute,
@@ -3288,12 +3342,14 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
-  ApiVtCapitalRoute: ApiVtCapitalRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
+  ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
+  ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
+  ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
   ApiHermesPersonalProbeRoute: ApiHermesPersonalProbeRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
