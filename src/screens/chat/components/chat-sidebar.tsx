@@ -12,6 +12,7 @@ import {
   ComputerTerminal01Icon,
   DashboardSquare01Icon,
   File01Icon,
+  ChipIcon,
   McpServerIcon,
   MessageMultiple01Icon,
   Moon02Icon,
@@ -24,6 +25,8 @@ import {
   UserGroupIcon,
   UserMultipleIcon,
   Activity01Icon,
+  KnightShieldIcon,
+  CpuIcon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -589,6 +592,7 @@ function ChatSidebarComponent({
   const isOperationsActive = pathname === '/operations'
   const isSwarmActive = pathname === '/swarm' || pathname === '/swarm2'
   const isFlowActive = pathname === '/flow'
+  const isModelsActive = pathname === '/models'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills']
   const systemRoutes = ['/settings', '/logs']
@@ -886,6 +890,20 @@ function ChatSidebarComponent({
       icon: UserMultipleIcon,
       label: t('nav.profiles'),
       active: pathname === '/profiles',
+    },
+    {
+      kind: 'link',
+      to: '/guardrails',
+      icon: KnightShieldIcon,
+      label: 'Guardrails',
+      active: pathname === '/guardrails',
+    },
+    {
+      kind: 'link',
+      to: '/models',
+      icon: CpuIcon,
+      label: 'Models',
+      active: isModelsActive,
     },
   ]
 
