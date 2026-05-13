@@ -23,6 +23,7 @@ import { CacheEfficiencyCard } from './components/cache-efficiency-card'
 import { ProviderMixCard } from './components/provider-mix-card'
 import { VelocityCard } from './components/velocity-card'
 import { CostLedgerCard } from './components/cost-ledger-card'
+import { BudgetBurnCard } from './components/budget-burn-card'
 import { OperatorTipCard } from './components/operator-tip-card'
 import { WidgetShell } from './components/widget-shell'
 import { EditModePanel } from './components/edit-mode-panel'
@@ -1113,6 +1114,11 @@ export function DashboardScreen() {
                 <CostLedgerCard
                   analytics={overview?.analytics ?? null}
                 />
+              </WidgetShell>
+            ) : null}
+            {layout.isVisible('budget_burn') ? (
+              <WidgetShell id="budget_burn" layout={layout}>
+                <BudgetBurnCard />
               </WidgetShell>
             ) : null}
           </div>

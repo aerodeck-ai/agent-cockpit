@@ -25,6 +25,7 @@ import {
   UserGroupIcon,
   UserMultipleIcon,
   KnightShieldIcon,
+  CpuIcon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -891,7 +892,7 @@ function ChatSidebarComponent({
     {
       kind: 'link',
       to: '/models',
-      icon: ChipIcon,
+      icon: CpuIcon,
       label: 'Models',
       active: isModelsActive,
     },
