@@ -12,6 +12,7 @@ import {
   ComputerTerminal01Icon,
   DashboardSquare01Icon,
   File01Icon,
+  ChipIcon,
   McpServerIcon,
   MessageMultiple01Icon,
   Moon02Icon,
@@ -23,6 +24,7 @@ import {
   Sun02Icon,
   UserGroupIcon,
   UserMultipleIcon,
+  KnightShieldIcon,
   CpuIcon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
@@ -879,6 +881,13 @@ function ChatSidebarComponent({
       icon: UserMultipleIcon,
       label: t('nav.profiles'),
       active: pathname === '/profiles',
+    },
+    {
+      kind: 'link',
+      to: '/guardrails',
+      icon: KnightShieldIcon,
+      label: 'Guardrails',
+      active: pathname === '/guardrails',
     },
     {
       kind: 'link',
