@@ -23,6 +23,7 @@ export type WidgetId =
   | 'skills_usage'
   | 'achievements'
   | 'mix_rhythm'
+  | 'budget_burn'
 
 export type WidgetMeta = {
   id: WidgetId
@@ -78,6 +79,13 @@ export const WIDGET_CATALOG: ReadonlyArray<WidgetMeta> = [
     label: 'Cost ledger',
     description:
       'Per-model cost split between paid providers and subscription/local.',
+    column: 'main',
+    hideable: true,
+  },
+  {
+    id: 'budget_burn',
+    label: 'Budget burn',
+    description: 'Daily USD spend vs cap per tenant, with projection and soft warnings at 80% / 90%.',
     column: 'main',
     hideable: true,
   },
