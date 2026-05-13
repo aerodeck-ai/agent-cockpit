@@ -15,6 +15,7 @@ import { runHermesMcpTest } from '../../../server/mcp-cli-bridge'
 import { setProbe } from '../../../server/mcp-tools-cache'
 import { parseMcpServerInput } from '../../../server/mcp-input-validate'
 import { createCapabilityUnavailablePayload } from '@/lib/feature-gates'
+import { recordInvocation } from '../../../server/mcp-invocations-store'
 
 const TEST_TIMEOUT_MS = 30_000
 
@@ -58,12 +59,20 @@ export const Route = createFileRoute('/api/mcp/test')({
                   'Local fallback only supports testing existing servers by name.',
               })
             }
+            const t0 = Date.now()
             const result = await runHermesMcpTest(name, { timeoutMs: TEST_TIMEOUT_MS })
             setProbe(name, {
               status: result.status,
               toolCount: result.discoveredTools.length,
               toolNames: result.discoveredTools.map((t) => t.name),
               latencyMs: result.latencyMs,
+              error: result.error,
+            })
+            recordInvocation({
+              server: name,
+              tool: '__probe__',
+              status: result.ok ? 'ok' : 'error',
+              latencyMs: result.latencyMs ?? (Date.now() - t0),
               error: result.error,
             })
             return json(result)
@@ -90,6 +99,8 @@ export const Route = createFileRoute('/api/mcp/test')({
         try {
           const raw = (await request.json()) as Record<string, unknown>
           let body: Record<string, unknown>
+          const serverName =
+            typeof raw.name === 'string' ? raw.name : 'unknown'
           if (typeof raw.name === 'string' && Object.keys(raw).length === 1) {
             body = { name: raw.name }
           } else {
@@ -102,6 +113,7 @@ export const Route = createFileRoute('/api/mcp/test')({
             }
             body = parsed.value as unknown as Record<string, unknown>
           }
+          const t0 = Date.now()
           const response = await mcpFetch('/api/mcp/test', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -110,6 +122,13 @@ export const Route = createFileRoute('/api/mcp/test')({
           })
           const payload = (await response.json().catch(() => ({}))) as unknown
           const result = normalizeTestResult(payload)
+          recordInvocation({
+            server: serverName,
+            tool: '__probe__',
+            status: result.ok ? 'ok' : 'error',
+            latencyMs: result.latencyMs ?? (Date.now() - t0),
+            error: result.error,
+          })
           return json(result, { status: response.ok ? 200 : response.status || 502 })
         } catch (err) {
           return json({ ok: false, status: 'failed', discoveredTools: [], error: safeErrorMessage(err) }, { status: 500 })
