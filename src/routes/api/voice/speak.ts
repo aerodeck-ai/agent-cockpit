@@ -13,7 +13,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { isAuthenticated } from '../../../server/auth-middleware'
 
-const TTS_BASE = 'http://127.0.0.1:8908'
+// Mac chatterbox (ElevenLabs primary + Piper fallback) via Tailscale.
+// Override with VOICE_TTS_BASE env for local dev.
+const TTS_BASE = process.env.VOICE_TTS_BASE ?? 'http://100.89.244.20:8908'
 
 async function isTtsAlive(): Promise<boolean> {
   try {
