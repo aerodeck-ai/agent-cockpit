@@ -8,6 +8,7 @@ import {
 } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
+import { resolveTenantFromEmail } from '../lib/auth/tenants'
 
 /**
  * Persistent session token store.
@@ -339,8 +340,6 @@ export function getCFAccessEmail(request: Request): string | null {
 export function isAuthenticatedViaCFAccess(request: Request): boolean {
   const email = getCFAccessEmail(request)
   if (!email) return false
-  // Lazy-import to avoid circular deps — resolveTenantFromEmail is pure
-  const { resolveTenantFromEmail } = require('../lib/auth/tenants') as typeof import('../lib/auth/tenants')
   return resolveTenantFromEmail(email) !== null
 }
 
