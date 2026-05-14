@@ -38,6 +38,7 @@ import {
   SettingsTrigger,
   useSettingsFlyout,
 } from '@/components/shell/SettingsFlyout'
+import { SessionPill } from '@/components/shell/SessionPill'
 
 // ── Nav entry definitions ──────────────────────────────────────────────────
 
@@ -589,6 +590,9 @@ export function LeftNav() {
           <MeetingsCounterRow onOpen={handleOpen} />
           <BriefingCounterRow onOpen={handleOpen} />
         </div>
+
+        {/* Session pill */}
+        <SessionPill />
 
         {/* Divider */}
         <div className="leftnav-divider" aria-hidden="true" />

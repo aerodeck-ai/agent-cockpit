@@ -2687,6 +2687,37 @@ a.home-rail-item-title:hover {
   50%       { opacity: 0.4; }
 }
 
+/* SessionPill: suppress default ::before dot (inline dot used instead) */
+.cp-status-pill.cp-session-pill::before {
+  content: none;
+}
+
+/* ── LeftNav Session Pill ─────────────────────────────────────── */
+.leftnav-session-pill-wrap {
+  padding: 4px 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.leftnav-session-pill-btn {
+  /* override default cp-status-pill font-size set inline; layout expands on hover */
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* hide IN/OUT/CTX/COST segments when nav is slim (56px) */
+.leftnav-slim .leftnav-session-pill-btn .leftnav-counter-value {
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.12s ease;
+}
+
+.leftnav-slim:hover .leftnav-session-pill-btn .leftnav-counter-value {
+  opacity: 1;
+  transition-delay: 0.08s;
+}
+
 /* ── B. Typography: mono headings ────────────────────────────── */
 /* Applied scoped to berlai dark to avoid breaking other themes        */
 [data-theme='berlai'] h1,
