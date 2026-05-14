@@ -69,8 +69,11 @@ function fixtureMeetings(): Meeting[] {
 }
 
 function cfHeaders(): Record<string, string> | null {
-  const id = process.env.CF_ACCESS_CLIENT_ID
-  const secret = process.env.CF_ACCESS_CLIENT_SECRET
+  // Check vectos-specific token first, then fall back to the generic one
+  const id =
+    process.env.CF_ACCESS_CLIENT_ID_VECTOS ?? process.env.CF_ACCESS_CLIENT_ID
+  const secret =
+    process.env.CF_ACCESS_CLIENT_SECRET_VECTOS ?? process.env.CF_ACCESS_CLIENT_SECRET
   if (!id || !secret) return null
   return {
     'CF-Access-Client-Id': id,
