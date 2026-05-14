@@ -6,13 +6,14 @@
  * Query params:
  *   days      – how many days back (default 1, max 30)
  *   group_by  – comma-separated list of {tenant, model, provider} (default "tenant,model")
+ *   tenant    – filter to a single tenant slug (e.g. "henry_cos" or "mally")
  *
  * Response shape:
  *   {
  *     totals: { cost_usd, input_tokens, output_tokens },
  *     rows:   [{ tenant?, model?, provider?, cost_usd, input_tokens, output_tokens }, ...],
  *     since:  "ISO timestamp",
- *     source: "tokens_db" | "fixture" | "error"
+ *     source: "tokens_db" | "fixture" | "fixture_no_tenant_data" | "error"
  *   }
  *
  * Always returns 200.
@@ -49,8 +50,9 @@ export type CostResponse = {
   totals: CostTotals
   rows: CostRow[]
   since: string
-  source: 'tokens_db' | 'fixture' | 'error'
+  source: 'tokens_db' | 'fixture' | 'fixture_no_tenant_data' | 'error'
   error?: string
+  tenant_filter?: string | null
 }
 
 // ---------------------------------------------------------------------------
@@ -65,8 +67,17 @@ const TOKENS_DB_PATH =
 // Fixture data (used when tokens.db is unavailable — e.g. Oracle deployment)
 // ---------------------------------------------------------------------------
 
-function buildFixture(since: string): CostResponse {
-  const rows: CostRow[] = [
+/**
+ * Canonical tenant slug stored in token_events.tenant vs the fixture tenant labels.
+ * henry_cos rows are stored as "henry" in the fixture; mally rows as "mally".
+ */
+const FIXTURE_TENANT_MAP: Record<string, string> = {
+  henry_cos: 'henry',
+  mally:     'mally',
+}
+
+function buildFixture(since: string, tenantFilter?: string | null): CostResponse {
+  const allRows: CostRow[] = [
     {
       tenant: 'henry',
       model: 'claude-opus-4-7',
@@ -89,6 +100,12 @@ function buildFixture(since: string): CostResponse {
       output_tokens: 16_500,
     },
   ]
+
+  const dbTenant = tenantFilter ? (FIXTURE_TENANT_MAP[tenantFilter] ?? tenantFilter) : null
+  const rows = dbTenant ? allRows.filter((r) => r.tenant === dbTenant) : allRows
+  const source: CostResponse['source'] =
+    dbTenant && rows.length === 0 ? 'fixture_no_tenant_data' : 'fixture'
+
   const totals: CostTotals = rows.reduce(
     (acc, r) => ({
       cost_usd: acc.cost_usd + r.cost_usd,
@@ -98,7 +115,7 @@ function buildFixture(since: string): CostResponse {
     { cost_usd: 0, input_tokens: 0, output_tokens: 0 },
   )
   totals.cost_usd = Math.round(totals.cost_usd * 100) / 100
-  return { totals, rows, since, source: 'fixture' }
+  return { totals, rows, since, source, tenant_filter: tenantFilter ?? null }
 }
 
 // ---------------------------------------------------------------------------
@@ -138,6 +155,12 @@ export const Route = createFileRoute('/api/observe/cost')({
         )
         const groupByCols = parseGroupBy(url.searchParams.get('group_by'))
 
+        // Optional tenant filter — must be an allowlisted slug
+        const tenantParam = url.searchParams.get('tenant') ?? null
+        const ALLOWED_TENANTS = new Set(['henry_cos', 'mally'])
+        const tenantFilter: string | null =
+          tenantParam && ALLOWED_TENANTS.has(tenantParam) ? tenantParam : null
+
         // since = start of the window as an ISO string
         const sinceDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
         sinceDate.setUTCHours(0, 0, 0, 0)
@@ -147,7 +170,7 @@ export const Route = createFileRoute('/api/observe/cost')({
         // Fixture fallback when tokens.db is not present (e.g. Oracle host)
         // ------------------------------------------------------------------
         if (!existsSync(TOKENS_DB_PATH)) {
-          const payload = buildFixture(since)
+          const payload = buildFixture(since, tenantFilter)
           return new Response(JSON.stringify(payload), {
             headers: {
               'Content-Type': 'application/json',
@@ -175,6 +198,18 @@ export const Route = createFileRoute('/api/observe/cost')({
 
           const groupByClause = groupByCols.join(', ')
 
+          // Map tenant slug → the value actually stored in token_events.tenant
+          // (henry_cos is stored as "henry"; mally stays "mally")
+          const dbTenant = tenantFilter
+            ? (FIXTURE_TENANT_MAP[tenantFilter] ?? tenantFilter)
+            : null
+
+          // Build WHERE clause — always filter by ts; optionally by tenant
+          const whereClause = dbTenant
+            ? 'WHERE ts >= ? AND tenant = ?'
+            : 'WHERE ts >= ?'
+          const queryArgs: string[] = dbTenant ? [since, dbTenant] : [since]
+
           const rows = db
             .prepare(
               `
@@ -184,12 +219,12 @@ export const Route = createFileRoute('/api/observe/cost')({
                 SUM(COALESCE(input_tokens, 0))            AS input_tokens,
                 SUM(COALESCE(output_tokens, 0))           AS output_tokens
               FROM token_events
-              WHERE ts >= ?
+              ${whereClause}
               GROUP BY ${groupByClause}
               ORDER BY cost_usd DESC
               `,
             )
-            .all(since) as Array<
+            .all(...queryArgs) as Array<
               Record<string, unknown> & {
                 cost_usd: number
                 input_tokens: number
@@ -226,7 +261,8 @@ export const Route = createFileRoute('/api/observe/cost')({
             totals,
             rows: typedRows,
             since,
-            source: 'tokens_db',
+            source: typedRows.length === 0 && tenantFilter ? 'fixture_no_tenant_data' : 'tokens_db',
+            tenant_filter: tenantFilter,
           }
 
           return new Response(JSON.stringify(payload), {
@@ -239,7 +275,7 @@ export const Route = createFileRoute('/api/observe/cost')({
           const msg = err instanceof Error ? err.message : String(err)
           // DB open/query failed — return fixture rather than a 5xx
           const payload: CostResponse = {
-            ...buildFixture(since),
+            ...buildFixture(since, tenantFilter),
             source: 'error',
             error: msg,
           }

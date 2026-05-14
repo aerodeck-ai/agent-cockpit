@@ -17,6 +17,7 @@ import {
   type ProfileSnapshot,
   type WorkflowState,
 } from '@/stores/agent-workflow-store'
+import { useTenantRole } from '@/hooks/use-tenant-role'
 
 // ── State badge config ────────────────────────────────────────────────────────
 
@@ -200,10 +201,32 @@ function ProfileCard({ snap }: { snap: ProfileSnapshot }) {
   )
 }
 
+// ── Tenant profile allowlists ─────────────────────────────────────────────────
+
+/**
+ * Profiles surfaced to each tenant.
+ * henry_cos → everything except Mally's profiles.
+ * mally     → only her profiles.
+ * null/unknown → fall back to henry_cos (no disruption).
+ */
+const MALLY_PROFILES = new Set(['mally', 'mally-second'])
+
+function filterProfilesByTenant(
+  profiles: ProfileSnapshot[],
+  tenant: string | null,
+): ProfileSnapshot[] {
+  if (tenant === 'mally') {
+    return profiles.filter((p) => MALLY_PROFILES.has(p.profile))
+  }
+  // henry_cos or unknown → exclude mally profiles
+  return profiles.filter((p) => !MALLY_PROFILES.has(p.profile))
+}
+
 // ── WorkflowView ──────────────────────────────────────────────────────────────
 
 export default function WorkflowView() {
   const { snapshots, ingestSpans } = useAgentWorkflowStore()
+  const { tenant, displayName, loading: tenantLoading } = useTenantRole()
   const abortRef = useRef<AbortController | null>(null)
   const isFixture = useRef(false)
 
@@ -250,7 +273,8 @@ export default function WorkflowView() {
     }
   }, [ingestSpans])
 
-  const profiles = Object.values(snapshots)
+  const allProfiles = Object.values(snapshots)
+  const profiles = filterProfilesByTenant(allProfiles, tenantLoading ? null : tenant)
 
   // Sort: error first → active states → idle/done
   const statePriority: Record<WorkflowState, number> = {
@@ -267,6 +291,11 @@ export default function WorkflowView() {
   )
 
   const fixtureMode = isFixture.current && sorted.length > 0
+  const tenantLabel = tenantLoading
+    ? null
+    : displayName
+      ? `Showing profiles for ${displayName}`
+      : 'Showing all profiles'
 
   return (
     <div className="h-full overflow-y-auto p-6">
@@ -276,6 +305,11 @@ export default function WorkflowView() {
         <span className="text-xs text-muted-foreground">
           Per-profile state machine · polling every 3 s
         </span>
+        {tenantLabel && (
+          <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground">
+            {tenantLabel}
+          </span>
+        )}
         {fixtureMode && (
           <span className="rounded-full border border-amber-500/50 bg-amber-400/10 px-2 py-0.5 text-[11px] font-semibold text-amber-400">
             FIXTURE DATA
