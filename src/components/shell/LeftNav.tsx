@@ -242,7 +242,7 @@ function CounterRow({ emoji, label, count, hasError, hasDot, onClick }: CounterR
   return (
     <button
       ref={rowRef}
-      className="leftnav-counter-row"
+      className="leftnav-counter-row atc-interactive"
       onClick={() => {
         if (rowRef.current) onClick(rowRef.current)
       }}
@@ -336,7 +336,8 @@ function MilestonesCounterRow({ onOpen }: { onOpen: (el: HTMLElement, content: R
   const { data, isLoading, error } = useQuery<MilestonesResponse>({
     queryKey: ['vectos', 'milestones', tenant],
     queryFn: async () => {
-      const resp = await fetch('https://vectos.berl.ai/api/milestones', { credentials: 'include' })
+      // Use server-side proxy to bypass CF Access CORS restriction
+      const resp = await fetch('/api/milestones')
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
       return resp.json()
     },
@@ -393,10 +394,13 @@ function MeetingsCounterRow({ onOpen }: { onOpen: (el: HTMLElement, content: Rea
   const { data, isLoading, error } = useQuery<MeetingsResponse>({
     queryKey: ['vectos', 'meetings-today'],
     queryFn: async () => {
-      const resp = await fetch('https://vectos.berl.ai/api/meetings/today', { credentials: 'include' })
-      if (resp.status === 404) return { meetings: [] }
+      // Use server-side proxy to bypass CF Access CORS restriction
+      const resp = await fetch('/api/meetings')
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
-      return resp.json()
+      const body = await resp.json() as { meetings?: Meeting[]; data?: Meeting[]; source?: string }
+      // proxy returns source:"vectos_404" when the upstream endpoint is not yet implemented
+      if (body.source === 'vectos_404') return { meetings: [] }
+      return body
     },
     refetchInterval: 10 * 60_000,
     staleTime: 9 * 60_000,
@@ -511,7 +515,7 @@ function NavLink({ entry, active }: { entry: NavEntry; active: boolean }) {
       to={entry.to as any}
       aria-label={entry.label}
       className={cn(
-        'leftnav-link',
+        'leftnav-link atc-interactive',
         active ? 'leftnav-link-active' : 'leftnav-link-idle',
       )}
     >
@@ -560,7 +564,7 @@ export function LeftNav() {
     <>
       <nav
         aria-label="Cockpit navigation"
-        className="leftnav"
+        className="leftnav leftnav-slim"
       >
         {/* Logo */}
         <div className="leftnav-logo">

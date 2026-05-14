@@ -65,10 +65,10 @@ export function ObservePage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px flex items-center gap-1.5',
+                'px-4 py-3 text-sm font-medium border-b-2 -mb-px flex items-center gap-1.5 atc-interactive observe-tab-btn',
                 activeTab === tab.id
-                  ? 'border-primary text-foreground'
-                  : 'border-transparent text-muted-foreground hover:text-foreground',
+                  ? 'border-primary text-foreground observe-tab-active'
+                  : 'border-transparent text-muted-foreground hover:text-foreground observe-tab-inactive',
               )}
             >
               <span>{tab.emoji}</span>

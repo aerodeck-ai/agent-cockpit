@@ -2427,3 +2427,331 @@ a.home-rail-item-title:hover {
 .flow-strip-skeleton-row.short {
   width: 55%;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CYBERPUNK DESIGN PASS — berlai theme enhancements
+   Refs: brief-cyberpunk.md | 2026-05-13-cockpit-design-upgrades.md
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── A. Extended cyberpunk color tokens (berlai dark only) ───── */
+[data-theme='berlai'] {
+  --cp-cyan: #22e9ff;
+  --cp-magenta: #ff3b8a;
+  --cp-cyan-subtle: rgba(34, 233, 255, 0.10);
+  --cp-magenta-subtle: rgba(255, 59, 138, 0.10);
+  --cp-accent-glow: 0 0 12px rgba(151, 103, 253, 0.30);
+  --cp-cyan-glow: 0 0 12px rgba(34, 233, 255, 0.25);
+}
+
+/* ── B. Scanline overlay (berlai dark only, pseudo-element on body) */
+[data-theme='berlai'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.015) 3px,
+    rgba(0, 0, 0, 0.015) 4px
+  );
+}
+
+/* ── C. LeftNav cyberpunk enhancements ───────────────────────── */
+
+/* Right edge neon line at 30% opacity */
+[data-theme='berlai'] .leftnav {
+  border-right-color: rgba(151, 103, 253, 0.30);
+}
+
+/* Active link: 2px left-edge full accent + subtle glow */
+[data-theme='berlai'] .leftnav-link-active {
+  box-shadow: inset 2px 0 0 var(--theme-accent), var(--cp-accent-glow);
+}
+
+/* Active bar: neon glow */
+[data-theme='berlai'] .leftnav-active-bar {
+  box-shadow: 0 0 6px var(--theme-accent), 0 0 12px rgba(151, 103, 253, 0.40);
+}
+
+/* Wordmark: mono font, letter-spaced */
+[data-theme='berlai'] .leftnav-wordmark {
+  font-family: 'JetBrains Mono', ui-monospace, 'IBM Plex Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Nav link labels: mono headings */
+[data-theme='berlai'] .leftnav-link-label {
+  font-family: 'JetBrains Mono', ui-monospace, 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+/* Counter labels: mono */
+[data-theme='berlai'] .leftnav-counter-label {
+  font-family: 'JetBrains Mono', ui-monospace, 'IBM Plex Mono', monospace;
+  font-size: 0.73rem;
+  letter-spacing: 0.03em;
+}
+
+/* ── F. LeftNav slim: 56px icons-only by default, 168px on hover */
+/* Pure CSS: width on the nav element drives the auto grid column.
+   overflow:hidden clips labels until hover.                          */
+.leftnav-slim {
+  width: 56px;
+  transition: width 0.20s ease;
+  overflow: hidden;
+}
+
+.leftnav-slim:hover {
+  width: 168px;
+  /* keep overflow hidden to prevent clip artifacts during transition */
+  overflow: hidden;
+}
+
+/* When slim: clip text/labels — they fade in as width expands */
+.leftnav-slim .leftnav-wordmark {
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.12s ease;
+}
+
+.leftnav-slim .leftnav-link-label {
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.12s ease;
+}
+
+.leftnav-slim .leftnav-counter-label,
+.leftnav-slim .leftnav-counter-value {
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.12s ease;
+}
+
+.leftnav-slim:hover .leftnav-wordmark,
+.leftnav-slim:hover .leftnav-link-label,
+.leftnav-slim:hover .leftnav-counter-label,
+.leftnav-slim:hover .leftnav-counter-value {
+  opacity: 1;
+  transition-delay: 0.08s;
+}
+
+/* ── D. Backdrop — drop chat input blur, replace with accent border  */
+/* Override backdrop-blur on md chat composer wrapper                  */
+[data-theme='berlai'] .md\:backdrop-blur {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[data-theme='berlai'] .backdrop-blur-xl,
+[data-theme='berlai'] .backdrop-blur-2xl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--theme-accent-border) !important;
+}
+
+/* ── E. Microinteractions: hover lift + glow ─────────────────── */
+
+/* atc-interactive utility: apply to buttons/tabs/cards that should lift */
+.atc-interactive {
+  transition: box-shadow 0.15s ease, transform 0.10s ease;
+}
+
+.atc-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--cp-accent-glow, 0 0 12px rgba(151, 103, 253, 0.25));
+}
+
+.atc-interactive:focus-visible {
+  outline: 2px solid rgba(151, 103, 253, 0.50);
+  outline-offset: 2px;
+}
+
+/* Tab transitions: 200ms fade */
+[data-theme='berlai'] .observe-tab-btn {
+  transition: color 0.20s ease, border-color 0.20s ease, opacity 0.20s ease;
+}
+
+/* ── C. Button ghost double-stroke treatment (berlai dark) ────── */
+/* Adds outer ring on hover for the "double-stroke" neon border look */
+[data-theme='berlai'] button.cp-btn-ghost,
+[data-theme='berlai'] .cp-btn-ghost {
+  background: transparent;
+  border: 1px solid var(--theme-accent-border);
+  outline: 1px solid transparent;
+  outline-offset: 2px;
+  border-radius: 6px;
+  transition: outline-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-theme='berlai'] button.cp-btn-ghost:hover,
+[data-theme='berlai'] .cp-btn-ghost:hover {
+  border-color: var(--cp-cyan);
+  outline-color: rgba(34, 233, 255, 0.35);
+  box-shadow: var(--cp-cyan-glow);
+}
+
+/* ── C. Cards + panels: corner accent marks ─────────────────── */
+/* Apply .cp-card to panel/card wrappers for cyberpunk corner marks   */
+[data-theme='berlai'] .cp-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--theme-border);
+}
+
+/* Top-left corner mark */
+[data-theme='berlai'] .cp-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--theme-accent);
+  border-left: 2px solid var(--theme-accent);
+  pointer-events: none;
+}
+
+/* Bottom-right corner mark */
+[data-theme='berlai'] .cp-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--theme-accent);
+  border-right: 2px solid var(--theme-accent);
+  pointer-events: none;
+}
+
+/* ── C. Status pills: monospace, all-caps, ● prefix ─────────── */
+/* Apply .cp-status-pill to connection/status badge wrappers           */
+.cp-status-pill {
+  font-family: 'JetBrains Mono', ui-monospace, 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+}
+
+.cp-status-pill::before {
+  content: '●';
+  font-size: 0.55rem;
+  line-height: 1;
+}
+
+/* Status color variants */
+.cp-status-connected {
+  color: #63d0a6;
+  border-color: rgba(99, 208, 166, 0.35);
+  background: rgba(99, 208, 166, 0.08);
+}
+
+.cp-status-connected::before {
+  animation: cp-pulse-green 2s ease-in-out infinite;
+}
+
+.cp-status-disconnected {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.cp-status-idle {
+  color: var(--theme-muted);
+  border-color: rgba(151, 103, 253, 0.20);
+  background: transparent;
+}
+
+.cp-status-partial {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+@keyframes cp-pulse-green {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── B. Typography: mono headings ────────────────────────────── */
+/* Applied scoped to berlai dark to avoid breaking other themes        */
+[data-theme='berlai'] h1,
+[data-theme='berlai'] h2,
+[data-theme='berlai'] h3 {
+  font-family: 'JetBrains Mono', ui-monospace, 'IBM Plex Mono', monospace;
+  letter-spacing: 0.02em;
+}
+
+/* All-caps headings get wider tracking */
+[data-theme='berlai'] .cp-label-caps {
+  font-family: 'JetBrains Mono', ui-monospace, 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--theme-muted);
+}
+
+/* ── Observe page tabs (cyberpunk underline + dot) ───────────── */
+/* Active tab: full accent underline 2px + small dot indicator         */
+[data-theme='berlai'] .observe-tab-active {
+  border-bottom-color: var(--theme-accent) !important;
+  color: var(--theme-text) !important;
+  position: relative;
+}
+
+/* Small accent dot below active tab label */
+[data-theme='berlai'] .observe-tab-active::after {
+  content: '●';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.35rem;
+  color: var(--theme-accent);
+  line-height: 1;
+}
+
+/* Inactive tabs: faded label */
+[data-theme='berlai'] .observe-tab-inactive {
+  opacity: 0.55;
+}
+
+[data-theme='berlai'] .observe-tab-inactive:hover {
+  opacity: 0.85;
+}
+
+/* ── KPI card hover — extra neon glow for berlai ─────────────── */
+[data-theme='berlai'] .kpi-card {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* ── ATC surface-depth vars (from research doc) ──────────────── */
+/* Additive — existing classes keep working; new classes opt-in        */
+[data-theme='berlai'] {
+  --atc-surface-0: #07070d;
+  --atc-surface-1: #0d0d15;
+  --atc-surface-2: #12121a;
+  --atc-surface-3: #1a1a26;
+  --atc-border: rgba(151, 103, 253, 0.22);
+  --atc-accent: #9767fd;
+  --atc-accent-subtle: rgba(151, 103, 253, 0.08);
+  --atc-cyan: #22e9ff;
+  --atc-success: #63d0a6;
+  --atc-warning: #f59e0b;
+  --atc-error: #ef4444;
+}

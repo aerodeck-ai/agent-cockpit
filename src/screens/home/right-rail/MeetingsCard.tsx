@@ -39,16 +39,16 @@ export function MeetingsCard() {
   const { data, isLoading, error } = useQuery<MeetingsResponse>({
     queryKey: ['vectos', 'meetings-today'],
     queryFn: async () => {
-      const resp = await fetch('https://vectos.berl.ai/api/meetings/today', {
-        credentials: 'include',
-      })
-      if (resp.status === 404) {
-        // Endpoint not implemented — signal to use iframe fallback
+      // Use server-side proxy to bypass CF Access CORS restriction
+      const resp = await fetch('/api/meetings')
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+      const body = await resp.json() as { meetings?: Meeting[]; data?: Meeting[]; source?: string }
+      // proxy returns source:"vectos_404" when the upstream endpoint is not yet implemented
+      if (body.source === 'vectos_404') {
         setUseIframe(true)
         return { meetings: [] }
       }
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
-      return resp.json()
+      return body
     },
     refetchInterval: 10 * 60_000,
     staleTime: 9 * 60_000,

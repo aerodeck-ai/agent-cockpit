@@ -143,20 +143,19 @@ export function StatusIndicator({
   const isPartial = data?.status === 'partial'
   const tooltip = buildTooltip(data, label)
 
+  const cpStatusClass =
+    isConnected
+      ? 'cp-status-pill cp-status-connected'
+      : isPartial
+        ? 'cp-status-pill cp-status-partial'
+        : isLoading
+          ? 'cp-status-pill cp-status-idle'
+          : 'cp-status-pill cp-status-disconnected'
+
   if (inline) {
     return (
       <span className="flex items-center gap-1.5" title={tooltip}>
-        <span className="relative flex h-1.5 w-1.5 shrink-0">
-          {(isLoading || isConnected || isPartial) && (
-            <span
-              className={`absolute inline-flex h-full w-full animate-ping rounded-full ${pulseColor}`}
-            />
-          )}
-          <span
-            className={`relative inline-flex h-1.5 w-1.5 rounded-full ${dotColor}`}
-          />
-        </span>
-        <span className="text-[10px] text-primary-400 dark:text-gray-500">
+        <span className={cpStatusClass}>
           {label}
         </span>
       </span>
@@ -165,19 +164,21 @@ export function StatusIndicator({
 
   return (
     <div className="flex items-center gap-2 px-2 py-1.5" title={tooltip}>
-      <span className="relative flex h-2 w-2 shrink-0">
-        {(isLoading || isConnected || isPartial) && (
-          <span
-            className={`absolute inline-flex h-full w-full animate-ping rounded-full ${pulseColor}`}
-          />
-        )}
-        <span
-          className={`relative inline-flex h-2 w-2 rounded-full ${dotColor}`}
-        />
-      </span>
       {!collapsed && (
-        <span className="truncate text-[11px] text-primary-500 dark:text-gray-400">
+        <span className={cpStatusClass}>
           {label}
+        </span>
+      )}
+      {collapsed && (
+        <span className="relative flex h-2 w-2 shrink-0">
+          {(isLoading || isConnected || isPartial) && (
+            <span
+              className={`absolute inline-flex h-full w-full animate-ping rounded-full ${pulseColor}`}
+            />
+          )}
+          <span
+            className={`relative inline-flex h-2 w-2 rounded-full ${dotColor}`}
+          />
         </span>
       )}
     </div>
