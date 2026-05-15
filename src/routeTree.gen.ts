@@ -20,9 +20,12 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
+import { Route as OfficeRouteImport } from './routes/office'
+import { Route as ObserveRouteImport } from './routes/observe'
 import { Route as ModelsRouteImport } from './routes/models'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as GuardrailsRouteImport } from './routes/guardrails'
 import { Route as FlowRouteImport } from './routes/flow'
@@ -30,6 +33,7 @@ import { Route as FilesRouteImport } from './routes/files'
 import { Route as EvalsRouteImport } from './routes/evals'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
+import { Route as BuildRouteImport } from './routes/build'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -128,6 +132,8 @@ import { Route as ApiProfilesListRouteImport } from './routes/api/profiles/list'
 import { Route as ApiProfilesDeleteRouteImport } from './routes/api/profiles/delete'
 import { Route as ApiProfilesCreateRouteImport } from './routes/api/profiles/create'
 import { Route as ApiProfilesActivateRouteImport } from './routes/api/profiles/activate'
+import { Route as ApiObserveSpansRouteImport } from './routes/api/observe/spans'
+import { Route as ApiObserveCostRouteImport } from './routes/api/observe/cost'
 import { Route as ApiOauthPollTokenRouteImport } from './routes/api/oauth.poll-token'
 import { Route as ApiOauthDeviceCodeRouteImport } from './routes/api/oauth.device-code'
 import { Route as ApiModelsProfilesRouteImport } from './routes/api/models/profiles'
@@ -166,6 +172,7 @@ import { Route as ApiBudgetStatusRouteImport } from './routes/api/budget/status'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
+import { Route as ApiObserveIntentIntentIdRouteImport } from './routes/api/observe/intent/$intentId'
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
@@ -225,6 +232,16 @@ const OperationsRoute = OperationsRouteImport.update({
   path: '/operations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfficeRoute = OfficeRouteImport.update({
+  id: '/office',
+  path: '/office',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObserveRoute = ObserveRouteImport.update({
+  id: '/observe',
+  path: '/observe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModelsRoute = ModelsRouteImport.update({
   id: '/models',
   path: '/models',
@@ -238,6 +255,11 @@ const MemoryRoute = MemoryRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowledgeRoute = KnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsRoute = JobsRouteImport.update({
@@ -273,6 +295,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConductorRoute = ConductorRouteImport.update({
   id: '/conductor',
   path: '/conductor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuildRoute = BuildRouteImport.update({
+  id: '/build',
+  path: '/build',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -766,6 +793,16 @@ const ApiProfilesActivateRoute = ApiProfilesActivateRouteImport.update({
   path: '/api/profiles/activate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiObserveSpansRoute = ApiObserveSpansRouteImport.update({
+  id: '/api/observe/spans',
+  path: '/api/observe/spans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiObserveCostRoute = ApiObserveCostRouteImport.update({
+  id: '/api/observe/cost',
+  path: '/api/observe/cost',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiOauthPollTokenRoute = ApiOauthPollTokenRouteImport.update({
   id: '/api/oauth/poll-token',
   path: '/api/oauth/poll-token',
@@ -960,6 +997,12 @@ const ApiSessionsSessionKeyActiveRunRoute =
     path: '/$sessionKey/active-run',
     getParentRoute: () => ApiSessionsRoute,
   } as any)
+const ApiObserveIntentIntentIdRoute =
+  ApiObserveIntentIntentIdRouteImport.update({
+    id: '/api/observe/intent/$intentId',
+    path: '/api/observe/intent/$intentId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiMcpHubSourcesIdRoute = ApiMcpHubSourcesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -980,6 +1023,7 @@ const ApiHermesworldReservationsConfirmRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/build': typeof BuildRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/evals': typeof EvalsRoute
@@ -987,9 +1031,12 @@ export interface FileRoutesByFullPath {
   '/flow': typeof FlowRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
+  '/knowledge': typeof KnowledgeRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
+  '/observe': typeof ObserveRoute
+  '/office': typeof OfficeRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/prompts': typeof PromptsRoute
@@ -1111,6 +1158,8 @@ export interface FileRoutesByFullPath {
   '/api/models/profiles': typeof ApiModelsProfilesRoute
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
+  '/api/observe/cost': typeof ApiObserveCostRoute
+  '/api/observe/spans': typeof ApiObserveSpansRoute
   '/api/profiles/activate': typeof ApiProfilesActivateRoute
   '/api/profiles/create': typeof ApiProfilesCreateRoute
   '/api/profiles/delete': typeof ApiProfilesDeleteRoute
@@ -1136,12 +1185,14 @@ export interface FileRoutesByFullPath {
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
+  '/api/observe/intent/$intentId': typeof ApiObserveIntentIntentIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/build': typeof BuildRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/evals': typeof EvalsRoute
@@ -1149,9 +1200,12 @@ export interface FileRoutesByTo {
   '/flow': typeof FlowRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
+  '/knowledge': typeof KnowledgeRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
+  '/observe': typeof ObserveRoute
+  '/office': typeof OfficeRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/prompts': typeof PromptsRoute
@@ -1272,6 +1326,8 @@ export interface FileRoutesByTo {
   '/api/models/profiles': typeof ApiModelsProfilesRoute
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
+  '/api/observe/cost': typeof ApiObserveCostRoute
+  '/api/observe/spans': typeof ApiObserveSpansRoute
   '/api/profiles/activate': typeof ApiProfilesActivateRoute
   '/api/profiles/create': typeof ApiProfilesCreateRoute
   '/api/profiles/delete': typeof ApiProfilesDeleteRoute
@@ -1297,6 +1353,7 @@ export interface FileRoutesByTo {
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
+  '/api/observe/intent/$intentId': typeof ApiObserveIntentIntentIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1304,6 +1361,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/build': typeof BuildRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
   '/evals': typeof EvalsRoute
@@ -1311,9 +1369,12 @@ export interface FileRoutesById {
   '/flow': typeof FlowRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
+  '/knowledge': typeof KnowledgeRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
+  '/observe': typeof ObserveRoute
+  '/office': typeof OfficeRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/prompts': typeof PromptsRoute
@@ -1435,6 +1496,8 @@ export interface FileRoutesById {
   '/api/models/profiles': typeof ApiModelsProfilesRoute
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
+  '/api/observe/cost': typeof ApiObserveCostRoute
+  '/api/observe/spans': typeof ApiObserveSpansRoute
   '/api/profiles/activate': typeof ApiProfilesActivateRoute
   '/api/profiles/create': typeof ApiProfilesCreateRoute
   '/api/profiles/delete': typeof ApiProfilesDeleteRoute
@@ -1460,6 +1523,7 @@ export interface FileRoutesById {
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
+  '/api/observe/intent/$intentId': typeof ApiObserveIntentIntentIdRoute
   '/api/sessions/$sessionKey/active-run': typeof ApiSessionsSessionKeyActiveRunRoute
   '/api/sessions/$sessionKey/status': typeof ApiSessionsSessionKeyStatusRoute
 }
@@ -1468,6 +1532,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/build'
     | '/conductor'
     | '/dashboard'
     | '/evals'
@@ -1475,9 +1540,12 @@ export interface FileRouteTypes {
     | '/flow'
     | '/guardrails'
     | '/jobs'
+    | '/knowledge'
     | '/mcp'
     | '/memory'
     | '/models'
+    | '/observe'
+    | '/office'
     | '/operations'
     | '/profiles'
     | '/prompts'
@@ -1599,6 +1667,8 @@ export interface FileRouteTypes {
     | '/api/models/profiles'
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
+    | '/api/observe/cost'
+    | '/api/observe/spans'
     | '/api/profiles/activate'
     | '/api/profiles/create'
     | '/api/profiles/delete'
@@ -1624,12 +1694,14 @@ export interface FileRouteTypes {
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
+    | '/api/observe/intent/$intentId'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
+    | '/build'
     | '/conductor'
     | '/dashboard'
     | '/evals'
@@ -1637,9 +1709,12 @@ export interface FileRouteTypes {
     | '/flow'
     | '/guardrails'
     | '/jobs'
+    | '/knowledge'
     | '/mcp'
     | '/memory'
     | '/models'
+    | '/observe'
+    | '/office'
     | '/operations'
     | '/profiles'
     | '/prompts'
@@ -1760,6 +1835,8 @@ export interface FileRouteTypes {
     | '/api/models/profiles'
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
+    | '/api/observe/cost'
+    | '/api/observe/spans'
     | '/api/profiles/activate'
     | '/api/profiles/create'
     | '/api/profiles/delete'
@@ -1785,12 +1862,14 @@ export interface FileRouteTypes {
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
+    | '/api/observe/intent/$intentId'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   id:
     | '__root__'
     | '/'
     | '/$'
+    | '/build'
     | '/conductor'
     | '/dashboard'
     | '/evals'
@@ -1798,9 +1877,12 @@ export interface FileRouteTypes {
     | '/flow'
     | '/guardrails'
     | '/jobs'
+    | '/knowledge'
     | '/mcp'
     | '/memory'
     | '/models'
+    | '/observe'
+    | '/office'
     | '/operations'
     | '/profiles'
     | '/prompts'
@@ -1922,6 +2004,8 @@ export interface FileRouteTypes {
     | '/api/models/profiles'
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
+    | '/api/observe/cost'
+    | '/api/observe/spans'
     | '/api/profiles/activate'
     | '/api/profiles/create'
     | '/api/profiles/delete'
@@ -1947,6 +2031,7 @@ export interface FileRouteTypes {
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
+    | '/api/observe/intent/$intentId'
     | '/api/sessions/$sessionKey/active-run'
     | '/api/sessions/$sessionKey/status'
   fileRoutesById: FileRoutesById
@@ -1954,6 +2039,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  BuildRoute: typeof BuildRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
   EvalsRoute: typeof EvalsRoute
@@ -1961,9 +2047,12 @@ export interface RootRouteChildren {
   FlowRoute: typeof FlowRoute
   GuardrailsRoute: typeof GuardrailsRoute
   JobsRoute: typeof JobsRoute
+  KnowledgeRoute: typeof KnowledgeRoute
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
   ModelsRoute: typeof ModelsRoute
+  ObserveRoute: typeof ObserveRoute
+  OfficeRoute: typeof OfficeRoute
   OperationsRoute: typeof OperationsRoute
   ProfilesRoute: typeof ProfilesRoute
   PromptsRoute: typeof PromptsRoute
@@ -2065,6 +2154,8 @@ export interface RootRouteChildren {
   ApiModelInfoRoute: typeof ApiModelInfoRoute
   ApiOauthDeviceCodeRoute: typeof ApiOauthDeviceCodeRoute
   ApiOauthPollTokenRoute: typeof ApiOauthPollTokenRoute
+  ApiObserveCostRoute: typeof ApiObserveCostRoute
+  ApiObserveSpansRoute: typeof ApiObserveSpansRoute
   ApiProfilesActivateRoute: typeof ApiProfilesActivateRoute
   ApiProfilesCreateRoute: typeof ApiProfilesCreateRoute
   ApiProfilesDeleteRoute: typeof ApiProfilesDeleteRoute
@@ -2079,6 +2170,7 @@ export interface RootRouteChildren {
   ApiVoiceChatRoute: typeof ApiVoiceChatRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
+  ApiObserveIntentIntentIdRoute: typeof ApiObserveIntentIntentIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2160,6 +2252,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OperationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/office': {
+      id: '/office'
+      path: '/office'
+      fullPath: '/office'
+      preLoaderRoute: typeof OfficeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/observe': {
+      id: '/observe'
+      path: '/observe'
+      fullPath: '/observe'
+      preLoaderRoute: typeof ObserveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/models': {
       id: '/models'
       path: '/models'
@@ -2179,6 +2285,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/knowledge': {
+      id: '/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs': {
@@ -2228,6 +2341,13 @@ declare module '@tanstack/react-router' {
       path: '/conductor'
       fullPath: '/conductor'
       preLoaderRoute: typeof ConductorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/build': {
+      id: '/build'
+      path: '/build'
+      fullPath: '/build'
+      preLoaderRoute: typeof BuildRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -2916,6 +3036,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiProfilesActivateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/observe/spans': {
+      id: '/api/observe/spans'
+      path: '/api/observe/spans'
+      fullPath: '/api/observe/spans'
+      preLoaderRoute: typeof ApiObserveSpansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/observe/cost': {
+      id: '/api/observe/cost'
+      path: '/api/observe/cost'
+      fullPath: '/api/observe/cost'
+      preLoaderRoute: typeof ApiObserveCostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/oauth/poll-token': {
       id: '/api/oauth/poll-token'
       path: '/api/oauth/poll-token'
@@ -3182,6 +3316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSessionsSessionKeyActiveRunRouteImport
       parentRoute: typeof ApiSessionsRoute
     }
+    '/api/observe/intent/$intentId': {
+      id: '/api/observe/intent/$intentId'
+      path: '/api/observe/intent/$intentId'
+      fullPath: '/api/observe/intent/$intentId'
+      preLoaderRoute: typeof ApiObserveIntentIntentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/mcp/hub-sources/$id': {
       id: '/api/mcp/hub-sources/$id'
       path: '/$id'
@@ -3416,6 +3557,7 @@ const ApiHermesworldReservationsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  BuildRoute: BuildRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
   EvalsRoute: EvalsRoute,
@@ -3423,9 +3565,12 @@ const rootRouteChildren: RootRouteChildren = {
   FlowRoute: FlowRoute,
   GuardrailsRoute: GuardrailsRoute,
   JobsRoute: JobsRoute,
+  KnowledgeRoute: KnowledgeRoute,
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
   ModelsRoute: ModelsRoute,
+  ObserveRoute: ObserveRoute,
+  OfficeRoute: OfficeRoute,
   OperationsRoute: OperationsRoute,
   ProfilesRoute: ProfilesRoute,
   PromptsRoute: PromptsRoute,
@@ -3527,6 +3672,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiModelInfoRoute: ApiModelInfoRoute,
   ApiOauthDeviceCodeRoute: ApiOauthDeviceCodeRoute,
   ApiOauthPollTokenRoute: ApiOauthPollTokenRoute,
+  ApiObserveCostRoute: ApiObserveCostRoute,
+  ApiObserveSpansRoute: ApiObserveSpansRoute,
   ApiProfilesActivateRoute: ApiProfilesActivateRoute,
   ApiProfilesCreateRoute: ApiProfilesCreateRoute,
   ApiProfilesDeleteRoute: ApiProfilesDeleteRoute,
@@ -3541,6 +3688,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceChatRoute: ApiVoiceChatRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
+  ApiObserveIntentIntentIdRoute: ApiObserveIntentIntentIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
