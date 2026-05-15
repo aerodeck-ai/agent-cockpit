@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WatchdogsRouteImport } from './routes/watchdogs'
 import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as TracesRouteImport } from './routes/traces'
 import { Route as TerminalRouteImport } from './routes/terminal'
@@ -28,12 +29,15 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as GuardrailsRouteImport } from './routes/guardrails'
+import { Route as GoalRouteImport } from './routes/goal'
 import { Route as FlowRouteImport } from './routes/flow'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as EvalsRouteImport } from './routes/evals'
+import { Route as DecisionsRouteImport } from './routes/decisions'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
 import { Route as BuildRouteImport } from './routes/build'
+import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
@@ -41,6 +45,7 @@ import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
+import { Route as ApiWatchdogsRouteImport } from './routes/api/watchdogs'
 import { Route as ApiVoiceWatchdogLogRouteImport } from './routes/api/voice-watchdog-log'
 import { Route as ApiVoiceFleetRouteImport } from './routes/api/voice-fleet'
 import { Route as ApiVoiceCostRouteImport } from './routes/api/voice-cost'
@@ -163,13 +168,22 @@ import { Route as ApiHermesPersonalProbeRouteImport } from './routes/api/hermes/
 import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
 import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
 import { Route as ApiGuardrailsPiiClassifierRouteImport } from './routes/api/guardrails/pii-classifier'
+import { Route as ApiGoalPauseRouteImport } from './routes/api/goal/pause'
+import { Route as ApiGoalListRouteImport } from './routes/api/goal/list'
+import { Route as ApiGoalHardStopRouteImport } from './routes/api/goal/hard-stop'
+import { Route as ApiGoalCreateRouteImport } from './routes/api/goal/create'
+import { Route as ApiGoalIdRouteImport } from './routes/api/goal/$id'
 import { Route as ApiFlowEventsRouteImport } from './routes/api/flow/events'
+import { Route as ApiDecisionsReadRouteImport } from './routes/api/decisions/read'
+import { Route as ApiDecisionsListRouteImport } from './routes/api/decisions/list'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
+import { Route as ApiCostRateSseRouteImport } from './routes/api/cost-rate/sse'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
 import { Route as ApiBudgetStatusRouteImport } from './routes/api/budget/status'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
+import { Route as ApiAgentsListRouteImport } from './routes/api/agents/list'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
 import { Route as ApiObserveIntentIntentIdRouteImport } from './routes/api/observe/intent/$intentId'
@@ -177,6 +191,11 @@ import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sou
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 
+const WatchdogsRoute = WatchdogsRouteImport.update({
+  id: '/watchdogs',
+  path: '/watchdogs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
@@ -272,6 +291,11 @@ const GuardrailsRoute = GuardrailsRouteImport.update({
   path: '/guardrails',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GoalRoute = GoalRouteImport.update({
+  id: '/goal',
+  path: '/goal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FlowRoute = FlowRouteImport.update({
   id: '/flow',
   path: '/flow',
@@ -287,6 +311,11 @@ const EvalsRoute = EvalsRouteImport.update({
   path: '/evals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DecisionsRoute = DecisionsRouteImport.update({
+  id: '/decisions',
+  path: '/decisions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -300,6 +329,11 @@ const ConductorRoute = ConductorRouteImport.update({
 const BuildRoute = BuildRouteImport.update({
   id: '/build',
   path: '/build',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentsRoute = AgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -335,6 +369,11 @@ const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   id: '/api/workspace',
   path: '/api/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWatchdogsRoute = ApiWatchdogsRouteImport.update({
+  id: '/api/watchdogs',
+  path: '/api/watchdogs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiVoiceWatchdogLogRoute = ApiVoiceWatchdogLogRouteImport.update({
@@ -950,14 +989,54 @@ const ApiGuardrailsPiiClassifierRoute =
     path: '/api/guardrails/pii-classifier',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiGoalPauseRoute = ApiGoalPauseRouteImport.update({
+  id: '/api/goal/pause',
+  path: '/api/goal/pause',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGoalListRoute = ApiGoalListRouteImport.update({
+  id: '/api/goal/list',
+  path: '/api/goal/list',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGoalHardStopRoute = ApiGoalHardStopRouteImport.update({
+  id: '/api/goal/hard-stop',
+  path: '/api/goal/hard-stop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGoalCreateRoute = ApiGoalCreateRouteImport.update({
+  id: '/api/goal/create',
+  path: '/api/goal/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGoalIdRoute = ApiGoalIdRouteImport.update({
+  id: '/api/goal/$id',
+  path: '/api/goal/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiFlowEventsRoute = ApiFlowEventsRouteImport.update({
   id: '/api/flow/events',
   path: '/api/flow/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDecisionsReadRoute = ApiDecisionsReadRouteImport.update({
+  id: '/api/decisions/read',
+  path: '/api/decisions/read',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDecisionsListRoute = ApiDecisionsListRouteImport.update({
+  id: '/api/decisions/list',
+  path: '/api/decisions/list',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   id: '/api/dashboard/overview',
   path: '/api/dashboard/overview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCostRateSseRoute = ApiCostRateSseRouteImport.update({
+  id: '/api/cost-rate/sse',
+  path: '/api/cost-rate/sse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiClaudeTasksTaskIdRoute = ApiClaudeTasksTaskIdRouteImport.update({
@@ -984,6 +1063,11 @@ const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   id: '/$artifactId',
   path: '/$artifactId',
   getParentRoute: () => ApiArtifactsRoute,
+} as any)
+const ApiAgentsListRoute = ApiAgentsListRouteImport.update({
+  id: '/api/agents/list',
+  path: '/api/agents/list',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiSessionsSessionKeyStatusRoute =
   ApiSessionsSessionKeyStatusRouteImport.update({
@@ -1023,12 +1107,15 @@ const ApiHermesworldReservationsConfirmRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agents': typeof AgentsRoute
   '/build': typeof BuildRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/decisions': typeof DecisionsRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
   '/flow': typeof FlowRoute
+  '/goal': typeof GoalRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
   '/knowledge': typeof KnowledgeRoute
@@ -1048,6 +1135,7 @@ export interface FileRoutesByFullPath {
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
   '/voice': typeof VoiceRoute
+  '/watchdogs': typeof WatchdogsRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1117,18 +1205,28 @@ export interface FileRoutesByFullPath {
   '/api/voice-cost': typeof ApiVoiceCostRoute
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
+  '/api/watchdogs': typeof ApiWatchdogsRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/agents/list': typeof ApiAgentsListRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/cost-rate/sse': typeof ApiCostRateSseRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/decisions/list': typeof ApiDecisionsListRoute
+  '/api/decisions/read': typeof ApiDecisionsReadRoute
   '/api/flow/events': typeof ApiFlowEventsRoute
+  '/api/goal/$id': typeof ApiGoalIdRoute
+  '/api/goal/create': typeof ApiGoalCreateRoute
+  '/api/goal/hard-stop': typeof ApiGoalHardStopRoute
+  '/api/goal/list': typeof ApiGoalListRoute
+  '/api/goal/pause': typeof ApiGoalPauseRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1192,12 +1290,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agents': typeof AgentsRoute
   '/build': typeof BuildRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/decisions': typeof DecisionsRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
   '/flow': typeof FlowRoute
+  '/goal': typeof GoalRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
   '/knowledge': typeof KnowledgeRoute
@@ -1216,6 +1317,7 @@ export interface FileRoutesByTo {
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
   '/voice': typeof VoiceRoute
+  '/watchdogs': typeof WatchdogsRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1285,18 +1387,28 @@ export interface FileRoutesByTo {
   '/api/voice-cost': typeof ApiVoiceCostRoute
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
+  '/api/watchdogs': typeof ApiWatchdogsRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
+  '/api/agents/list': typeof ApiAgentsListRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/cost-rate/sse': typeof ApiCostRateSseRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/decisions/list': typeof ApiDecisionsListRoute
+  '/api/decisions/read': typeof ApiDecisionsReadRoute
   '/api/flow/events': typeof ApiFlowEventsRoute
+  '/api/goal/$id': typeof ApiGoalIdRoute
+  '/api/goal/create': typeof ApiGoalCreateRoute
+  '/api/goal/hard-stop': typeof ApiGoalHardStopRoute
+  '/api/goal/list': typeof ApiGoalListRoute
+  '/api/goal/pause': typeof ApiGoalPauseRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1361,12 +1473,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/agents': typeof AgentsRoute
   '/build': typeof BuildRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
+  '/decisions': typeof DecisionsRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
   '/flow': typeof FlowRoute
+  '/goal': typeof GoalRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
   '/knowledge': typeof KnowledgeRoute
@@ -1386,6 +1501,7 @@ export interface FileRoutesById {
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
   '/voice': typeof VoiceRoute
+  '/watchdogs': typeof WatchdogsRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1455,18 +1571,28 @@ export interface FileRoutesById {
   '/api/voice-cost': typeof ApiVoiceCostRoute
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
+  '/api/watchdogs': typeof ApiWatchdogsRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
+  '/api/agents/list': typeof ApiAgentsListRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
+  '/api/cost-rate/sse': typeof ApiCostRateSseRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/decisions/list': typeof ApiDecisionsListRoute
+  '/api/decisions/read': typeof ApiDecisionsReadRoute
   '/api/flow/events': typeof ApiFlowEventsRoute
+  '/api/goal/$id': typeof ApiGoalIdRoute
+  '/api/goal/create': typeof ApiGoalCreateRoute
+  '/api/goal/hard-stop': typeof ApiGoalHardStopRoute
+  '/api/goal/list': typeof ApiGoalListRoute
+  '/api/goal/pause': typeof ApiGoalPauseRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1532,12 +1658,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
+    | '/agents'
     | '/build'
     | '/conductor'
     | '/dashboard'
+    | '/decisions'
     | '/evals'
     | '/files'
     | '/flow'
+    | '/goal'
     | '/guardrails'
     | '/jobs'
     | '/knowledge'
@@ -1557,6 +1686,7 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/traces'
     | '/voice'
+    | '/watchdogs'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1626,18 +1756,28 @@ export interface FileRouteTypes {
     | '/api/voice-cost'
     | '/api/voice-fleet'
     | '/api/voice-watchdog-log'
+    | '/api/watchdogs'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/agents/list'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/cost-rate/sse'
     | '/api/dashboard/overview'
+    | '/api/decisions/list'
+    | '/api/decisions/read'
     | '/api/flow/events'
+    | '/api/goal/$id'
+    | '/api/goal/create'
+    | '/api/goal/hard-stop'
+    | '/api/goal/list'
+    | '/api/goal/pause'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1701,12 +1841,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
+    | '/agents'
     | '/build'
     | '/conductor'
     | '/dashboard'
+    | '/decisions'
     | '/evals'
     | '/files'
     | '/flow'
+    | '/goal'
     | '/guardrails'
     | '/jobs'
     | '/knowledge'
@@ -1725,6 +1868,7 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/traces'
     | '/voice'
+    | '/watchdogs'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1794,18 +1938,28 @@ export interface FileRouteTypes {
     | '/api/voice-cost'
     | '/api/voice-fleet'
     | '/api/voice-watchdog-log'
+    | '/api/watchdogs'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/providers'
     | '/chat'
     | '/settings'
+    | '/api/agents/list'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/cost-rate/sse'
     | '/api/dashboard/overview'
+    | '/api/decisions/list'
+    | '/api/decisions/read'
     | '/api/flow/events'
+    | '/api/goal/$id'
+    | '/api/goal/create'
+    | '/api/goal/hard-stop'
+    | '/api/goal/list'
+    | '/api/goal/pause'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1869,12 +2023,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
+    | '/agents'
     | '/build'
     | '/conductor'
     | '/dashboard'
+    | '/decisions'
     | '/evals'
     | '/files'
     | '/flow'
+    | '/goal'
     | '/guardrails'
     | '/jobs'
     | '/knowledge'
@@ -1894,6 +2051,7 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/traces'
     | '/voice'
+    | '/watchdogs'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1963,18 +2121,28 @@ export interface FileRouteTypes {
     | '/api/voice-cost'
     | '/api/voice-fleet'
     | '/api/voice-watchdog-log'
+    | '/api/watchdogs'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
+    | '/api/agents/list'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
+    | '/api/cost-rate/sse'
     | '/api/dashboard/overview'
+    | '/api/decisions/list'
+    | '/api/decisions/read'
     | '/api/flow/events'
+    | '/api/goal/$id'
+    | '/api/goal/create'
+    | '/api/goal/hard-stop'
+    | '/api/goal/list'
+    | '/api/goal/pause'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -2039,12 +2207,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AgentsRoute: typeof AgentsRoute
   BuildRoute: typeof BuildRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
+  DecisionsRoute: typeof DecisionsRoute
   EvalsRoute: typeof EvalsRoute
   FilesRoute: typeof FilesRoute
   FlowRoute: typeof FlowRoute
+  GoalRoute: typeof GoalRoute
   GuardrailsRoute: typeof GuardrailsRoute
   JobsRoute: typeof JobsRoute
   KnowledgeRoute: typeof KnowledgeRoute
@@ -2064,6 +2235,7 @@ export interface RootRouteChildren {
   TerminalRoute: typeof TerminalRoute
   TracesRoute: typeof TracesRoute
   VoiceRoute: typeof VoiceRoute
+  WatchdogsRoute: typeof WatchdogsRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
@@ -2133,13 +2305,23 @@ export interface RootRouteChildren {
   ApiVoiceCostRoute: typeof ApiVoiceCostRoute
   ApiVoiceFleetRoute: typeof ApiVoiceFleetRoute
   ApiVoiceWatchdogLogRoute: typeof ApiVoiceWatchdogLogRoute
+  ApiWatchdogsRoute: typeof ApiWatchdogsRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  ApiAgentsListRoute: typeof ApiAgentsListRoute
   ApiBudgetStatusRoute: typeof ApiBudgetStatusRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
+  ApiCostRateSseRoute: typeof ApiCostRateSseRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
+  ApiDecisionsListRoute: typeof ApiDecisionsListRoute
+  ApiDecisionsReadRoute: typeof ApiDecisionsReadRoute
   ApiFlowEventsRoute: typeof ApiFlowEventsRoute
+  ApiGoalIdRoute: typeof ApiGoalIdRoute
+  ApiGoalCreateRoute: typeof ApiGoalCreateRoute
+  ApiGoalHardStopRoute: typeof ApiGoalHardStopRoute
+  ApiGoalListRoute: typeof ApiGoalListRoute
+  ApiGoalPauseRoute: typeof ApiGoalPauseRoute
   ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
   ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
   ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
@@ -2175,6 +2357,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/watchdogs': {
+      id: '/watchdogs'
+      path: '/watchdogs'
+      fullPath: '/watchdogs'
+      preLoaderRoute: typeof WatchdogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/voice': {
       id: '/voice'
       path: '/voice'
@@ -2308,6 +2497,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuardrailsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/goal': {
+      id: '/goal'
+      path: '/goal'
+      fullPath: '/goal'
+      preLoaderRoute: typeof GoalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/flow': {
       id: '/flow'
       path: '/flow'
@@ -2329,6 +2525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EvalsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/decisions': {
+      id: '/decisions'
+      path: '/decisions'
+      fullPath: '/decisions'
+      preLoaderRoute: typeof DecisionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -2348,6 +2551,13 @@ declare module '@tanstack/react-router' {
       path: '/build'
       fullPath: '/build'
       preLoaderRoute: typeof BuildRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agents': {
+      id: '/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -2397,6 +2607,13 @@ declare module '@tanstack/react-router' {
       path: '/api/workspace'
       fullPath: '/api/workspace'
       preLoaderRoute: typeof ApiWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/watchdogs': {
+      id: '/api/watchdogs'
+      path: '/api/watchdogs'
+      fullPath: '/api/watchdogs'
+      preLoaderRoute: typeof ApiWatchdogsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/voice-watchdog-log': {
@@ -3253,6 +3470,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGuardrailsPiiClassifierRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/goal/pause': {
+      id: '/api/goal/pause'
+      path: '/api/goal/pause'
+      fullPath: '/api/goal/pause'
+      preLoaderRoute: typeof ApiGoalPauseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/goal/list': {
+      id: '/api/goal/list'
+      path: '/api/goal/list'
+      fullPath: '/api/goal/list'
+      preLoaderRoute: typeof ApiGoalListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/goal/hard-stop': {
+      id: '/api/goal/hard-stop'
+      path: '/api/goal/hard-stop'
+      fullPath: '/api/goal/hard-stop'
+      preLoaderRoute: typeof ApiGoalHardStopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/goal/create': {
+      id: '/api/goal/create'
+      path: '/api/goal/create'
+      fullPath: '/api/goal/create'
+      preLoaderRoute: typeof ApiGoalCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/goal/$id': {
+      id: '/api/goal/$id'
+      path: '/api/goal/$id'
+      fullPath: '/api/goal/$id'
+      preLoaderRoute: typeof ApiGoalIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/flow/events': {
       id: '/api/flow/events'
       path: '/api/flow/events'
@@ -3260,11 +3512,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiFlowEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/decisions/read': {
+      id: '/api/decisions/read'
+      path: '/api/decisions/read'
+      fullPath: '/api/decisions/read'
+      preLoaderRoute: typeof ApiDecisionsReadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/decisions/list': {
+      id: '/api/decisions/list'
+      path: '/api/decisions/list'
+      fullPath: '/api/decisions/list'
+      preLoaderRoute: typeof ApiDecisionsListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dashboard/overview': {
       id: '/api/dashboard/overview'
       path: '/api/dashboard/overview'
       fullPath: '/api/dashboard/overview'
       preLoaderRoute: typeof ApiDashboardOverviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cost-rate/sse': {
+      id: '/api/cost-rate/sse'
+      path: '/api/cost-rate/sse'
+      fullPath: '/api/cost-rate/sse'
+      preLoaderRoute: typeof ApiCostRateSseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/claude-tasks/$taskId': {
@@ -3301,6 +3574,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/artifacts/$artifactId'
       preLoaderRoute: typeof ApiArtifactsArtifactIdRouteImport
       parentRoute: typeof ApiArtifactsRoute
+    }
+    '/api/agents/list': {
+      id: '/api/agents/list'
+      path: '/api/agents/list'
+      fullPath: '/api/agents/list'
+      preLoaderRoute: typeof ApiAgentsListRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/sessions/$sessionKey/status': {
       id: '/api/sessions/$sessionKey/status'
@@ -3557,12 +3837,15 @@ const ApiHermesworldReservationsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AgentsRoute: AgentsRoute,
   BuildRoute: BuildRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
+  DecisionsRoute: DecisionsRoute,
   EvalsRoute: EvalsRoute,
   FilesRoute: FilesRoute,
   FlowRoute: FlowRoute,
+  GoalRoute: GoalRoute,
   GuardrailsRoute: GuardrailsRoute,
   JobsRoute: JobsRoute,
   KnowledgeRoute: KnowledgeRoute,
@@ -3582,6 +3865,7 @@ const rootRouteChildren: RootRouteChildren = {
   TerminalRoute: TerminalRoute,
   TracesRoute: TracesRoute,
   VoiceRoute: VoiceRoute,
+  WatchdogsRoute: WatchdogsRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
@@ -3651,13 +3935,23 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceCostRoute: ApiVoiceCostRoute,
   ApiVoiceFleetRoute: ApiVoiceFleetRoute,
   ApiVoiceWatchdogLogRoute: ApiVoiceWatchdogLogRoute,
+  ApiWatchdogsRoute: ApiWatchdogsRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
+  ApiAgentsListRoute: ApiAgentsListRoute,
   ApiBudgetStatusRoute: ApiBudgetStatusRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
+  ApiCostRateSseRoute: ApiCostRateSseRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
+  ApiDecisionsListRoute: ApiDecisionsListRoute,
+  ApiDecisionsReadRoute: ApiDecisionsReadRoute,
   ApiFlowEventsRoute: ApiFlowEventsRoute,
+  ApiGoalIdRoute: ApiGoalIdRoute,
+  ApiGoalCreateRoute: ApiGoalCreateRoute,
+  ApiGoalHardStopRoute: ApiGoalHardStopRoute,
+  ApiGoalListRoute: ApiGoalListRoute,
+  ApiGoalPauseRoute: ApiGoalPauseRoute,
   ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
   ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
   ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
