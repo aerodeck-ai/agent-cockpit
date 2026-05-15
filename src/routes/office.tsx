@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { usePageTitle } from '@/hooks/use-page-title'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTenantRole } from '@/hooks/use-tenant-role'
 
 export const Route = createFileRoute('/office')({
@@ -38,31 +38,11 @@ function resolveOfficeUrl(tenant: string | null, mode: OfficeMode): string {
  */
 function OfficeRoute() {
   usePageTitle('Office')
+  const [loaded, setLoaded] = useState(false)
   const [mode, setMode] = useState<OfficeMode>('shared')
   const { tenant, loading } = useTenantRole()
-  const officeUrl = resolveOfficeUrl(loading ? null : tenant, mode)
-  const displayUrl = officeUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
 
-  const open = () => {
-    if (loading) return
-    window.open(officeUrl, '_blank', 'noopener,noreferrer')
-  }
-
-  // Keyboard shortcut: Enter or Space when the launcher has focus
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.tagName !== 'BUTTON') {
-        // Only fire when no button is focused (Enter on a button is handled natively)
-        if (e.target === document.body) {
-          e.preventDefault()
-          open()
-        }
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [officeUrl, loading])
+  const iframeSrc = resolveOfficeUrl(loading ? null : tenant, mode)
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-surface">
@@ -71,7 +51,7 @@ function OfficeRoute() {
         {(['shared', 'personal'] as const).map((m) => (
           <button
             key={m}
-            onClick={() => setMode(m)}
+            onClick={() => { setMode(m); setLoaded(false) }}
             className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
               mode === m
                 ? 'bg-primary text-primary-foreground'
@@ -92,41 +72,25 @@ function OfficeRoute() {
         </a>
       </div>
 
-      {/* Launcher card */}
-      <div className="flex flex-1 items-center justify-center p-8">
-        <div className="flex max-w-lg flex-col items-center gap-5 rounded-2xl border border-border bg-primary-50/40 px-8 py-10 text-center shadow-sm dark:bg-primary-900/20">
-          <div className="flex size-16 items-center justify-center rounded-2xl border border-accent-500/30 bg-accent-500/10 text-3xl">
-            🏢
+      <div className="relative flex-1">
+        {(!loaded || loading) && (
+          <div className="absolute inset-0 z-10 flex flex-col gap-3 p-4 animate-pulse">
+            <div className="h-10 w-full rounded-md bg-primary-100/60 dark:bg-primary-800/40" />
+            <div className="h-6 w-2/3 rounded bg-primary-100/60 dark:bg-primary-800/40" />
+            <div className="flex-1 rounded-lg bg-primary-100/40 dark:bg-primary-800/30" />
           </div>
-          <div className="space-y-1">
-            <h2 className="text-lg font-semibold text-primary-900 dark:text-primary-100">
-              Open {mode === 'shared' ? 'Shared' : 'Personal'} Office
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {loading
-                ? 'Resolving tenant…'
-                : `${displayUrl} opens in a new tab`}
-            </p>
-          </div>
-          <button
-            onClick={open}
-            disabled={loading}
-            className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Open in new tab →
-          </button>
-          <details className="mt-2 w-full text-[11px] text-muted-foreground">
-            <summary className="cursor-pointer select-none opacity-70 hover:opacity-100">
-              Why not embedded?
-            </summary>
-            <p className="mt-2 px-2 text-left leading-relaxed">
-              The Claw3D office apps set <code>X-Frame-Options: SAMEORIGIN</code> and
-              a CSP that doesn&apos;t list <code>atc.berl.ai</code> as a frame
-              ancestor, so the browser refuses to iframe them. Until the upstream
-              repos accept atc.berl.ai in their headers, we launch in a new tab.
-            </p>
-          </details>
-        </div>
+        )}
+        {!loading && (
+          <iframe
+            key={iframeSrc}
+            src={iframeSrc}
+            title="Claw3D Office"
+            allow="microphone; clipboard-read; clipboard-write"
+            className="h-full w-full border-0"
+            onLoad={() => setLoaded(true)}
+            style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
+          />
+        )}
       </div>
     </div>
   )
