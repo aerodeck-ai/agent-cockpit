@@ -15,15 +15,30 @@ import YAML from 'yaml'
 
 // ─── Canonical root ────────────────────────────────────────────────────────────
 
-const DECISIONS_DIR = path.join(
-  os.homedir(),
-  'Obsidian',
-  'Henry',
-  'AI Infrastructure',
-  'decisions',
-)
+/**
+ * Decisions live in `~/Obsidian/Henry/AI Infrastructure/decisions/` on Mac. On
+ * Oracle (where this app deploys) the same directory is rsync'd to
+ * `~/data/obsidian-decisions/`. Env override via `DECISIONS_DIR` for tests.
+ */
+const DECISIONS_CANDIDATE_DIRS = [
+  process.env.DECISIONS_DIR,
+  path.join(os.homedir(), 'Obsidian', 'Henry', 'AI Infrastructure', 'decisions'),
+  path.join(os.homedir(), 'data', 'obsidian-decisions'),
+].filter((p): p is string => Boolean(p))
 
-const WIRE_REPORTS_DIR = path.join(os.homedir(), 'Obsidian', 'Henry', 'wire-reports')
+const DECISIONS_DIR = DECISIONS_CANDIDATE_DIRS.find((p) => {
+  try { return fs.existsSync(p) } catch { return false }
+}) ?? DECISIONS_CANDIDATE_DIRS[1]
+
+const WIRE_REPORTS_CANDIDATE_DIRS = [
+  process.env.WIRE_REPORTS_DIR,
+  path.join(os.homedir(), 'Obsidian', 'Henry', 'wire-reports'),
+  path.join(os.homedir(), 'data', 'wire-reports'),
+].filter((p): p is string => Boolean(p))
+
+const WIRE_REPORTS_DIR = WIRE_REPORTS_CANDIDATE_DIRS.find((p) => {
+  try { return fs.existsSync(p) } catch { return false }
+}) ?? WIRE_REPORTS_CANDIDATE_DIRS[1]
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
