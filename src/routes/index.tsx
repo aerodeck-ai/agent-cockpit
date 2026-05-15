@@ -1,14 +1,14 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+/**
+ * / — Home page (Part B0 of cockpit v1)
+ *
+ * Calm landing: Hermes chat + ambient flow strip + right-rail cards.
+ * Replaced the old redirect-to-/chat behaviour.
+ */
+
+import { createFileRoute } from '@tanstack/react-router'
+import { HomePage } from '@/screens/home/HomePage'
 
 export const Route = createFileRoute('/')({
   ssr: false,
-  beforeLoad: function redirectToChat() {
-    throw redirect({
-      to: '/chat' as string,
-      replace: true,
-    })
-  },
-  component: function IndexRoute() {
-    return null
-  },
+  component: HomePage,
 })

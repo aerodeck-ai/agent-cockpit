@@ -35,6 +35,39 @@ export type TailscaleDevice = {
   last_seen_ago_s: number | null
 }
 
+// ── Oracle voice-health probe types ─────────────────────────────
+export type OracleSystemdUnit = {
+  unit: string
+  state: string
+  ok: boolean
+  optional?: boolean
+}
+
+export type OraclePm2Process = {
+  name: string
+  status: string
+  restarts_total: number
+  ok: boolean
+}
+
+export type OracleDisk = {
+  path: string
+  use_pct: number | null
+  ok: boolean
+}
+
+export type OracleVoiceHealth = {
+  ts: number
+  alert: boolean
+  systemd: Array<OracleSystemdUnit>
+  pm2: Array<OraclePm2Process>
+  disk: Array<OracleDisk>
+}
+
+export type OracleVoiceProbeResult = ProbeResult & {
+  oracle_health: OracleVoiceHealth | null
+}
+
 export type VoiceFleetStatus = {
   checked_at: number
   henry_mlx: MlxProbeResult
@@ -45,6 +78,7 @@ export type VoiceFleetStatus = {
   voice_ingest: IngestProbeResult
   voice_bot: VoiceBotProbeResult
   tailscale: Array<TailscaleDevice>
+  oracle_voice: OracleVoiceProbeResult
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
@@ -150,6 +184,23 @@ async function probeVoiceBot(url: string): Promise<VoiceBotProbeResult> {
   }
 }
 
+async function probeOracleVoice(url: string): Promise<OracleVoiceProbeResult> {
+  const ts = nowTs()
+  try {
+    const { ok, latency_ms, body, error } = await probeHttp(url)
+    const data = body as OracleVoiceHealth | null
+    return {
+      ok: ok && !(data?.alert ?? false),
+      latency_ms,
+      ts,
+      detail: error,
+      oracle_health: data,
+    }
+  } catch (err: unknown) {
+    return { ok: false, latency_ms: null, ts, detail: String(err), oracle_health: null }
+  }
+}
+
 async function probeTailscale(): Promise<Array<TailscaleDevice>> {
   // Hostname patterns to match against tailscale peers
   const WATCH_HOSTS = [
@@ -216,6 +267,7 @@ export const Route = createFileRoute('/api/voice-fleet')({
           voice_ingest,
           voice_bot,
           tailscale,
+          oracle_voice,
         ] = await Promise.all([
           probeMlx('http://100.89.244.20:8770/metrics'),
           probeMlx('http://100.114.38.97:8770/metrics'),
@@ -225,6 +277,8 @@ export const Route = createFileRoute('/api/voice-fleet')({
           probeIngest('http://localhost:8470/health'),
           probeVoiceBot('http://localhost:8471/health'),
           probeTailscale(),
+          // Oracle voice-health aggregator (port 8660 via autossh tunnel or Tailscale)
+          probeOracleVoice('http://100.64.135.5:8660/health'),
         ])
 
         const body: VoiceFleetStatus = {
@@ -237,6 +291,7 @@ export const Route = createFileRoute('/api/voice-fleet')({
           voice_ingest,
           voice_bot,
           tailscale,
+          oracle_voice,
         }
 
         return Response.json(body, {

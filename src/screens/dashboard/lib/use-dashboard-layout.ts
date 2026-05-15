@@ -1,4 +1,3 @@
-Warning: Permanently added '100.64.135.5' (ED25519) to the list of known hosts.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const STORAGE_KEY = 'dashboard.layout.v1'
@@ -26,6 +25,7 @@ export type WidgetId =
   | 'mix_rhythm'
   | 'budget_burn'
   | 'voice_fleet'
+  | 'voice_cost'
 
 export type WidgetMeta = {
   id: WidgetId
@@ -142,6 +142,13 @@ export const WIDGET_CATALOG: ReadonlyArray<WidgetMeta> = [
     column: 'rail',
     hideable: true,
   },
+  {
+    id: 'voice_cost',
+    label: 'Voice cost',
+    description: 'Telnyx CDR spend: today/week totals, top DIDs, per-tenant breakdown, cost-cap alert. Phase 8.',
+    column: 'rail',
+    hideable: true,
+  },
 ]
 
 type StoredLayout = {
@@ -174,7 +181,7 @@ const DEFAULT_HIDDEN: ReadonlyArray<WidgetId> = [
  * so existing localStorage entries with `attention` get migrated
  * cleanly instead of silently re-hiding stale ids.
  */
-const STORAGE_VERSION = 5
+const STORAGE_VERSION = 6
 
 function readLayout(): StoredLayout {
   if (typeof window === 'undefined') {
