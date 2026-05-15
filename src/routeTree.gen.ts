@@ -9,8 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WorldRouteImport } from './routes/world'
-import { Route as VtCapitalRouteImport } from './routes/vt-capital'
 import { Route as VoiceRouteImport } from './routes/voice'
 import { Route as TracesRouteImport } from './routes/traces'
 import { Route as TerminalRouteImport } from './routes/terminal'
@@ -19,29 +17,27 @@ import { Route as Swarm2RouteImport } from './routes/swarm2'
 import { Route as SwarmRouteImport } from './routes/swarm'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ReserveRouteImport } from './routes/reserve'
+import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as ProfilesRouteImport } from './routes/profiles'
-import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as OperationsRouteImport } from './routes/operations'
+import { Route as ModelsRouteImport } from './routes/models'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
-import { Route as HermesWorldRouteImport } from './routes/hermes-world'
 import { Route as GuardrailsRouteImport } from './routes/guardrails'
+import { Route as FlowRouteImport } from './routes/flow'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as EvalsRouteImport } from './routes/evals'
-import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConductorRouteImport } from './routes/conductor'
-import { Route as AgoraRouteImport } from './routes/agora'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
-import { Route as ReserveConfirmRouteImport } from './routes/reserve/confirm'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
+import { Route as ApiVoiceFleetRouteImport } from './routes/api/voice-fleet'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
@@ -76,6 +72,7 @@ import { Route as ApiSessionHistoryRouteImport } from './routes/api/session-hist
 import { Route as ApiSendStreamRouteImport } from './routes/api/send-stream'
 import { Route as ApiSendRouteImport } from './routes/api/send'
 import { Route as ApiProviderUsageRouteImport } from './routes/api/provider-usage'
+import { Route as ApiPromptsRouteImport } from './routes/api/prompts'
 import { Route as ApiPreviewFileRouteImport } from './routes/api/preview-file'
 import { Route as ApiPluginsRouteImport } from './routes/api/plugins'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
@@ -120,6 +117,8 @@ import { Route as ApiSkillsInstallRouteImport } from './routes/api/skills/instal
 import { Route as ApiSkillsHubSearchRouteImport } from './routes/api/skills/hub-search'
 import { Route as ApiSessionsSendRouteImport } from './routes/api/sessions/send'
 import { Route as ApiRelayMessagesRouteImport } from './routes/api/relay/messages'
+import { Route as ApiPromptsAssignRouteImport } from './routes/api/prompts/assign'
+import { Route as ApiPromptsIdRouteImport } from './routes/api/prompts/$id'
 import { Route as ApiProfilesUpdateRouteImport } from './routes/api/profiles/update'
 import { Route as ApiProfilesRenameRouteImport } from './routes/api/profiles/rename'
 import { Route as ApiProfilesReadRouteImport } from './routes/api/profiles/read'
@@ -129,6 +128,8 @@ import { Route as ApiProfilesCreateRouteImport } from './routes/api/profiles/cre
 import { Route as ApiProfilesActivateRouteImport } from './routes/api/profiles/activate'
 import { Route as ApiOauthPollTokenRouteImport } from './routes/api/oauth.poll-token'
 import { Route as ApiOauthDeviceCodeRouteImport } from './routes/api/oauth.device-code'
+import { Route as ApiModelsProfilesRouteImport } from './routes/api/models/profiles'
+import { Route as ApiModelsCostRouteImport } from './routes/api/models/cost'
 import { Route as ApiModelInfoRouteImport } from './routes/api/model/info'
 import { Route as ApiMemoryWriteRouteImport } from './routes/api/memory/write'
 import { Route as ApiMemorySearchRouteImport } from './routes/api/memory/search'
@@ -138,6 +139,8 @@ import { Route as ApiMcpTestRouteImport } from './routes/api/mcp/test'
 import { Route as ApiMcpPresetsRouteImport } from './routes/api/mcp/presets'
 import { Route as ApiMcpHubSourcesRouteImport } from './routes/api/mcp/hub-sources'
 import { Route as ApiMcpHubSearchRouteImport } from './routes/api/mcp/hub-search'
+import { Route as ApiMcpHistoryRouteImport } from './routes/api/mcp/history'
+import { Route as ApiMcpHealthRouteImport } from './routes/api/mcp/health'
 import { Route as ApiMcpDiscoverRouteImport } from './routes/api/mcp/discover'
 import { Route as ApiMcpConfigureRouteImport } from './routes/api/mcp/configure'
 import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
@@ -152,10 +155,12 @@ import { Route as ApiHermesPersonalProbeRouteImport } from './routes/api/hermes/
 import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
 import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
 import { Route as ApiGuardrailsPiiClassifierRouteImport } from './routes/api/guardrails/pii-classifier'
+import { Route as ApiFlowEventsRouteImport } from './routes/api/flow/events'
 import { Route as ApiDashboardOverviewRouteImport } from './routes/api/dashboard/overview'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
+import { Route as ApiBudgetStatusRouteImport } from './routes/api/budget/status'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
 import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api/sessions/$sessionKey.active-run'
@@ -163,13 +168,6 @@ import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sou
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 
-const WorldRoute = WorldRouteImport.update({
-  id: '/world',
-  path: '/world',
-  getParentRoute: () => rootRouteImport,
-} as any)
-  getParentRoute: () => rootRouteImport,
-} as any)
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
   path: '/voice',
@@ -210,9 +208,9 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReserveRoute = ReserveRouteImport.update({
-  id: '/reserve',
-  path: '/reserve',
+const PromptsRoute = PromptsRouteImport.update({
+  id: '/prompts',
+  path: '/prompts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfilesRoute = ProfilesRouteImport.update({
@@ -220,14 +218,14 @@ const ProfilesRoute = ProfilesRouteImport.update({
   path: '/profiles',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlaygroundRoute = PlaygroundRouteImport.update({
-  id: '/playground',
-  path: '/playground',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModelsRoute = ModelsRouteImport.update({
+  id: '/models',
+  path: '/models',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemoryRoute = MemoryRouteImport.update({
@@ -245,14 +243,14 @@ const JobsRoute = JobsRouteImport.update({
   path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HermesWorldRoute = HermesWorldRouteImport.update({
-  id: '/hermes-world',
-  path: '/hermes-world',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const GuardrailsRoute = GuardrailsRouteImport.update({
   id: '/guardrails',
   path: '/guardrails',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlowRoute = FlowRouteImport.update({
+  id: '/flow',
+  path: '/flow',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FilesRoute = FilesRouteImport.update({
@@ -265,11 +263,6 @@ const EvalsRoute = EvalsRouteImport.update({
   path: '/evals',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EarlyAccessRoute = EarlyAccessRouteImport.update({
-  id: '/early-access',
-  path: '/early-access',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -278,11 +271,6 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConductorRoute = ConductorRouteImport.update({
   id: '/conductor',
   path: '/conductor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AgoraRoute = AgoraRouteImport.update({
-  id: '/agora',
-  path: '/agora',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -310,11 +298,6 @@ const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => SettingsRoute,
 } as any)
-const ReserveConfirmRoute = ReserveConfirmRouteImport.update({
-  id: '/confirm',
-  path: '/confirm',
-  getParentRoute: () => ReserveRoute,
-} as any)
 const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
   id: '/chat/$sessionKey',
   path: '/chat/$sessionKey',
@@ -323,6 +306,11 @@ const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   id: '/api/workspace',
   path: '/api/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVoiceFleetRoute = ApiVoiceFleetRouteImport.update({
+  id: '/api/voice-fleet',
+  path: '/api/voice-fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTerminalStreamRoute = ApiTerminalStreamRouteImport.update({
@@ -494,6 +482,11 @@ const ApiSendRoute = ApiSendRouteImport.update({
 const ApiProviderUsageRoute = ApiProviderUsageRouteImport.update({
   id: '/api/provider-usage',
   path: '/api/provider-usage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPromptsRoute = ApiPromptsRouteImport.update({
+  id: '/api/prompts',
+  path: '/api/prompts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPreviewFileRoute = ApiPreviewFileRouteImport.update({
@@ -716,6 +709,16 @@ const ApiRelayMessagesRoute = ApiRelayMessagesRouteImport.update({
   path: '/api/relay/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPromptsAssignRoute = ApiPromptsAssignRouteImport.update({
+  id: '/assign',
+  path: '/assign',
+  getParentRoute: () => ApiPromptsRoute,
+} as any)
+const ApiPromptsIdRoute = ApiPromptsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiPromptsRoute,
+} as any)
 const ApiProfilesUpdateRoute = ApiProfilesUpdateRouteImport.update({
   id: '/api/profiles/update',
   path: '/api/profiles/update',
@@ -761,6 +764,16 @@ const ApiOauthDeviceCodeRoute = ApiOauthDeviceCodeRouteImport.update({
   path: '/api/oauth/device-code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiModelsProfilesRoute = ApiModelsProfilesRouteImport.update({
+  id: '/profiles',
+  path: '/profiles',
+  getParentRoute: () => ApiModelsRoute,
+} as any)
+const ApiModelsCostRoute = ApiModelsCostRouteImport.update({
+  id: '/cost',
+  path: '/cost',
+  getParentRoute: () => ApiModelsRoute,
+} as any)
 const ApiModelInfoRoute = ApiModelInfoRouteImport.update({
   id: '/api/model/info',
   path: '/api/model/info',
@@ -804,6 +817,16 @@ const ApiMcpHubSourcesRoute = ApiMcpHubSourcesRouteImport.update({
 const ApiMcpHubSearchRoute = ApiMcpHubSearchRouteImport.update({
   id: '/hub-search',
   path: '/hub-search',
+  getParentRoute: () => ApiMcpRoute,
+} as any)
+const ApiMcpHistoryRoute = ApiMcpHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => ApiMcpRoute,
+} as any)
+const ApiMcpHealthRoute = ApiMcpHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
   getParentRoute: () => ApiMcpRoute,
 } as any)
 const ApiMcpDiscoverRoute = ApiMcpDiscoverRouteImport.update({
@@ -878,6 +901,11 @@ const ApiGuardrailsPiiClassifierRoute =
     path: '/api/guardrails/pii-classifier',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiFlowEventsRoute = ApiFlowEventsRouteImport.update({
+  id: '/api/flow/events',
+  path: '/api/flow/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiDashboardOverviewRoute = ApiDashboardOverviewRouteImport.update({
   id: '/api/dashboard/overview',
   path: '/api/dashboard/overview',
@@ -897,6 +925,11 @@ const ApiClaudeJobsJobIdRoute = ApiClaudeJobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
   getParentRoute: () => ApiClaudeJobsRoute,
+} as any)
+const ApiBudgetStatusRoute = ApiBudgetStatusRouteImport.update({
+  id: '/api/budget/status',
+  path: '/api/budget/status',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiArtifactsArtifactIdRoute = ApiArtifactsArtifactIdRouteImport.update({
   id: '/$artifactId',
@@ -935,21 +968,19 @@ const ApiHermesworldReservationsConfirmRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
-  '/early-access': typeof EarlyAccessRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/flow': typeof FlowRoute
   '/guardrails': typeof GuardrailsRoute
-  '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
   '/operations': typeof OperationsRoute
-  '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
-  '/reserve': typeof ReserveRouteWithChildren
+  '/prompts': typeof PromptsRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -958,8 +989,6 @@ export interface FileRoutesByFullPath {
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
   '/voice': typeof VoiceRoute
-  '/vt-capital': typeof VtCapitalRoute
-  '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -986,11 +1015,12 @@ export interface FileRoutesByFullPath {
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
-  '/api/models': typeof ApiModelsRoute
+  '/api/models': typeof ApiModelsRouteWithChildren
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/prompts': typeof ApiPromptsRouteWithChildren
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1025,17 +1055,19 @@ export interface FileRoutesByFullPath {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
+  '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
-  '/reserve/confirm': typeof ReserveConfirmRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
+  '/api/budget/status': typeof ApiBudgetStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/flow/events': typeof ApiFlowEventsRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1050,6 +1082,8 @@ export interface FileRoutesByFullPath {
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
+  '/api/mcp/health': typeof ApiMcpHealthRoute
+  '/api/mcp/history': typeof ApiMcpHistoryRoute
   '/api/mcp/hub-search': typeof ApiMcpHubSearchRoute
   '/api/mcp/hub-sources': typeof ApiMcpHubSourcesRouteWithChildren
   '/api/mcp/presets': typeof ApiMcpPresetsRoute
@@ -1059,6 +1093,8 @@ export interface FileRoutesByFullPath {
   '/api/memory/search': typeof ApiMemorySearchRoute
   '/api/memory/write': typeof ApiMemoryWriteRoute
   '/api/model/info': typeof ApiModelInfoRoute
+  '/api/models/cost': typeof ApiModelsCostRoute
+  '/api/models/profiles': typeof ApiModelsProfilesRoute
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/profiles/activate': typeof ApiProfilesActivateRoute
@@ -1068,6 +1104,8 @@ export interface FileRoutesByFullPath {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/prompts/$id': typeof ApiPromptsIdRoute
+  '/api/prompts/assign': typeof ApiPromptsAssignRoute
   '/api/relay/messages': typeof ApiRelayMessagesRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
@@ -1090,21 +1128,19 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
-  '/early-access': typeof EarlyAccessRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/flow': typeof FlowRoute
   '/guardrails': typeof GuardrailsRoute
-  '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
   '/operations': typeof OperationsRoute
-  '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
-  '/reserve': typeof ReserveRouteWithChildren
+  '/prompts': typeof PromptsRoute
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
   '/swarm2': typeof Swarm2Route
@@ -1112,8 +1148,6 @@ export interface FileRoutesByTo {
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
   '/voice': typeof VoiceRoute
-  '/vt-capital': typeof VtCapitalRoute
-  '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1140,11 +1174,12 @@ export interface FileRoutesByTo {
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
-  '/api/models': typeof ApiModelsRoute
+  '/api/models': typeof ApiModelsRouteWithChildren
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/prompts': typeof ApiPromptsRouteWithChildren
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1179,17 +1214,19 @@ export interface FileRoutesByTo {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
+  '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
-  '/reserve/confirm': typeof ReserveConfirmRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
+  '/api/budget/status': typeof ApiBudgetStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/flow/events': typeof ApiFlowEventsRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1204,6 +1241,8 @@ export interface FileRoutesByTo {
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
+  '/api/mcp/health': typeof ApiMcpHealthRoute
+  '/api/mcp/history': typeof ApiMcpHistoryRoute
   '/api/mcp/hub-search': typeof ApiMcpHubSearchRoute
   '/api/mcp/hub-sources': typeof ApiMcpHubSourcesRouteWithChildren
   '/api/mcp/presets': typeof ApiMcpPresetsRoute
@@ -1213,6 +1252,8 @@ export interface FileRoutesByTo {
   '/api/memory/search': typeof ApiMemorySearchRoute
   '/api/memory/write': typeof ApiMemoryWriteRoute
   '/api/model/info': typeof ApiModelInfoRoute
+  '/api/models/cost': typeof ApiModelsCostRoute
+  '/api/models/profiles': typeof ApiModelsProfilesRoute
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/profiles/activate': typeof ApiProfilesActivateRoute
@@ -1222,6 +1263,8 @@ export interface FileRoutesByTo {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/prompts/$id': typeof ApiPromptsIdRoute
+  '/api/prompts/assign': typeof ApiPromptsAssignRoute
   '/api/relay/messages': typeof ApiRelayMessagesRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
@@ -1245,21 +1288,19 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/agora': typeof AgoraRoute
   '/conductor': typeof ConductorRoute
   '/dashboard': typeof DashboardRoute
-  '/early-access': typeof EarlyAccessRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
+  '/flow': typeof FlowRoute
   '/guardrails': typeof GuardrailsRoute
-  '/hermes-world': typeof HermesWorldRoute
   '/jobs': typeof JobsRoute
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
+  '/models': typeof ModelsRoute
   '/operations': typeof OperationsRoute
-  '/playground': typeof PlaygroundRoute
   '/profiles': typeof ProfilesRoute
-  '/reserve': typeof ReserveRouteWithChildren
+  '/prompts': typeof PromptsRoute
   '/settings': typeof SettingsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/swarm': typeof SwarmRoute
@@ -1268,8 +1309,6 @@ export interface FileRoutesById {
   '/terminal': typeof TerminalRoute
   '/traces': typeof TracesRoute
   '/voice': typeof VoiceRoute
-  '/vt-capital': typeof VtCapitalRoute
-  '/world': typeof WorldRoute
   '/api/artifacts': typeof ApiArtifactsRouteWithChildren
   '/api/auth': typeof ApiAuthRoute
   '/api/auth-check': typeof ApiAuthCheckRoute
@@ -1296,11 +1335,12 @@ export interface FileRoutesById {
   '/api/mcp': typeof ApiMcpRouteWithChildren
   '/api/media': typeof ApiMediaRoute
   '/api/memory': typeof ApiMemoryRouteWithChildren
-  '/api/models': typeof ApiModelsRoute
+  '/api/models': typeof ApiModelsRouteWithChildren
   '/api/paths': typeof ApiPathsRoute
   '/api/ping': typeof ApiPingRoute
   '/api/plugins': typeof ApiPluginsRoute
   '/api/preview-file': typeof ApiPreviewFileRoute
+  '/api/prompts': typeof ApiPromptsRouteWithChildren
   '/api/provider-usage': typeof ApiProviderUsageRoute
   '/api/send': typeof ApiSendRoute
   '/api/send-stream': typeof ApiSendStreamRoute
@@ -1335,17 +1375,19 @@ export interface FileRoutesById {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
+  '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
-  '/reserve/confirm': typeof ReserveConfirmRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
+  '/api/budget/status': typeof ApiBudgetStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
   '/api/dashboard/overview': typeof ApiDashboardOverviewRoute
+  '/api/flow/events': typeof ApiFlowEventsRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1360,6 +1402,8 @@ export interface FileRoutesById {
   '/api/mcp/$name': typeof ApiMcpNameRouteWithChildren
   '/api/mcp/configure': typeof ApiMcpConfigureRoute
   '/api/mcp/discover': typeof ApiMcpDiscoverRoute
+  '/api/mcp/health': typeof ApiMcpHealthRoute
+  '/api/mcp/history': typeof ApiMcpHistoryRoute
   '/api/mcp/hub-search': typeof ApiMcpHubSearchRoute
   '/api/mcp/hub-sources': typeof ApiMcpHubSourcesRouteWithChildren
   '/api/mcp/presets': typeof ApiMcpPresetsRoute
@@ -1369,6 +1413,8 @@ export interface FileRoutesById {
   '/api/memory/search': typeof ApiMemorySearchRoute
   '/api/memory/write': typeof ApiMemoryWriteRoute
   '/api/model/info': typeof ApiModelInfoRoute
+  '/api/models/cost': typeof ApiModelsCostRoute
+  '/api/models/profiles': typeof ApiModelsProfilesRoute
   '/api/oauth/device-code': typeof ApiOauthDeviceCodeRoute
   '/api/oauth/poll-token': typeof ApiOauthPollTokenRoute
   '/api/profiles/activate': typeof ApiProfilesActivateRoute
@@ -1378,6 +1424,8 @@ export interface FileRoutesById {
   '/api/profiles/read': typeof ApiProfilesReadRoute
   '/api/profiles/rename': typeof ApiProfilesRenameRoute
   '/api/profiles/update': typeof ApiProfilesUpdateRoute
+  '/api/prompts/$id': typeof ApiPromptsIdRoute
+  '/api/prompts/assign': typeof ApiPromptsAssignRoute
   '/api/relay/messages': typeof ApiRelayMessagesRoute
   '/api/sessions/send': typeof ApiSessionsSendRoute
   '/api/skills/hub-search': typeof ApiSkillsHubSearchRoute
@@ -1402,21 +1450,19 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$'
-    | '/agora'
     | '/conductor'
     | '/dashboard'
-    | '/early-access'
     | '/evals'
     | '/files'
+    | '/flow'
     | '/guardrails'
-    | '/hermes-world'
     | '/jobs'
     | '/mcp'
     | '/memory'
+    | '/models'
     | '/operations'
-    | '/playground'
     | '/profiles'
-    | '/reserve'
+    | '/prompts'
     | '/settings'
     | '/skills'
     | '/swarm'
@@ -1425,8 +1471,6 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/traces'
     | '/voice'
-    | '/vt-capital'
-    | '/world'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1458,6 +1502,7 @@ export interface FileRouteTypes {
     | '/api/ping'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/prompts'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1492,17 +1537,19 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/voice-fleet'
     | '/api/workspace'
     | '/chat/$sessionKey'
-    | '/reserve/confirm'
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
+    | '/api/budget/status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/flow/events'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1517,6 +1564,8 @@ export interface FileRouteTypes {
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
+    | '/api/mcp/health'
+    | '/api/mcp/history'
     | '/api/mcp/hub-search'
     | '/api/mcp/hub-sources'
     | '/api/mcp/presets'
@@ -1526,6 +1575,8 @@ export interface FileRouteTypes {
     | '/api/memory/search'
     | '/api/memory/write'
     | '/api/model/info'
+    | '/api/models/cost'
+    | '/api/models/profiles'
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/profiles/activate'
@@ -1535,6 +1586,8 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/prompts/$id'
+    | '/api/prompts/assign'
     | '/api/relay/messages'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
@@ -1557,21 +1610,19 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$'
-    | '/agora'
     | '/conductor'
     | '/dashboard'
-    | '/early-access'
     | '/evals'
     | '/files'
+    | '/flow'
     | '/guardrails'
-    | '/hermes-world'
     | '/jobs'
     | '/mcp'
     | '/memory'
+    | '/models'
     | '/operations'
-    | '/playground'
     | '/profiles'
-    | '/reserve'
+    | '/prompts'
     | '/skills'
     | '/swarm'
     | '/swarm2'
@@ -1579,8 +1630,6 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/traces'
     | '/voice'
-    | '/vt-capital'
-    | '/world'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1612,6 +1661,7 @@ export interface FileRouteTypes {
     | '/api/ping'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/prompts'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1646,17 +1696,19 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/voice-fleet'
     | '/api/workspace'
     | '/chat/$sessionKey'
-    | '/reserve/confirm'
     | '/settings/providers'
     | '/chat'
     | '/settings'
     | '/api/artifacts/$artifactId'
+    | '/api/budget/status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/flow/events'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1671,6 +1723,8 @@ export interface FileRouteTypes {
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
+    | '/api/mcp/health'
+    | '/api/mcp/history'
     | '/api/mcp/hub-search'
     | '/api/mcp/hub-sources'
     | '/api/mcp/presets'
@@ -1680,6 +1734,8 @@ export interface FileRouteTypes {
     | '/api/memory/search'
     | '/api/memory/write'
     | '/api/model/info'
+    | '/api/models/cost'
+    | '/api/models/profiles'
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/profiles/activate'
@@ -1689,6 +1745,8 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/prompts/$id'
+    | '/api/prompts/assign'
     | '/api/relay/messages'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
@@ -1711,21 +1769,19 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$'
-    | '/agora'
     | '/conductor'
     | '/dashboard'
-    | '/early-access'
     | '/evals'
     | '/files'
+    | '/flow'
     | '/guardrails'
-    | '/hermes-world'
     | '/jobs'
     | '/mcp'
     | '/memory'
+    | '/models'
     | '/operations'
-    | '/playground'
     | '/profiles'
-    | '/reserve'
+    | '/prompts'
     | '/settings'
     | '/skills'
     | '/swarm'
@@ -1734,8 +1790,6 @@ export interface FileRouteTypes {
     | '/terminal'
     | '/traces'
     | '/voice'
-    | '/vt-capital'
-    | '/world'
     | '/api/artifacts'
     | '/api/auth'
     | '/api/auth-check'
@@ -1767,6 +1821,7 @@ export interface FileRouteTypes {
     | '/api/ping'
     | '/api/plugins'
     | '/api/preview-file'
+    | '/api/prompts'
     | '/api/provider-usage'
     | '/api/send'
     | '/api/send-stream'
@@ -1801,17 +1856,19 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/voice-fleet'
     | '/api/workspace'
     | '/chat/$sessionKey'
-    | '/reserve/confirm'
     | '/settings/providers'
     | '/chat/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
+    | '/api/budget/status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
     | '/api/dashboard/overview'
+    | '/api/flow/events'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1826,6 +1883,8 @@ export interface FileRouteTypes {
     | '/api/mcp/$name'
     | '/api/mcp/configure'
     | '/api/mcp/discover'
+    | '/api/mcp/health'
+    | '/api/mcp/history'
     | '/api/mcp/hub-search'
     | '/api/mcp/hub-sources'
     | '/api/mcp/presets'
@@ -1835,6 +1894,8 @@ export interface FileRouteTypes {
     | '/api/memory/search'
     | '/api/memory/write'
     | '/api/model/info'
+    | '/api/models/cost'
+    | '/api/models/profiles'
     | '/api/oauth/device-code'
     | '/api/oauth/poll-token'
     | '/api/profiles/activate'
@@ -1844,6 +1905,8 @@ export interface FileRouteTypes {
     | '/api/profiles/read'
     | '/api/profiles/rename'
     | '/api/profiles/update'
+    | '/api/prompts/$id'
+    | '/api/prompts/assign'
     | '/api/relay/messages'
     | '/api/sessions/send'
     | '/api/skills/hub-search'
@@ -1867,21 +1930,19 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
-  AgoraRoute: typeof AgoraRoute
   ConductorRoute: typeof ConductorRoute
   DashboardRoute: typeof DashboardRoute
-  EarlyAccessRoute: typeof EarlyAccessRoute
   EvalsRoute: typeof EvalsRoute
   FilesRoute: typeof FilesRoute
+  FlowRoute: typeof FlowRoute
   GuardrailsRoute: typeof GuardrailsRoute
-  HermesWorldRoute: typeof HermesWorldRoute
   JobsRoute: typeof JobsRoute
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
+  ModelsRoute: typeof ModelsRoute
   OperationsRoute: typeof OperationsRoute
-  PlaygroundRoute: typeof PlaygroundRoute
   ProfilesRoute: typeof ProfilesRoute
-  ReserveRoute: typeof ReserveRouteWithChildren
+  PromptsRoute: typeof PromptsRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
   SwarmRoute: typeof SwarmRoute
@@ -1890,8 +1951,6 @@ export interface RootRouteChildren {
   TerminalRoute: typeof TerminalRoute
   TracesRoute: typeof TracesRoute
   VoiceRoute: typeof VoiceRoute
-  VtCapitalRoute: typeof VtCapitalRoute
-  WorldRoute: typeof WorldRoute
   ApiArtifactsRoute: typeof ApiArtifactsRouteWithChildren
   ApiAuthRoute: typeof ApiAuthRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
@@ -1918,11 +1977,12 @@ export interface RootRouteChildren {
   ApiMcpRoute: typeof ApiMcpRouteWithChildren
   ApiMediaRoute: typeof ApiMediaRoute
   ApiMemoryRoute: typeof ApiMemoryRouteWithChildren
-  ApiModelsRoute: typeof ApiModelsRoute
+  ApiModelsRoute: typeof ApiModelsRouteWithChildren
   ApiPathsRoute: typeof ApiPathsRoute
   ApiPingRoute: typeof ApiPingRoute
   ApiPluginsRoute: typeof ApiPluginsRoute
   ApiPreviewFileRoute: typeof ApiPreviewFileRoute
+  ApiPromptsRoute: typeof ApiPromptsRouteWithChildren
   ApiProviderUsageRoute: typeof ApiProviderUsageRoute
   ApiSendRoute: typeof ApiSendRoute
   ApiSendStreamRoute: typeof ApiSendStreamRoute
@@ -1957,11 +2017,14 @@ export interface RootRouteChildren {
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
+  ApiVoiceFleetRoute: typeof ApiVoiceFleetRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  ApiBudgetStatusRoute: typeof ApiBudgetStatusRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
+  ApiFlowEventsRoute: typeof ApiFlowEventsRoute
   ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
   ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
   ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
@@ -1994,15 +2057,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/world': {
-      id: '/world'
-      path: '/world'
-      fullPath: '/world'
-      preLoaderRoute: typeof WorldRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-      parentRoute: typeof rootRouteImport
-    }
     '/voice': {
       id: '/voice'
       path: '/voice'
@@ -2059,11 +2113,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reserve': {
-      id: '/reserve'
-      path: '/reserve'
-      fullPath: '/reserve'
-      preLoaderRoute: typeof ReserveRouteImport
+    '/prompts': {
+      id: '/prompts'
+      path: '/prompts'
+      fullPath: '/prompts'
+      preLoaderRoute: typeof PromptsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profiles': {
@@ -2073,18 +2127,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/playground': {
-      id: '/playground'
-      path: '/playground'
-      fullPath: '/playground'
-      preLoaderRoute: typeof PlaygroundRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/operations': {
       id: '/operations'
       path: '/operations'
       fullPath: '/operations'
       preLoaderRoute: typeof OperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/models': {
+      id: '/models'
+      path: '/models'
+      fullPath: '/models'
+      preLoaderRoute: typeof ModelsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memory': {
@@ -2108,18 +2162,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JobsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/hermes-world': {
-      id: '/hermes-world'
-      path: '/hermes-world'
-      fullPath: '/hermes-world'
-      preLoaderRoute: typeof HermesWorldRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/guardrails': {
       id: '/guardrails'
       path: '/guardrails'
       fullPath: '/guardrails'
       preLoaderRoute: typeof GuardrailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flow': {
+      id: '/flow'
+      path: '/flow'
+      fullPath: '/flow'
+      preLoaderRoute: typeof FlowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/files': {
@@ -2136,13 +2190,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EvalsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/early-access': {
-      id: '/early-access'
-      path: '/early-access'
-      fullPath: '/early-access'
-      preLoaderRoute: typeof EarlyAccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -2155,13 +2202,6 @@ declare module '@tanstack/react-router' {
       path: '/conductor'
       fullPath: '/conductor'
       preLoaderRoute: typeof ConductorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/agora': {
-      id: '/agora'
-      path: '/agora'
-      fullPath: '/agora'
-      preLoaderRoute: typeof AgoraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -2199,13 +2239,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsProvidersRouteImport
       parentRoute: typeof SettingsRoute
     }
-    '/reserve/confirm': {
-      id: '/reserve/confirm'
-      path: '/confirm'
-      fullPath: '/reserve/confirm'
-      preLoaderRoute: typeof ReserveConfirmRouteImport
-      parentRoute: typeof ReserveRoute
-    }
     '/chat/$sessionKey': {
       id: '/chat/$sessionKey'
       path: '/chat/$sessionKey'
@@ -2218,6 +2251,13 @@ declare module '@tanstack/react-router' {
       path: '/api/workspace'
       fullPath: '/api/workspace'
       preLoaderRoute: typeof ApiWorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/voice-fleet': {
+      id: '/api/voice-fleet'
+      path: '/api/voice-fleet'
+      fullPath: '/api/voice-fleet'
+      preLoaderRoute: typeof ApiVoiceFleetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/terminal-stream': {
@@ -2456,6 +2496,13 @@ declare module '@tanstack/react-router' {
       path: '/api/provider-usage'
       fullPath: '/api/provider-usage'
       preLoaderRoute: typeof ApiProviderUsageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/prompts': {
+      id: '/api/prompts'
+      path: '/api/prompts'
+      fullPath: '/api/prompts'
+      preLoaderRoute: typeof ApiPromptsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/preview-file': {
@@ -2766,6 +2813,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRelayMessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/prompts/assign': {
+      id: '/api/prompts/assign'
+      path: '/assign'
+      fullPath: '/api/prompts/assign'
+      preLoaderRoute: typeof ApiPromptsAssignRouteImport
+      parentRoute: typeof ApiPromptsRoute
+    }
+    '/api/prompts/$id': {
+      id: '/api/prompts/$id'
+      path: '/$id'
+      fullPath: '/api/prompts/$id'
+      preLoaderRoute: typeof ApiPromptsIdRouteImport
+      parentRoute: typeof ApiPromptsRoute
+    }
     '/api/profiles/update': {
       id: '/api/profiles/update'
       path: '/api/profiles/update'
@@ -2829,6 +2890,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiOauthDeviceCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/models/profiles': {
+      id: '/api/models/profiles'
+      path: '/profiles'
+      fullPath: '/api/models/profiles'
+      preLoaderRoute: typeof ApiModelsProfilesRouteImport
+      parentRoute: typeof ApiModelsRoute
+    }
+    '/api/models/cost': {
+      id: '/api/models/cost'
+      path: '/cost'
+      fullPath: '/api/models/cost'
+      preLoaderRoute: typeof ApiModelsCostRouteImport
+      parentRoute: typeof ApiModelsRoute
+    }
     '/api/model/info': {
       id: '/api/model/info'
       path: '/api/model/info'
@@ -2890,6 +2965,20 @@ declare module '@tanstack/react-router' {
       path: '/hub-search'
       fullPath: '/api/mcp/hub-search'
       preLoaderRoute: typeof ApiMcpHubSearchRouteImport
+      parentRoute: typeof ApiMcpRoute
+    }
+    '/api/mcp/history': {
+      id: '/api/mcp/history'
+      path: '/history'
+      fullPath: '/api/mcp/history'
+      preLoaderRoute: typeof ApiMcpHistoryRouteImport
+      parentRoute: typeof ApiMcpRoute
+    }
+    '/api/mcp/health': {
+      id: '/api/mcp/health'
+      path: '/health'
+      fullPath: '/api/mcp/health'
+      preLoaderRoute: typeof ApiMcpHealthRouteImport
       parentRoute: typeof ApiMcpRoute
     }
     '/api/mcp/discover': {
@@ -2990,6 +3079,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGuardrailsPiiClassifierRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/flow/events': {
+      id: '/api/flow/events'
+      path: '/api/flow/events'
+      fullPath: '/api/flow/events'
+      preLoaderRoute: typeof ApiFlowEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/dashboard/overview': {
       id: '/api/dashboard/overview'
       path: '/api/dashboard/overview'
@@ -3017,6 +3113,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/claude-jobs/$jobId'
       preLoaderRoute: typeof ApiClaudeJobsJobIdRouteImport
       parentRoute: typeof ApiClaudeJobsRoute
+    }
+    '/api/budget/status': {
+      id: '/api/budget/status'
+      path: '/api/budget/status'
+      fullPath: '/api/budget/status'
+      preLoaderRoute: typeof ApiBudgetStatusRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/artifacts/$artifactId': {
       id: '/api/artifacts/$artifactId'
@@ -3062,17 +3165,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface ReserveRouteChildren {
-  ReserveConfirmRoute: typeof ReserveConfirmRoute
-}
-
-const ReserveRouteChildren: ReserveRouteChildren = {
-  ReserveConfirmRoute: ReserveConfirmRoute,
-}
-
-const ReserveRouteWithChildren =
-  ReserveRoute._addFileChildren(ReserveRouteChildren)
 
 interface SettingsRouteChildren {
   SettingsProvidersRoute: typeof SettingsProvidersRoute
@@ -3151,6 +3243,8 @@ interface ApiMcpRouteChildren {
   ApiMcpNameRoute: typeof ApiMcpNameRouteWithChildren
   ApiMcpConfigureRoute: typeof ApiMcpConfigureRoute
   ApiMcpDiscoverRoute: typeof ApiMcpDiscoverRoute
+  ApiMcpHealthRoute: typeof ApiMcpHealthRoute
+  ApiMcpHistoryRoute: typeof ApiMcpHistoryRoute
   ApiMcpHubSearchRoute: typeof ApiMcpHubSearchRoute
   ApiMcpHubSourcesRoute: typeof ApiMcpHubSourcesRouteWithChildren
   ApiMcpPresetsRoute: typeof ApiMcpPresetsRoute
@@ -3161,6 +3255,8 @@ const ApiMcpRouteChildren: ApiMcpRouteChildren = {
   ApiMcpNameRoute: ApiMcpNameRouteWithChildren,
   ApiMcpConfigureRoute: ApiMcpConfigureRoute,
   ApiMcpDiscoverRoute: ApiMcpDiscoverRoute,
+  ApiMcpHealthRoute: ApiMcpHealthRoute,
+  ApiMcpHistoryRoute: ApiMcpHistoryRoute,
   ApiMcpHubSearchRoute: ApiMcpHubSearchRoute,
   ApiMcpHubSourcesRoute: ApiMcpHubSourcesRouteWithChildren,
   ApiMcpPresetsRoute: ApiMcpPresetsRoute,
@@ -3186,6 +3282,34 @@ const ApiMemoryRouteChildren: ApiMemoryRouteChildren = {
 
 const ApiMemoryRouteWithChildren = ApiMemoryRoute._addFileChildren(
   ApiMemoryRouteChildren,
+)
+
+interface ApiModelsRouteChildren {
+  ApiModelsCostRoute: typeof ApiModelsCostRoute
+  ApiModelsProfilesRoute: typeof ApiModelsProfilesRoute
+}
+
+const ApiModelsRouteChildren: ApiModelsRouteChildren = {
+  ApiModelsCostRoute: ApiModelsCostRoute,
+  ApiModelsProfilesRoute: ApiModelsProfilesRoute,
+}
+
+const ApiModelsRouteWithChildren = ApiModelsRoute._addFileChildren(
+  ApiModelsRouteChildren,
+)
+
+interface ApiPromptsRouteChildren {
+  ApiPromptsIdRoute: typeof ApiPromptsIdRoute
+  ApiPromptsAssignRoute: typeof ApiPromptsAssignRoute
+}
+
+const ApiPromptsRouteChildren: ApiPromptsRouteChildren = {
+  ApiPromptsIdRoute: ApiPromptsIdRoute,
+  ApiPromptsAssignRoute: ApiPromptsAssignRoute,
+}
+
+const ApiPromptsRouteWithChildren = ApiPromptsRoute._addFileChildren(
+  ApiPromptsRouteChildren,
 )
 
 interface ApiSessionsRouteChildren {
@@ -3252,21 +3376,19 @@ const ApiHermesworldReservationsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
-  AgoraRoute: AgoraRoute,
   ConductorRoute: ConductorRoute,
   DashboardRoute: DashboardRoute,
-  EarlyAccessRoute: EarlyAccessRoute,
   EvalsRoute: EvalsRoute,
   FilesRoute: FilesRoute,
+  FlowRoute: FlowRoute,
   GuardrailsRoute: GuardrailsRoute,
-  HermesWorldRoute: HermesWorldRoute,
   JobsRoute: JobsRoute,
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
+  ModelsRoute: ModelsRoute,
   OperationsRoute: OperationsRoute,
-  PlaygroundRoute: PlaygroundRoute,
   ProfilesRoute: ProfilesRoute,
-  ReserveRoute: ReserveRouteWithChildren,
+  PromptsRoute: PromptsRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SkillsRoute: SkillsRoute,
   SwarmRoute: SwarmRoute,
@@ -3275,8 +3397,6 @@ const rootRouteChildren: RootRouteChildren = {
   TerminalRoute: TerminalRoute,
   TracesRoute: TracesRoute,
   VoiceRoute: VoiceRoute,
-  VtCapitalRoute: VtCapitalRoute,
-  WorldRoute: WorldRoute,
   ApiArtifactsRoute: ApiArtifactsRouteWithChildren,
   ApiAuthRoute: ApiAuthRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
@@ -3303,11 +3423,12 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMcpRoute: ApiMcpRouteWithChildren,
   ApiMediaRoute: ApiMediaRoute,
   ApiMemoryRoute: ApiMemoryRouteWithChildren,
-  ApiModelsRoute: ApiModelsRoute,
+  ApiModelsRoute: ApiModelsRouteWithChildren,
   ApiPathsRoute: ApiPathsRoute,
   ApiPingRoute: ApiPingRoute,
   ApiPluginsRoute: ApiPluginsRoute,
   ApiPreviewFileRoute: ApiPreviewFileRoute,
+  ApiPromptsRoute: ApiPromptsRouteWithChildren,
   ApiProviderUsageRoute: ApiProviderUsageRoute,
   ApiSendRoute: ApiSendRoute,
   ApiSendStreamRoute: ApiSendStreamRoute,
@@ -3342,11 +3463,14 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
+  ApiVoiceFleetRoute: ApiVoiceFleetRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,
+  ApiBudgetStatusRoute: ApiBudgetStatusRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
+  ApiFlowEventsRoute: ApiFlowEventsRoute,
   ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
   ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
   ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
