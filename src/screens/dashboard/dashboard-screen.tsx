@@ -29,6 +29,7 @@ import { OperatorTipCard } from './components/operator-tip-card'
 import { WidgetShell } from './components/widget-shell'
 import { EditModePanel } from './components/edit-mode-panel'
 import { VoiceFleetTile } from './components/VoiceFleetTile'
+import { VoiceCostTile } from './components/VoiceCostTile'
 import { useDashboardLayout } from './lib/use-dashboard-layout'
 import {
   Area,
@@ -1203,6 +1204,12 @@ export function DashboardScreen() {
           {layout.isVisible('voice_fleet') ? (
             <WidgetShell id="voice_fleet" layout={layout}>
               <VoiceFleetTile />
+            </WidgetShell>
+          ) : null}
+          {/* Phase 8 — Telnyx CDR cost monitoring tile */}
+          {layout.isVisible('voice_cost') ? (
+            <WidgetShell id="voice_cost" layout={layout}>
+              <VoiceCostTile />
             </WidgetShell>
           ) : null}
         </div>
