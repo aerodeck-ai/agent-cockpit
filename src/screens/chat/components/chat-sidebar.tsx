@@ -930,6 +930,62 @@ function ChatSidebarComponent({
       label: 'Models',
       active: isModelsActive,
     },
+    {
+      kind: 'link',
+      to: '/agents',
+      icon: UserGroupIcon,
+      label: 'Agents',
+      active: pathname === '/agents',
+    },
+    {
+      kind: 'link',
+      to: '/watchdogs',
+      icon: Activity01Icon,
+      label: 'Watchdogs',
+      active: pathname === '/watchdogs',
+    },
+    {
+      kind: 'link',
+      to: '/decisions',
+      icon: CheckListIcon,
+      label: 'Decisions',
+      active: pathname === '/decisions',
+    },
+    {
+      kind: 'link',
+      to: '/knowledge',
+      icon: BrainIcon,
+      label: 'Knowledge',
+      active: pathname === '/knowledge',
+    },
+    {
+      kind: 'link',
+      to: '/observe',
+      icon: Search01Icon,
+      label: 'Observe',
+      active: pathname === '/observe',
+    },
+    {
+      kind: 'link',
+      to: '/build',
+      icon: PencilEdit02Icon,
+      label: 'Build',
+      active: pathname === '/build',
+    },
+    {
+      kind: 'link',
+      to: '/office',
+      icon: Building01Icon,
+      label: 'Office',
+      active: pathname === '/office',
+    },
+    {
+      kind: 'link',
+      to: '/goal',
+      icon: Rocket01Icon,
+      label: 'God Mode',
+      active: pathname === '/goal',
+    },
   ]
 
   const systemItems: Array<NavItemDef> = []
