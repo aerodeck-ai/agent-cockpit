@@ -165,6 +165,7 @@ import { Route as ApiKnowledgeGraphRouteImport } from './routes/api/knowledge/gr
 import { Route as ApiKnowledgeConfigRouteImport } from './routes/api/knowledge/config'
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesPersonalProbeRouteImport } from './routes/api/hermes/personal-probe'
+import { Route as ApiHermesGoalRouteImport } from './routes/api/hermes/goal'
 import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
 import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
 import { Route as ApiGuardrailsPiiClassifierRouteImport } from './routes/api/guardrails/pii-classifier'
@@ -973,6 +974,11 @@ const ApiHermesPersonalProbeRoute = ApiHermesPersonalProbeRouteImport.update({
   path: '/api/hermes/personal-probe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHermesGoalRoute = ApiHermesGoalRouteImport.update({
+  id: '/api/hermes/goal',
+  path: '/api/hermes/goal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiGuardrailsTirithRoute = ApiGuardrailsTirithRouteImport.update({
   id: '/api/guardrails/tirith',
   path: '/api/guardrails/tirith',
@@ -1230,6 +1236,7 @@ export interface FileRoutesByFullPath {
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
+  '/api/hermes/goal': typeof ApiHermesGoalRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1412,6 +1419,7 @@ export interface FileRoutesByTo {
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
+  '/api/hermes/goal': typeof ApiHermesGoalRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1596,6 +1604,7 @@ export interface FileRoutesById {
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
+  '/api/hermes/goal': typeof ApiHermesGoalRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
   '/api/knowledge/config': typeof ApiKnowledgeConfigRoute
@@ -1781,6 +1790,7 @@ export interface FileRouteTypes {
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
+    | '/api/hermes/goal'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -1963,6 +1973,7 @@ export interface FileRouteTypes {
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
+    | '/api/hermes/goal'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -2146,6 +2157,7 @@ export interface FileRouteTypes {
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
+    | '/api/hermes/goal'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
     | '/api/knowledge/config'
@@ -2325,6 +2337,7 @@ export interface RootRouteChildren {
   ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
   ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
   ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
+  ApiHermesGoalRoute: typeof ApiHermesGoalRoute
   ApiHermesPersonalProbeRoute: typeof ApiHermesPersonalProbeRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
   ApiKnowledgeConfigRoute: typeof ApiKnowledgeConfigRoute
@@ -3449,6 +3462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesPersonalProbeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hermes/goal': {
+      id: '/api/hermes/goal'
+      path: '/api/hermes/goal'
+      fullPath: '/api/hermes/goal'
+      preLoaderRoute: typeof ApiHermesGoalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/guardrails/tirith': {
       id: '/api/guardrails/tirith'
       path: '/api/guardrails/tirith'
@@ -3955,6 +3975,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
   ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
   ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
+  ApiHermesGoalRoute: ApiHermesGoalRoute,
   ApiHermesPersonalProbeRoute: ApiHermesPersonalProbeRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
   ApiKnowledgeConfigRoute: ApiKnowledgeConfigRoute,
