@@ -41,6 +41,38 @@ type TailscaleDevice = {
   last_seen_ago_s: number | null
 }
 
+type OracleSystemdUnit = {
+  unit: string
+  state: string
+  ok: boolean
+  optional?: boolean
+}
+
+type OraclePm2Process = {
+  name: string
+  status: string
+  restarts_total: number
+  ok: boolean
+}
+
+type OracleDisk = {
+  path: string
+  use_pct: number | null
+  ok: boolean
+}
+
+type OracleVoiceHealth = {
+  ts: number
+  alert: boolean
+  systemd: Array<OracleSystemdUnit>
+  pm2: Array<OraclePm2Process>
+  disk: Array<OracleDisk>
+}
+
+type OracleVoiceProbeResult = ProbeResult & {
+  oracle_health: OracleVoiceHealth | null
+}
+
 type VoiceFleetStatus = {
   checked_at: number
   henry_mlx: MlxProbeResult
@@ -51,6 +83,7 @@ type VoiceFleetStatus = {
   voice_ingest: IngestProbeResult
   voice_bot: VoiceBotProbeResult
   tailscale: Array<TailscaleDevice>
+  oracle_voice: OracleVoiceProbeResult
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
@@ -118,6 +151,15 @@ function Dim({ children }: { children: React.ReactNode }) {
   return <span style={{ color: 'var(--theme-muted)', fontSize: 10 }}>{children}</span>
 }
 
+// ── Watchdog log query ───────────────────────────────────────────
+
+type WatchdogLogResponse = {
+  lines: string[]
+  path: string
+  ts: number
+  error?: string
+}
+
 // ── Main tile ────────────────────────────────────────────────────
 
 export function VoiceFleetTile() {
@@ -130,6 +172,17 @@ export function VoiceFleetTile() {
     },
     staleTime: 10_000,
     refetchInterval: 15_000,
+  })
+
+  const logQuery = useQuery<WatchdogLogResponse>({
+    queryKey: ['voice-watchdog-log'],
+    queryFn: async () => {
+      const res = await fetch('/api/voice-watchdog-log?n=10')
+      if (!res.ok) throw new Error(`watchdog-log ${res.status}`)
+      return (await res.json()) as WatchdogLogResponse
+    },
+    staleTime: 30_000,
+    refetchInterval: 60_000,
   })
 
   const d = query.data ?? null
@@ -295,6 +348,113 @@ export function VoiceFleetTile() {
           ))
         ) : (
           <Row label="—"><Dim>—</Dim></Row>
+        )}
+
+        {/* ── Oracle Voice Services ── */}
+        <div
+          className="mb-1 mt-3 text-[9px] font-semibold uppercase tracking-[0.18em]"
+          style={{ color: 'var(--theme-muted)' }}
+        >
+          Oracle Voice
+          {d?.oracle_voice?.oracle_health?.alert && (
+            <span
+              className="ml-2 rounded-full px-1.5 py-0.5 text-[8px] font-bold"
+              style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}
+            >
+              ALERT
+            </span>
+          )}
+        </div>
+
+        {/* Oracle aggregator reachability */}
+        <Row label="oracle-voice-health">
+          {d ? (
+            <>
+              <StatusPill ok={d.oracle_voice.ok} label={d.oracle_voice.ok ? 'ok' : 'down'} />
+              {d.oracle_voice.latency_ms !== null && <Dim>{latStr(d.oracle_voice.latency_ms)}</Dim>}
+            </>
+          ) : (
+            <Dim>—</Dim>
+          )}
+        </Row>
+
+        {/* Systemd units: drachtio, freeswitch, redis-jambonz */}
+        {d?.oracle_voice?.oracle_health?.systemd?.map((u) => (
+          <Row key={u.unit} label={u.unit}>
+            <StatusPill
+              ok={u.ok}
+              label={u.ok ? 'active' : u.optional ? 'inactive' : 'down'}
+            />
+            {!u.ok && !u.optional && (
+              <Dim style={{ color: '#ef4444' }}>!</Dim>
+            )}
+            <Dim>{u.state}</Dim>
+          </Row>
+        ))}
+
+        {/* pm2 voice processes on Oracle */}
+        {d?.oracle_voice?.oracle_health?.pm2?.length ? (
+          <div className="mb-0.5 mt-2 text-[8px] font-semibold uppercase tracking-[0.15em]" style={{ color: 'var(--theme-muted)' }}>
+            pm2 voice processes
+          </div>
+        ) : null}
+        {d?.oracle_voice?.oracle_health?.pm2?.map((p) => (
+          <Row key={p.name} label={p.name}>
+            <StatusPill ok={p.ok} label={p.ok ? 'online' : p.status} />
+            {p.restarts_total > 5 && (
+              <span
+                className="rounded-full px-1.5 py-0.5 text-[8px] font-bold"
+                style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}
+              >
+                {p.restarts_total} restarts
+              </span>
+            )}
+            {p.restarts_total <= 5 && <Dim>{p.restarts_total}↺</Dim>}
+          </Row>
+        ))}
+
+        {/* Disk usage */}
+        {d?.oracle_voice?.oracle_health?.disk?.map((dk) => (
+          <Row key={dk.path} label={`disk ${dk.path}`}>
+            {dk.use_pct !== null ? (
+              <>
+                <StatusPill ok={dk.ok} label={`${dk.use_pct}%`} />
+              </>
+            ) : (
+              <Dim>—</Dim>
+            )}
+          </Row>
+        ))}
+
+        {/* ── Watchdog log (last 10 events) ── */}
+        <div className="mb-1 mt-3 text-[9px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--theme-muted)' }}>
+          Watchdog Log
+        </div>
+        {logQuery.data?.lines?.length ? (
+          <div
+            className="rounded-md p-2 overflow-y-auto"
+            style={{
+              background: 'rgba(0,0,0,0.2)',
+              border: '1px solid var(--theme-border)',
+              maxHeight: 120,
+            }}
+          >
+            {logQuery.data.lines.map((line, i) => {
+              const isFail = /FAIL|ALERT|RESTART FAIL/.test(line)
+              return (
+                <div
+                  key={i}
+                  className="font-mono text-[9px] leading-[1.6] truncate"
+                  style={{ color: isFail ? '#ef4444' : 'var(--theme-muted)' }}
+                  title={line}
+                >
+                  {line}
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <Dim>{logQuery.isLoading ? 'loading…' : logQuery.data?.error ?? 'no log entries'}</Dim>
         )}
       </div>
     </div>

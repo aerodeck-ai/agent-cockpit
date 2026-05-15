@@ -37,7 +37,9 @@ import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
+import { Route as ApiVoiceWatchdogLogRouteImport } from './routes/api/voice-watchdog-log'
 import { Route as ApiVoiceFleetRouteImport } from './routes/api/voice-fleet'
+import { Route as ApiVoiceCostRouteImport } from './routes/api/voice-cost'
 import { Route as ApiTerminalStreamRouteImport } from './routes/api/terminal-stream'
 import { Route as ApiTerminalResizeRouteImport } from './routes/api/terminal-resize'
 import { Route as ApiTerminalInputRouteImport } from './routes/api/terminal-input'
@@ -308,9 +310,19 @@ const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
   path: '/api/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVoiceWatchdogLogRoute = ApiVoiceWatchdogLogRouteImport.update({
+  id: '/api/voice-watchdog-log',
+  path: '/api/voice-watchdog-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiVoiceFleetRoute = ApiVoiceFleetRouteImport.update({
   id: '/api/voice-fleet',
   path: '/api/voice-fleet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVoiceCostRoute = ApiVoiceCostRouteImport.update({
+  id: '/api/voice-cost',
+  path: '/api/voice-cost',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTerminalStreamRoute = ApiTerminalStreamRouteImport.update({
@@ -1055,7 +1067,9 @@ export interface FileRoutesByFullPath {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
+  '/api/voice-cost': typeof ApiVoiceCostRoute
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
+  '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1214,7 +1228,9 @@ export interface FileRoutesByTo {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
+  '/api/voice-cost': typeof ApiVoiceCostRoute
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
+  '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1375,7 +1391,9 @@ export interface FileRoutesById {
   '/api/terminal-input': typeof ApiTerminalInputRoute
   '/api/terminal-resize': typeof ApiTerminalResizeRoute
   '/api/terminal-stream': typeof ApiTerminalStreamRoute
+  '/api/voice-cost': typeof ApiVoiceCostRoute
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
+  '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1537,7 +1555,9 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/voice-cost'
     | '/api/voice-fleet'
+    | '/api/voice-watchdog-log'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/providers'
@@ -1696,7 +1716,9 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/voice-cost'
     | '/api/voice-fleet'
+    | '/api/voice-watchdog-log'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/providers'
@@ -1856,7 +1878,9 @@ export interface FileRouteTypes {
     | '/api/terminal-input'
     | '/api/terminal-resize'
     | '/api/terminal-stream'
+    | '/api/voice-cost'
     | '/api/voice-fleet'
+    | '/api/voice-watchdog-log'
     | '/api/workspace'
     | '/chat/$sessionKey'
     | '/settings/providers'
@@ -2017,7 +2041,9 @@ export interface RootRouteChildren {
   ApiTerminalInputRoute: typeof ApiTerminalInputRoute
   ApiTerminalResizeRoute: typeof ApiTerminalResizeRoute
   ApiTerminalStreamRoute: typeof ApiTerminalStreamRoute
+  ApiVoiceCostRoute: typeof ApiVoiceCostRoute
   ApiVoiceFleetRoute: typeof ApiVoiceFleetRoute
+  ApiVoiceWatchdogLogRoute: typeof ApiVoiceWatchdogLogRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   ChatIndexRoute: typeof ChatIndexRoute
@@ -2253,11 +2279,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/voice-watchdog-log': {
+      id: '/api/voice-watchdog-log'
+      path: '/api/voice-watchdog-log'
+      fullPath: '/api/voice-watchdog-log'
+      preLoaderRoute: typeof ApiVoiceWatchdogLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/voice-fleet': {
       id: '/api/voice-fleet'
       path: '/api/voice-fleet'
       fullPath: '/api/voice-fleet'
       preLoaderRoute: typeof ApiVoiceFleetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/voice-cost': {
+      id: '/api/voice-cost'
+      path: '/api/voice-cost'
+      fullPath: '/api/voice-cost'
+      preLoaderRoute: typeof ApiVoiceCostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/terminal-stream': {
@@ -3463,7 +3503,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTerminalInputRoute: ApiTerminalInputRoute,
   ApiTerminalResizeRoute: ApiTerminalResizeRoute,
   ApiTerminalStreamRoute: ApiTerminalStreamRoute,
+  ApiVoiceCostRoute: ApiVoiceCostRoute,
   ApiVoiceFleetRoute: ApiVoiceFleetRoute,
+  ApiVoiceWatchdogLogRoute: ApiVoiceWatchdogLogRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   ChatIndexRoute: ChatIndexRoute,

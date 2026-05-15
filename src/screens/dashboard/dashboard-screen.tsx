@@ -1,4 +1,3 @@
-Warning: Permanently added '100.64.135.5' (ED25519) to the list of known hosts.
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'

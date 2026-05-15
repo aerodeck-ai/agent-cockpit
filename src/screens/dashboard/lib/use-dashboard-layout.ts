@@ -1,4 +1,3 @@
-Warning: Permanently added '100.64.135.5' (ED25519) to the list of known hosts.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const STORAGE_KEY = 'dashboard.layout.v1'
