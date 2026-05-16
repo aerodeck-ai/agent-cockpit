@@ -7,10 +7,20 @@ import {
   getSession,
   listSessions,
 } from '../../server/claude-api'
-import { isSyntheticSessionKey } from '../../server/session-utils'
+import {
+  isSyntheticSessionKey,
+  resolveMainChatSessionId,
+  shouldBindMainToPortableSession,
+} from '../../server/session-utils'
 import { getLocalSession } from '../../server/local-session-store'
+import { getActiveRunForSession } from '../../server/run-store'
 import { isAuthenticated } from '@/server/auth-middleware'
 import { readContextUsage } from '@/server/context-usage'
+
+function estimateTokensFromText(text: string): number {
+  const chars = text.trim().length
+  return chars > 0 ? Math.max(1, Math.ceil(chars / 4)) : 0
+}
 
 export const Route = createFileRoute('/api/session-status')({
   server: {
@@ -40,62 +50,26 @@ export const Route = createFileRoute('/api/session-status')({
           }
           const url = new URL(request.url)
           const requestedKey = url.searchParams.get('sessionKey')?.trim() || ''
-          let sessionKey = requestedKey || 'new'
+          let sessionKey = requestedKey || 'main'
+          const pinPortableMain = shouldBindMainToPortableSession({
+            sessionKey,
+            dashboardAvailable: capabilities.dashboard.available,
+            enhancedChat: capabilities.enhancedChat,
+          })
 
           if (sessionKey === 'new') {
+            const contextUsage = await readContextUsage('new')
             return json({
               ok: true,
               payload: {
                 status: 'idle',
                 sessionKey: 'new',
                 sessionLabel: '',
-                model: '',
+                model: contextUsage.model,
                 modelProvider: '',
                 inputTokens: 0,
                 outputTokens: 0,
                 totalTokens: 0,
-                contextPercent: 0,
-                maxTokens: 0,
-                usedTokens: 0,
-                sessions: [],
-              },
-            })
-          }
-
-          if (isSyntheticSessionKey(sessionKey)) {
-            return json({
-              ok: true,
-              payload: {
-                status: 'idle',
-                sessionKey,
-                sessionLabel: '',
-                model: '',
-                modelProvider: '',
-                inputTokens: 0,
-                outputTokens: 0,
-                totalTokens: 0,
-                contextPercent: 0,
-                maxTokens: 0,
-                usedTokens: 0,
-                sessions: [],
-              },
-            })
-          }
-
-          const localSession = getLocalSession(sessionKey)
-          if (localSession) {
-            const contextUsage = await readContextUsage(sessionKey)
-            return json({
-              ok: true,
-              payload: {
-                status: 'idle',
-                sessionKey,
-                sessionLabel: localSession.title ?? '',
-                model: localSession.model ?? contextUsage.model,
-                modelProvider: 'local',
-                inputTokens: contextUsage.usedTokens,
-                outputTokens: 0,
-                totalTokens: contextUsage.usedTokens,
                 contextPercent: contextUsage.contextPercent,
                 maxTokens: contextUsage.maxTokens,
                 usedTokens: contextUsage.usedTokens,
@@ -104,7 +78,120 @@ export const Route = createFileRoute('/api/session-status')({
             })
           }
 
-          const session = await getSession(sessionKey)
+          if (sessionKey === 'main' && !pinPortableMain) {
+            try {
+              const sessions = await listSessions(30, 0)
+              const candidate = resolveMainChatSessionId(sessions)
+              if (candidate) {
+                sessionKey = candidate
+              }
+            } catch {
+              // Fall through to local/synthetic handling below.
+            }
+          }
+
+          if (pinPortableMain) {
+            const contextUsage = await readContextUsage('main')
+            const localMain = getLocalSession('main')
+            const activeRun = await getActiveRunForSession('main')
+            const outputTokens = estimateTokensFromText(activeRun?.assistantText ?? '')
+            return json({
+              ok: true,
+              payload: {
+                status: activeRun ? activeRun.status : 'idle',
+                sessionKey: 'main',
+                sessionLabel: localMain?.title ?? '',
+                model: localMain?.model ?? contextUsage.model,
+                modelProvider: 'portable',
+                inputTokens: contextUsage.usedTokens,
+                outputTokens,
+                totalTokens: contextUsage.usedTokens + outputTokens,
+                contextPercent: contextUsage.contextPercent,
+                maxTokens: contextUsage.maxTokens,
+                usedTokens: contextUsage.usedTokens,
+                sessions: [],
+              },
+            })
+          }
+
+          const localSession = getLocalSession(sessionKey)
+          if (localSession) {
+            const contextUsage = await readContextUsage(sessionKey)
+            const activeRun = await getActiveRunForSession(sessionKey)
+            const outputTokens = estimateTokensFromText(activeRun?.assistantText ?? '')
+            return json({
+              ok: true,
+              payload: {
+                status: activeRun ? activeRun.status : 'idle',
+                sessionKey,
+                sessionLabel: localSession.title ?? '',
+                model: localSession.model ?? contextUsage.model,
+                modelProvider: 'local',
+                inputTokens: contextUsage.usedTokens,
+                outputTokens,
+                totalTokens: contextUsage.usedTokens + outputTokens,
+                contextPercent: contextUsage.contextPercent,
+                maxTokens: contextUsage.maxTokens,
+                usedTokens: contextUsage.usedTokens,
+                sessions: [],
+              },
+            })
+          }
+
+          if (isSyntheticSessionKey(sessionKey)) {
+            const contextUsage = await readContextUsage(sessionKey)
+            return json({
+              ok: true,
+              payload: {
+                status: 'idle',
+                sessionKey,
+                sessionLabel: '',
+                model: contextUsage.model,
+                modelProvider: '',
+                inputTokens: 0,
+                outputTokens: 0,
+                totalTokens: 0,
+                contextPercent: contextUsage.contextPercent,
+                maxTokens: contextUsage.maxTokens,
+                usedTokens: contextUsage.usedTokens,
+                sessions: [],
+              },
+            })
+          }
+
+          let session
+          try {
+            session = await getSession(sessionKey)
+          } catch (sessionErr) {
+            const msg =
+              sessionErr instanceof Error
+                ? sessionErr.message
+                : String(sessionErr)
+            // A client-minted sessionKey that Hermes has not created yet is
+            // NOT an error — report idle so the chat composer is not gated.
+            // (chat-fail fix: upstream's resolveMainChatSessionId only covers
+            // the 'main' key; a fresh client UUID still 404s here → was 503.)
+            if (/\b404\b|not found/i.test(msg)) {
+              return json({
+                ok: true,
+                payload: {
+                  status: 'idle',
+                  sessionKey,
+                  sessionLabel: '',
+                  model: '',
+                  modelProvider: '',
+                  inputTokens: 0,
+                  outputTokens: 0,
+                  totalTokens: 0,
+                  contextPercent: 0,
+                  maxTokens: 0,
+                  usedTokens: 0,
+                  sessions: [],
+                },
+              })
+            }
+            throw sessionErr
+          }
           const config = capabilities.config
             ? await getConfig()
             : ({ model: '', provider: '' } as const)

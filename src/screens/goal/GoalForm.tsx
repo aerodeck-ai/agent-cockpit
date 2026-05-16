@@ -5,7 +5,7 @@
  * Defaults: $200 kill per-goal, 4h wall, 3-429 stop, 5-identical-error stop.
  */
 import { useState } from 'react'
-import type { GoalSession } from '@/server/goal-sessions-store'
+import type { GoalSession } from '@/types/goal-session'
 
 interface Props {
   onCreated: (session: GoalSession) => void

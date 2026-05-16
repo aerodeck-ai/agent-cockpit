@@ -4,7 +4,7 @@
  * Renders the goal's declared exit conditions with live cost/time status.
  * Green = safe, Amber = within 20% of ceiling, Red = breached/exceeded.
  */
-import type { GoalSession } from '@/server/goal-sessions-store'
+import type { GoalSession } from '@/types/goal-session'
 
 interface Props {
   goal: GoalSession
