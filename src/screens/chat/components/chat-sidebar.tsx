@@ -621,9 +621,12 @@ function ChatSidebarComponent({
     'claude-sidebar-main-expanded',
     true,
   )
+  // Config group collapsed by default (#80 aggressive declutter). Key renamed
+  // so existing users reset to the new collapsed default instead of inheriting
+  // the old expanded value from localStorage.
   const [knowledgeExpanded, toggleKnowledge] = usePersistedBool(
-    'claude-sidebar-knowledge-expanded',
-    true,
+    'claude-sidebar-config-expanded',
+    false,
   )
   const [_systemExpanded, _toggleSystem] = usePersistedBool(
     'claude-sidebar-system-expanded',
@@ -790,6 +793,10 @@ function ChatSidebarComponent({
 
   const isDashboardActive = pathname === '/dashboard'
 
+  // Aggressive IA consolidation (#80): 6 primary destinations. The six
+  // overlapping agent views (Conductor/Operations/Swarm/Agents/Flow/Observe)
+  // collapse into one "Agents". Dashboard is the always-present Home affordance
+  // (fixes the reported nav dead-end). Terminal/Jobs move to the Config group.
   const mainItems: Array<NavItemDef> = [
     {
       kind: 'link',
@@ -805,27 +812,18 @@ function ChatSidebarComponent({
       label: t('nav.chat'),
       active: isChatActive,
     },
-
     {
       kind: 'link',
-      to: '/files',
-      icon: File01Icon,
-      label: t('nav.files'),
-      active: isFilesActive,
-    },
-    {
-      kind: 'link',
-      to: '/terminal',
-      icon: ComputerTerminal01Icon,
-      label: t('nav.terminal'),
-      active: isTerminalActive,
-    },
-    {
-      kind: 'link',
-      to: '/jobs',
-      icon: Clock01Icon,
-      label: t('nav.jobs'),
-      active: isJobsActive,
+      to: '/operations',
+      icon: UserGroupIcon,
+      label: 'Agents',
+      active:
+        isOperationsActive ||
+        isConductorActive ||
+        isSwarmActive ||
+        isFlowActive ||
+        pathname === '/agents' ||
+        pathname === '/observe',
     },
     {
       kind: 'link',
@@ -836,24 +834,10 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
-      to: '/conductor',
-      icon: Rocket01Icon,
-      label: 'Conductor',
-      active: isConductorActive,
-    },
-    {
-      kind: 'link',
-      to: '/operations',
-      icon: UserMultipleIcon,
-      label: 'Operations',
-      active: isOperationsActive,
-    },
-    {
-      kind: 'link',
-      to: '/swarm',
-      icon: UserGroupIcon,
-      label: 'Swarm',
-      active: isSwarmActive,
+      to: '/files',
+      icon: File01Icon,
+      label: t('nav.files'),
+      active: isFilesActive,
     },
     {
       kind: 'link',
@@ -862,23 +846,28 @@ function ChatSidebarComponent({
       label: 'Voice',
       active: isVoiceActive,
     },
-    {
-      kind: 'link',
-      to: '/flow',
-      icon: Activity01Icon,
-      label: 'Flow',
-      active: isFlowActive,
-    },
-
   ]
 
+  // Config group (collapsed): everything that isn't a primary destination.
+  // Memory + Decisions fold into Knowledge; Observe folds into Agents; the dead
+  // Office tab is removed; God Mode kept (it works). Terminal/Jobs land here.
   const knowledgeItems: Array<NavItemDef> = [
     {
       kind: 'link',
-      to: '/memory',
+      to: '/knowledge',
       icon: BrainIcon,
-      label: t('nav.memory'),
-      active: isMemoryActive,
+      label: 'Knowledge',
+      active:
+        pathname === '/knowledge' ||
+        isMemoryActive ||
+        pathname === '/decisions',
+    },
+    {
+      kind: 'link',
+      to: '/build',
+      icon: PencilEdit02Icon,
+      label: 'Build',
+      active: pathname === '/build',
     },
     {
       kind: 'link',
@@ -890,17 +879,24 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
-      to: '/mcp',
-      icon: McpServerIcon,
-      label: 'MCP',
-      active: isMcpActive,
-    },
-    {
-      kind: 'link',
       to: '/profiles',
       icon: UserMultipleIcon,
       label: t('nav.profiles'),
       active: pathname === '/profiles',
+    },
+    {
+      kind: 'link',
+      to: '/models',
+      icon: CpuIcon,
+      label: 'Models',
+      active: isModelsActive,
+    },
+    {
+      kind: 'link',
+      to: '/mcp',
+      icon: McpServerIcon,
+      label: 'MCP',
+      active: isMcpActive,
     },
     {
       kind: 'link',
@@ -925,20 +921,6 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
-      to: '/models',
-      icon: CpuIcon,
-      label: 'Models',
-      active: isModelsActive,
-    },
-    {
-      kind: 'link',
-      to: '/agents',
-      icon: UserGroupIcon,
-      label: 'Agents',
-      active: pathname === '/agents',
-    },
-    {
-      kind: 'link',
       to: '/watchdogs',
       icon: Activity01Icon,
       label: 'Watchdogs',
@@ -946,38 +928,17 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
-      to: '/decisions',
-      icon: CheckListIcon,
-      label: 'Decisions',
-      active: pathname === '/decisions',
+      to: '/terminal',
+      icon: ComputerTerminal01Icon,
+      label: t('nav.terminal'),
+      active: isTerminalActive,
     },
     {
       kind: 'link',
-      to: '/knowledge',
-      icon: BrainIcon,
-      label: 'Knowledge',
-      active: pathname === '/knowledge',
-    },
-    {
-      kind: 'link',
-      to: '/observe',
-      icon: Search01Icon,
-      label: 'Observe',
-      active: pathname === '/observe',
-    },
-    {
-      kind: 'link',
-      to: '/build',
-      icon: PencilEdit02Icon,
-      label: 'Build',
-      active: pathname === '/build',
-    },
-    {
-      kind: 'link',
-      to: '/office',
-      icon: Building01Icon,
-      label: 'Office',
-      active: pathname === '/office',
+      to: '/jobs',
+      icon: Clock01Icon,
+      label: t('nav.jobs'),
+      active: isJobsActive,
     },
     {
       kind: 'link',
@@ -1140,10 +1101,9 @@ function ChatSidebarComponent({
         </div>
       )}
 
-      {/* ── HermesWorld featured link (gold castle, NEW badge) ────── */}
-      {/* Hide when VITE_HERMESWORLD_ENABLED is explicitly '0' */}
-      {!isVisuallyCollapsed &&
-        (import.meta as any).env?.VITE_HERMESWORLD_ENABLED !== '0' && (
+      {/* HermesWorld featured link retired in IA consolidation (#80) —
+          aggressive declutter. The /playground route remains reachable directly. */}
+      {false && (
         <div className="px-2 pb-2">
           <Link
             to="/playground"
@@ -1202,7 +1162,7 @@ function ChatSidebarComponent({
           />
 
           <SectionLabel
-            label="Knowledge"
+            label="Config"
             isCollapsed={isVisuallyCollapsed}
             transition={transition}
             collapsible

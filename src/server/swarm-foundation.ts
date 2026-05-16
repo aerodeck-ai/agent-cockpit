@@ -450,6 +450,18 @@ export function patchSwarmRuntimeFile(
   }
 }
 
+// Profile dirs left behind by retire/rename/backup migrations otherwise
+// pollute every worker list (Swarm/Operations/Conductor): e.g.
+// `.RETIRED-worker-1778822684`, `henry-personal.bak-pre-s0.6-rename-1778846721`,
+// `.retired-20260514`. They are not real workers — exclude at the single source
+// so the UI stops listing them and 400ing on them.
+const STALE_PROFILE_NAME =
+  /^\.|\.bak(-pre)?[-.]|(^|[.\-])RETIRED([.\-]|$)|\.retired-\d|(^|[.\-])retired-\d{6,}|\.disabled[-.]/i
+
+export function isCanonicalProfileName(name: string): boolean {
+  return !STALE_PROFILE_NAME.test(name)
+}
+
 export function listSwarmWorkerIds(options?: { swarmOnly?: boolean }): Array<string> {
   const profilesDir = getProfilesDir()
   if (!fs.existsSync(profilesDir)) return []
@@ -457,6 +469,7 @@ export function listSwarmWorkerIds(options?: { swarmOnly?: boolean }): Array<str
   return entries
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
+    .filter(isCanonicalProfileName)
     .filter((name) => (options?.swarmOnly ?? false ? isSwarmWorkerId(name) : true))
     .sort()
 }
