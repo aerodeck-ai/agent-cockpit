@@ -80,6 +80,26 @@ const QUICK_ROUTES = [
   'Auto',
 ]
 
+// Auto-compress the dispatch transcript once a group dispatch exceeds this many
+// results. Routine short successes collapse to one line; anything needing
+// attention (failure/error/checkpoint/long output) always stays expanded.
+const AUTO_COMPRESS_AT = 6
+
+function needsAttention(r: DispatchResult): boolean {
+  return (
+    !r.ok ||
+    Boolean(r.error) ||
+    Boolean(r.checkpoint) ||
+    r.checkpointStatus === 'timeout' ||
+    r.output.length > 600
+  )
+}
+
+function firstLine(text: string, max = 96): string {
+  const line = text.trim().split('\n', 1)[0] ?? ''
+  return line.length > max ? `${line.slice(0, max)}…` : line
+}
+
 export function RouterChat({
   members,
   roomIds,
@@ -104,6 +124,7 @@ export function RouterChat({
   const [dispatchError, setDispatchError] = useState<string | null>(null)
   const [results, setResults] = useState<DispatchResponse | null>(null)
   const [followUp, setFollowUp] = useState<FollowUpResponse | null>(null)
+  const [expandAll, setExpandAll] = useState(false)
 
   useEffect(() => {
     if (!seedPrompt?.trim()) return
@@ -234,6 +255,7 @@ export function RouterChat({
     setDispatchError(null)
     setResults(null)
     setFollowUp(null)
+    setExpandAll(false)
     try {
       const res = await fetch('/api/swarm-dispatch', {
         method: 'POST',
@@ -281,6 +303,7 @@ export function RouterChat({
     setUnassigned([])
     setResults(null)
     setFollowUp(null)
+    setExpandAll(false)
     setDecomposeError(null)
     setDispatchError(null)
   }
@@ -516,66 +539,68 @@ export function RouterChat({
                 s
               </span>
             </div>
-            <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {results.results.map((r) => (
-                <div
-                  key={r.workerId}
-                  className={cn(
-                    'rounded-xl border px-3 py-2 text-[11px]',
-                    r.ok
-                      ? 'border-[var(--theme-border)] bg-[var(--theme-card)]'
-                      : 'border-[var(--theme-danger-border)] bg-[var(--theme-danger-soft)]',
-                  )}
-                >
-                  <div className="flex items-center justify-between text-[var(--theme-text)]">
-                    <span className="inline-flex items-center gap-1 font-semibold">
-                      <HugeiconsIcon
-                        icon={r.ok ? CheckmarkCircle02Icon : AlertCircleIcon}
-                        size={11}
-                        className={r.ok ? 'text-[var(--theme-accent)]' : 'text-[var(--theme-danger)]'}
-                      />
-                      {r.workerId}
-                    </span>
-                    <span className="text-[var(--theme-muted)]">
-                      {(r.durationMs / 1000).toFixed(1)}s
-                    </span>
-                  </div>
-                  {r.error ? (
-                    <pre className="mt-2 max-h-28 overflow-auto whitespace-pre-wrap text-[var(--theme-danger)]">
-                      {r.error}
-                    </pre>
-                  ) : null}
-                  {r.checkpoint ? (
-                    <div className="mt-2 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] p-2">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
-                        Checkpoint · {r.checkpoint.stateLabel}
-                      </div>
-                      {r.checkpoint.result ? (
-                        <div className="mt-1 line-clamp-4 text-[11px] text-[var(--theme-text)]">
-                          {r.checkpoint.result}
-                        </div>
-                      ) : null}
-                      {r.checkpoint.nextAction ? (
-                        <div className="mt-1 text-[10px] text-[var(--theme-muted)]">
-                          Next: {r.checkpoint.nextAction}
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : r.checkpointStatus === 'timeout' ? (
-                    <div className="mt-2 rounded-lg border border-[var(--theme-warning-border)] bg-[var(--theme-warning-soft)] p-2 text-[11px] text-[var(--theme-text)]">
-                      Delivered, waiting for checkpoint. Orchestrator loop can follow up.
+            {(() => {
+              const all = results.results
+              const compress = all.length > AUTO_COMPRESS_AT && !expandAll
+              const attention = compress ? all.filter(needsAttention) : all
+              const folded = compress
+                ? all.filter((r) => !needsAttention(r))
+                : []
+              return (
+                <>
+                  {all.length > AUTO_COMPRESS_AT ? (
+                    <div className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-[var(--theme-muted)]">
+                      <span>
+                        {compress
+                          ? `Auto-compressed · ${attention.length} flagged · ${folded.length} routine folded`
+                          : `Expanded · ${all.length} results`}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setExpandAll((v) => !v)}
+                        className="shrink-0 rounded-md border border-[var(--theme-border)] bg-[var(--theme-card)] px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-[var(--theme-muted)] hover:bg-[var(--theme-card2)] hover:text-[var(--theme-text)]"
+                      >
+                        {compress ? `Expand all ${all.length}` : 'Collapse routine'}
+                      </button>
                     </div>
                   ) : null}
-                  {r.output ? (
-                    <pre className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap text-[var(--theme-text)]">
-                      {r.output.length > 1800
-                        ? `${r.output.slice(0, 1800)}…\n[truncated]`
-                        : r.output}
-                    </pre>
+                  {attention.length > 0 ? (
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                      {attention.map((r) => (
+                        <ResultCard key={r.workerId} r={r} />
+                      ))}
+                    </div>
                   ) : null}
-                </div>
-              ))}
-            </div>
+                  {folded.length > 0 ? (
+                    <div className="mt-2 overflow-hidden rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)]">
+                      {folded.map((r) => (
+                        <button
+                          type="button"
+                          key={r.workerId}
+                          onClick={() => setExpandAll(true)}
+                          className="flex w-full items-center justify-between gap-2 border-b border-[var(--theme-border)] px-3 py-1.5 text-left text-[11px] last:border-b-0 hover:bg-[var(--theme-card2)]"
+                        >
+                          <span className="inline-flex min-w-0 items-center gap-1.5 text-[var(--theme-text)]">
+                            <HugeiconsIcon
+                              icon={CheckmarkCircle02Icon}
+                              size={11}
+                              className="shrink-0 text-[var(--theme-accent)]"
+                            />
+                            <span className="font-semibold">{r.workerId}</span>
+                            <span className="truncate text-[var(--theme-muted-2)]">
+                              {r.output ? firstLine(r.output) : 'done'}
+                            </span>
+                          </span>
+                          <span className="shrink-0 text-[var(--theme-muted)]">
+                            {(r.durationMs / 1000).toFixed(1)}s
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </>
+              )
+            })()}
           </div>
         ) : null}
 
@@ -591,6 +616,66 @@ export function RouterChat({
         ) : null}
 
       </div>
+    </div>
+  )
+}
+
+function ResultCard({ r }: { r: DispatchResult }) {
+  return (
+    <div
+      className={cn(
+        'rounded-xl border px-3 py-2 text-[11px]',
+        r.ok
+          ? 'border-[var(--theme-border)] bg-[var(--theme-card)]'
+          : 'border-[var(--theme-danger-border)] bg-[var(--theme-danger-soft)]',
+      )}
+    >
+      <div className="flex items-center justify-between text-[var(--theme-text)]">
+        <span className="inline-flex items-center gap-1 font-semibold">
+          <HugeiconsIcon
+            icon={r.ok ? CheckmarkCircle02Icon : AlertCircleIcon}
+            size={11}
+            className={r.ok ? 'text-[var(--theme-accent)]' : 'text-[var(--theme-danger)]'}
+          />
+          {r.workerId}
+        </span>
+        <span className="text-[var(--theme-muted)]">
+          {(r.durationMs / 1000).toFixed(1)}s
+        </span>
+      </div>
+      {r.error ? (
+        <pre className="mt-2 max-h-28 overflow-auto whitespace-pre-wrap text-[var(--theme-danger)]">
+          {r.error}
+        </pre>
+      ) : null}
+      {r.checkpoint ? (
+        <div className="mt-2 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-bg)] p-2">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--theme-muted)]">
+            Checkpoint · {r.checkpoint.stateLabel}
+          </div>
+          {r.checkpoint.result ? (
+            <div className="mt-1 line-clamp-4 text-[11px] text-[var(--theme-text)]">
+              {r.checkpoint.result}
+            </div>
+          ) : null}
+          {r.checkpoint.nextAction ? (
+            <div className="mt-1 text-[10px] text-[var(--theme-muted)]">
+              Next: {r.checkpoint.nextAction}
+            </div>
+          ) : null}
+        </div>
+      ) : r.checkpointStatus === 'timeout' ? (
+        <div className="mt-2 rounded-lg border border-[var(--theme-warning-border)] bg-[var(--theme-warning-soft)] p-2 text-[11px] text-[var(--theme-text)]">
+          Delivered, waiting for checkpoint. Orchestrator loop can follow up.
+        </div>
+      ) : null}
+      {r.output ? (
+        <pre className="mt-2 max-h-44 overflow-auto whitespace-pre-wrap text-[var(--theme-text)]">
+          {r.output.length > 1800
+            ? `${r.output.slice(0, 1800)}…\n[truncated]`
+            : r.output}
+        </pre>
+      ) : null}
     </div>
   )
 }
