@@ -1,19 +1,24 @@
 import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
+  Activity01Icon,
   BrainIcon,
-  Building01Icon,
   Cancel01Icon,
-  Castle02Icon,
   Chat01Icon,
+  CheckListIcon,
   Clock01Icon,
   CommandLineIcon,
+  CpuIcon,
   DashboardSquare01Icon,
   File01Icon,
+  KnightShieldIcon,
   McpServerIcon,
   Menu01Icon,
+  Mic01Icon,
+  PencilEdit02Icon,
   PuzzleIcon,
   Rocket01Icon,
+  Search01Icon,
   Settings01Icon,
   UserGroupIcon,
   UserMultipleIcon,
@@ -27,7 +32,18 @@ import {
   useChatSettingsStore,
 } from '@/hooks/use-chat-settings'
 
+// Mirrors the desktop sidebar IA (upstream Main + Knowledge + the BerlAI
+// delta). Flat list — a mobile drawer doesn't need collapsible sections —
+// but the route set + order match desktop exactly so the two never diverge.
 export const MOBILE_HAMBURGER_NAV_ITEMS = [
+  // ── Main (upstream canonical) ──
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: DashboardSquare01Icon,
+    to: '/dashboard',
+    match: (p: string) => p.startsWith('/dashboard'),
+  },
   {
     id: 'chat',
     label: 'Chat',
@@ -36,11 +52,11 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     match: (p: string) => p.startsWith('/chat') || p === '/new' || p === '/',
   },
   {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: DashboardSquare01Icon,
-    to: '/dashboard',
-    match: (p: string) => p.startsWith('/dashboard'),
+    id: 'files',
+    label: 'Files',
+    icon: File01Icon,
+    to: '/files',
+    match: (p: string) => p.startsWith('/files'),
   },
   {
     id: 'terminal',
@@ -55,6 +71,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: Clock01Icon,
     to: '/jobs',
     match: (p: string) => p.startsWith('/jobs'),
+  },
+  {
+    id: 'tasks',
+    label: 'Tasks',
+    icon: CheckListIcon,
+    to: '/tasks',
+    match: (p: string) => p.startsWith('/tasks'),
   },
   {
     id: 'conductor',
@@ -77,7 +100,7 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     to: '/swarm',
     match: (p: string) => p === '/swarm' || p.startsWith('/swarm2'),
   },
-
+  // ── Knowledge (upstream canonical) ──
   {
     id: 'memory',
     label: 'Memory',
@@ -102,9 +125,66 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
   {
     id: 'profiles',
     label: 'Profiles',
-    icon: UserGroupIcon,
+    icon: UserMultipleIcon,
     to: '/profiles',
     match: (p: string) => p.startsWith('/profiles'),
+  },
+  // ── BerlAI (ATC delta) ──
+  {
+    id: 'flow',
+    label: 'Flow',
+    icon: Activity01Icon,
+    to: '/flow',
+    match: (p: string) => p.startsWith('/flow'),
+  },
+  {
+    id: 'voice',
+    label: 'Voice',
+    icon: Mic01Icon,
+    to: '/voice',
+    match: (p: string) => p.startsWith('/voice'),
+  },
+  {
+    id: 'goal',
+    label: 'God Mode',
+    icon: Rocket01Icon,
+    to: '/goal',
+    match: (p: string) => p.startsWith('/goal'),
+  },
+  {
+    id: 'guardrails',
+    label: 'Guardrails',
+    icon: KnightShieldIcon,
+    to: '/guardrails',
+    match: (p: string) => p.startsWith('/guardrails'),
+  },
+  {
+    id: 'evals',
+    label: 'Evals',
+    icon: CheckListIcon,
+    to: '/evals',
+    match: (p: string) => p.startsWith('/evals'),
+  },
+  {
+    id: 'models',
+    label: 'Models',
+    icon: CpuIcon,
+    to: '/models',
+    match: (p: string) => p.startsWith('/models'),
+  },
+  {
+    id: 'prompts',
+    label: 'Prompts',
+    icon: PencilEdit02Icon,
+    to: '/prompts',
+    match: (p: string) => p.startsWith('/prompts'),
+  },
+  {
+    id: 'traces',
+    label: 'Traces',
+    icon: Search01Icon,
+    to: '/traces',
+    match: (p: string) => p.startsWith('/traces'),
   },
 ]
 

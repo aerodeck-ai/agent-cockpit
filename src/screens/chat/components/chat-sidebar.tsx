@@ -584,8 +584,9 @@ function ChatSidebarComponent({
   const isEvalsActive = pathname === '/evals'
   const isMcpActive = pathname === '/mcp'
   const isFilesActive = pathname === '/files'
-  const isPlaygroundActive = pathname === '/playground'
-  const isAgoraActive = pathname === '/agora'
+  const isGoalActive = pathname === '/goal'
+  const isGuardrailsActive = pathname === '/guardrails'
+  const isTracesActive = pathname === '/traces'
   const isTerminalActive = pathname === '/terminal'
   const isJobsActive = pathname === '/jobs'
   const isMemoryActive = pathname === '/memory'
@@ -621,12 +622,17 @@ function ChatSidebarComponent({
     'claude-sidebar-main-expanded',
     true,
   )
-  // Config group collapsed by default (#80 aggressive declutter). Key renamed
-  // so existing users reset to the new collapsed default instead of inheriting
-  // the old expanded value from localStorage.
+  // Upstream "Knowledge" section, collapsed by default. Key bumped (-v2) so
+  // existing users reset to the new structure rather than inheriting a stale
+  // value from the prior consolidation.
   const [knowledgeExpanded, toggleKnowledge] = usePersistedBool(
-    'claude-sidebar-config-expanded',
+    'claude-sidebar-knowledge-expanded-v2',
     false,
+  )
+  // BerlAI section — the explicit ATC delta — expanded by default.
+  const [berlaiExpanded, toggleBerlai] = usePersistedBool(
+    'claude-sidebar-berlai-expanded',
+    true,
   )
   const [_systemExpanded, _toggleSystem] = usePersistedBool(
     'claude-sidebar-system-expanded',
@@ -793,10 +799,11 @@ function ChatSidebarComponent({
 
   const isDashboardActive = pathname === '/dashboard'
 
-  // Aggressive IA consolidation (#80): 6 primary destinations. The six
-  // overlapping agent views (Conductor/Operations/Swarm/Agents/Flow/Observe)
-  // collapse into one "Agents". Dashboard is the always-present Home affordance
-  // (fixes the reported nav dead-end). Terminal/Jobs move to the Config group.
+  // IA realigned to upstream hermes-workspace canonical nav (defensible:
+  // drift questions resolve to "matches upstream"). "Main" + "Knowledge"
+  // mirror upstream exactly; "BerlAI" is the explicit, named ATC delta.
+  // Path = upstream route path; the screen behind it may be ATC-diverged
+  // (component parity not audited — out of nav scope).
   const mainItems: Array<NavItemDef> = [
     {
       kind: 'link',
@@ -814,117 +821,10 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
-      to: '/operations',
-      icon: UserGroupIcon,
-      label: 'Agents',
-      active:
-        isOperationsActive ||
-        isConductorActive ||
-        isSwarmActive ||
-        isFlowActive ||
-        pathname === '/agents' ||
-        pathname === '/observe',
-    },
-    {
-      kind: 'link',
-      to: '/tasks',
-      icon: CheckListIcon,
-      label: 'Tasks',
-      active: isTasksActive,
-    },
-    {
-      kind: 'link',
       to: '/files',
       icon: File01Icon,
       label: t('nav.files'),
       active: isFilesActive,
-    },
-    {
-      kind: 'link',
-      to: '/voice',
-      icon: Mic01Icon,
-      label: 'Voice',
-      active: isVoiceActive,
-    },
-  ]
-
-  // Config group (collapsed): everything that isn't a primary destination.
-  // Memory + Decisions fold into Knowledge; Observe folds into Agents; the dead
-  // Office tab is removed; God Mode kept (it works). Terminal/Jobs land here.
-  const knowledgeItems: Array<NavItemDef> = [
-    {
-      kind: 'link',
-      to: '/knowledge',
-      icon: BrainIcon,
-      label: 'Knowledge',
-      active:
-        pathname === '/knowledge' ||
-        isMemoryActive ||
-        pathname === '/decisions',
-    },
-    {
-      kind: 'link',
-      to: '/build',
-      icon: PencilEdit02Icon,
-      label: 'Build',
-      active: pathname === '/build',
-    },
-    {
-      kind: 'link',
-      to: '/skills',
-      icon: PuzzleIcon,
-      label: t('nav.skills'),
-      active: isSkillsActive,
-      dataTour: 'skills',
-    },
-    {
-      kind: 'link',
-      to: '/profiles',
-      icon: UserMultipleIcon,
-      label: t('nav.profiles'),
-      active: pathname === '/profiles',
-    },
-    {
-      kind: 'link',
-      to: '/models',
-      icon: CpuIcon,
-      label: 'Models',
-      active: isModelsActive,
-    },
-    {
-      kind: 'link',
-      to: '/mcp',
-      icon: McpServerIcon,
-      label: 'MCP',
-      active: isMcpActive,
-    },
-    {
-      kind: 'link',
-      to: '/prompts',
-      icon: PencilEdit02Icon,
-      label: 'Prompts',
-      active: isPromptsActive,
-    },
-    {
-      kind: 'link',
-      to: '/evals',
-      icon: CheckListIcon,
-      label: 'Evals',
-      active: isEvalsActive,
-    },
-    {
-      kind: 'link',
-      to: '/guardrails',
-      icon: KnightShieldIcon,
-      label: 'Guardrails',
-      active: pathname === '/guardrails',
-    },
-    {
-      kind: 'link',
-      to: '/watchdogs',
-      icon: Activity01Icon,
-      label: 'Watchdogs',
-      active: pathname === '/watchdogs',
     },
     {
       kind: 'link',
@@ -942,10 +842,126 @@ function ChatSidebarComponent({
     },
     {
       kind: 'link',
+      to: '/tasks',
+      icon: CheckListIcon,
+      label: 'Tasks',
+      active: isTasksActive,
+    },
+    {
+      kind: 'link',
+      to: '/conductor',
+      icon: Rocket01Icon,
+      label: 'Conductor',
+      active: isConductorActive,
+    },
+    {
+      kind: 'link',
+      to: '/operations',
+      icon: UserMultipleIcon,
+      label: 'Operations',
+      active: isOperationsActive,
+    },
+    {
+      kind: 'link',
+      to: '/swarm',
+      icon: UserGroupIcon,
+      label: 'Swarm',
+      active: isSwarmActive,
+    },
+  ]
+
+  // Knowledge — upstream canonical (collapsed by default).
+  const knowledgeItems: Array<NavItemDef> = [
+    {
+      kind: 'link',
+      to: '/memory',
+      icon: BrainIcon,
+      label: t('nav.memory'),
+      active: isMemoryActive,
+    },
+    {
+      kind: 'link',
+      to: '/skills',
+      icon: PuzzleIcon,
+      label: t('nav.skills'),
+      active: isSkillsActive,
+      dataTour: 'skills',
+    },
+    {
+      kind: 'link',
+      to: '/mcp',
+      icon: McpServerIcon,
+      label: 'MCP',
+      active: isMcpActive,
+    },
+    {
+      kind: 'link',
+      to: '/profiles',
+      icon: UserMultipleIcon,
+      label: t('nav.profiles'),
+      active: pathname === '/profiles',
+    },
+  ]
+
+  // BerlAI — the explicit ATC delta (not in upstream). Flow first (the
+  // differentiator, standalone). Traces is expected-degraded while Laminar
+  // is down (redirect → live.berl.ai 502) — kept intentionally.
+  const berlaiItems: Array<NavItemDef> = [
+    {
+      kind: 'link',
+      to: '/flow',
+      icon: Activity01Icon,
+      label: 'Flow',
+      active: isFlowActive,
+    },
+    {
+      kind: 'link',
+      to: '/voice',
+      icon: Mic01Icon,
+      label: 'Voice',
+      active: isVoiceActive,
+    },
+    {
+      kind: 'link',
       to: '/goal',
       icon: Rocket01Icon,
       label: 'God Mode',
-      active: pathname === '/goal',
+      active: isGoalActive,
+    },
+    {
+      kind: 'link',
+      to: '/guardrails',
+      icon: KnightShieldIcon,
+      label: 'Guardrails',
+      active: isGuardrailsActive,
+    },
+    {
+      kind: 'link',
+      to: '/evals',
+      icon: CheckListIcon,
+      label: 'Evals',
+      active: isEvalsActive,
+    },
+    {
+      kind: 'link',
+      to: '/models',
+      icon: CpuIcon,
+      label: 'Models',
+      active: isModelsActive,
+    },
+    {
+      kind: 'link',
+      to: '/prompts',
+      icon: PencilEdit02Icon,
+      label: 'Prompts',
+      active: isPromptsActive,
+    },
+    {
+      kind: 'link',
+      to: '/traces',
+      icon: Search01Icon,
+      label: 'Traces',
+      active: isTracesActive,
     },
   ]
 
@@ -1101,45 +1117,6 @@ function ChatSidebarComponent({
         </div>
       )}
 
-      {/* HermesWorld featured link retired in IA consolidation (#80) —
-          aggressive declutter. The /playground route remains reachable directly. */}
-      {false && (
-        <div className="px-2 pb-2">
-          <Link
-            to="/playground"
-            onClick={() => onSelectSession?.()}
-            className={cn(
-              buttonVariants({ variant: 'ghost', size: 'sm' }),
-              'group w-full justify-start gap-2.5 px-3 py-2 text-primary-900 hover:bg-primary-200 dark:hover:bg-primary-800',
-              isPlaygroundActive &&
-                'bg-accent-500/10 text-accent-500 hover:bg-accent-50 dark:hover:bg-accent-900/300/15',
-            )}
-            data-tour="hermesworld"
-          >
-            <HugeiconsIcon
-              icon={Castle02Icon}
-              size={20}
-              strokeWidth={1.5}
-              className="size-5 shrink-0"
-              style={{ color: '#facc15' }}
-            />
-            <span>HermesWorld</span>
-            <span
-              className="ml-auto inline-flex min-w-6 items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold leading-none"
-              style={{
-                background:
-                  'linear-gradient(180deg, #fde68a 0%, #fbbf24 50%, #d4a017 100%)',
-                color: '#0b1320',
-                boxShadow: '0 0 8px rgba(250,204,21,0.4)',
-                letterSpacing: '0.08em',
-              }}
-            >
-              NEW
-            </span>
-          </Link>
-        </div>
-      )}
-
       {/* ── Scrollable body: nav + sessions ─────────────────────────── */}
       <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin flex flex-col">
         {/* Navigation sections */}
@@ -1162,7 +1139,7 @@ function ChatSidebarComponent({
           />
 
           <SectionLabel
-            label="Config"
+            label="Knowledge"
             isCollapsed={isVisuallyCollapsed}
             transition={transition}
             collapsible
@@ -1173,6 +1150,23 @@ function ChatSidebarComponent({
           <CollapsibleSection
             expanded={knowledgeExpanded || isCollapsed}
             items={knowledgeItems}
+            isCollapsed={isVisuallyCollapsed}
+            transition={transition}
+            onSelectSession={onSelectSession}
+          />
+
+          <SectionLabel
+            label="BerlAI"
+            isCollapsed={isVisuallyCollapsed}
+            transition={transition}
+            collapsible
+            expanded={berlaiExpanded}
+            onToggle={toggleBerlai}
+            navigateTo="/flow"
+          />
+          <CollapsibleSection
+            expanded={berlaiExpanded || isCollapsed}
+            items={berlaiItems}
             isCollapsed={isVisuallyCollapsed}
             transition={transition}
             onSelectSession={onSelectSession}
