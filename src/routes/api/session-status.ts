@@ -159,7 +159,39 @@ export const Route = createFileRoute('/api/session-status')({
             })
           }
 
-          const session = await getSession(sessionKey)
+          let session
+          try {
+            session = await getSession(sessionKey)
+          } catch (sessionErr) {
+            const msg =
+              sessionErr instanceof Error
+                ? sessionErr.message
+                : String(sessionErr)
+            // A client-minted sessionKey that Hermes has not created yet is
+            // NOT an error — report idle so the chat composer is not gated.
+            // (chat-fail fix: upstream's resolveMainChatSessionId only covers
+            // the 'main' key; a fresh client UUID still 404s here → was 503.)
+            if (/\b404\b|not found/i.test(msg)) {
+              return json({
+                ok: true,
+                payload: {
+                  status: 'idle',
+                  sessionKey,
+                  sessionLabel: '',
+                  model: '',
+                  modelProvider: '',
+                  inputTokens: 0,
+                  outputTokens: 0,
+                  totalTokens: 0,
+                  contextPercent: 0,
+                  maxTokens: 0,
+                  usedTokens: 0,
+                  sessions: [],
+                },
+              })
+            }
+            throw sessionErr
+          }
           const config = capabilities.config
             ? await getConfig()
             : ({ model: '', provider: '' } as const)
