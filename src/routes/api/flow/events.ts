@@ -108,12 +108,35 @@ export const Route = createFileRoute('/api/flow/events')({
           }
           const sdb = db
           const enc = new TextEncoder()
-          const stmtInit = sdb.prepare(
-            `${SELECT('')} ORDER BY ts DESC LIMIT ?`,
-          )
-          const stmtSince = sdb.prepare(
-            `${SELECT('AND id > ?')} ORDER BY id ASC LIMIT 200`,
-          )
+          // Defensive try: prepare() can throw on schema mismatch OR sqlite
+          // corruption (observed 2026-05-16 21:44 in agent-cockpit-error.log
+          // — `SqliteError: database disk image is malformed`,
+          // `SQLITE_CORRUPT`), which surfaced as HTTP 500 because this SSE
+          // branch lacked the outer try/catch the JSON branch (~line 196)
+          // has. Fall back to a `nostream` event so the client uses its
+          // JSON-poll fallback — same UX as a DB-open failure.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let stmtInit: any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let stmtSince: any
+          try {
+            stmtInit = sdb.prepare(
+              `${SELECT('')} ORDER BY ts DESC LIMIT ?`,
+            )
+            stmtSince = sdb.prepare(
+              `${SELECT('AND id > ?')} ORDER BY id ASC LIMIT 200`,
+            )
+          } catch {
+            try {
+              sdb.close()
+            } catch {
+              /* already closed */
+            }
+            return new Response(
+              'retry: 10000\nevent: nostream\ndata: {}\n\n',
+              { headers: { 'Content-Type': 'text/event-stream' } },
+            )
+          }
           let lastId = 0
           let timer: ReturnType<typeof setInterval> | null = null
           const stream = new ReadableStream({

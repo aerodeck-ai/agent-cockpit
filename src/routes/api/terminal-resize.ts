@@ -40,10 +40,19 @@ export const Route = createFileRoute('/api/terminal-resize')({
         }
         const session = getTerminalSession(sessionId)
         if (!session) {
-          return new Response(JSON.stringify({ ok: false }), {
-            status: 404,
-            headers: { 'Content-Type': 'application/json' },
-          })
+          // 202 not 404: a fresh terminal mount fires resize BEFORE the
+          // server has registered the session (terminal-stream is still
+          // initialising). It's a transient race, not a missing route —
+          // 404 surfaced in Camoufox network capture as a "404 on
+          // /terminal" defect when steady-state behaviour is 200 once the
+          // session is registered (typically within ~50ms).
+          return new Response(
+            JSON.stringify({ ok: false, reason: 'session not yet registered' }),
+            {
+              status: 202,
+              headers: { 'Content-Type': 'application/json' },
+            },
+          )
         }
         session.resize(cols, rows)
         return new Response(JSON.stringify({ ok: true }), {
