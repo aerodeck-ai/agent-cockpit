@@ -16,9 +16,13 @@ const DB_PATH =
   process.env.PROMPTS_DB_PATH ??
   '/home/ubuntu/data/sqlite/shared/prompts.db'
 
-function getDb(readonly = false) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const Database = require('better-sqlite3') as typeof import('better-sqlite3')
+async function getDb(readonly = false) {
+  // ESM dynamic import — `require` is not defined in Vite SSR (tanstack-start
+  // server runtime), so the prior `require('better-sqlite3')` path 500'd
+  // every GET/POST/PUT with `{"error":"require is not defined"}` (caught by
+  // independent Camoufox deep verify, Phase #92). Mirror the pattern
+  // already used by src/routes/api/flow/events.ts:100.
+  const Database = (await import('better-sqlite3')).default
   return new Database(DB_PATH, readonly ? { readonly: true, fileMustExist: true } : {})
 }
 
@@ -39,7 +43,7 @@ export const Route = createFileRoute('/api/prompts')({
         }
 
         try {
-          const db = getDb(true)
+          const db = await getDb(true)
           const isMally = tenantInfo.tenant === 'mally'
 
           // If mally, only show prompts assigned to mally profile
@@ -96,7 +100,7 @@ export const Route = createFileRoute('/api/prompts')({
             return json({ error: 'name and body are required' }, { status: 400 })
           }
 
-          const db = getDb()
+          const db = await getDb()
           const stmt = db.prepare(
             'INSERT INTO prompts (name, current_version, created_by) VALUES (?, 1, ?)'
           )
@@ -136,7 +140,7 @@ export const Route = createFileRoute('/api/prompts')({
             return json({ error: 'id and body are required' }, { status: 400 })
           }
 
-          const db = getDb()
+          const db = await getDb()
           const prompt = db.prepare('SELECT id, current_version FROM prompts WHERE id = ?').get(body.id) as { id: number; current_version: number } | undefined
           if (!prompt) {
             db.close()
