@@ -213,6 +213,15 @@ export default function LiveFlowHome() {
             /* ignore malformed */
           }
         })
+        // Server can't open the findings DB → use JSON poll instead of
+        // holding a dead stream open.
+        es.addEventListener('nostream', () => {
+          if (es) {
+            es.close()
+            es = null
+          }
+          startPollFallback()
+        })
         es.onmessage = (ev) => {
           try {
             const d = JSON.parse(ev.data)
