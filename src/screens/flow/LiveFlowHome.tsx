@@ -161,30 +161,85 @@ export default function LiveFlowHome() {
 
   useEffect(() => {
     mounted.current = true
+    let es: EventSource | null = null
+    let pollId: ReturnType<typeof setInterval> | null = null
+
+    // Merge helper: append new events, dedupe by id, keep last 800.
+    const merge = (incoming: TraceEvent[]) => {
+      if (!mounted.current || incoming.length === 0) return
+      setAllEvents((prev) => {
+        const seen = new Set(prev.map((e) => e.id))
+        const add = incoming.filter((e) => !seen.has(e.id))
+        if (add.length === 0) return prev
+        const next = [...prev, ...add]
+        return next.length > 800 ? next.slice(-800) : next
+      })
+    }
+
+    // Initial backlog (works even if SSE is unavailable).
     const load = async () => {
       try {
         const r = await fetch('/api/flow/events', { cache: 'no-store' })
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         const data = await r.json()
         if (!mounted.current) return
-        const events = (data.events ?? []) as TraceEvent[]
-        setAllEvents(events)
+        setAllEvents((data.events ?? []) as TraceEvent[])
         setLoadError(null)
         setLoading(false)
-        if (activeTraceId === null && events.length > 0) {
-          // deliberately leave as null = "all events" view
-        }
       } catch (err) {
         if (!mounted.current) return
         setLoadError(err instanceof Error ? err.message : String(err))
         setLoading(false)
       }
     }
-    load()
-    const id = setInterval(load, 10_000)
+
+    const startPollFallback = () => {
+      if (pollId) return
+      pollId = setInterval(load, 10_000)
+    }
+
+    // Live layer: SSE. Falls back to 10s poll on error.
+    const startSse = () => {
+      try {
+        es = new EventSource('/api/flow/events?stream=1')
+        es.addEventListener('snapshot', (ev) => {
+          try {
+            const d = JSON.parse((ev as MessageEvent).data)
+            if (!mounted.current) return
+            setAllEvents((d.events ?? []) as TraceEvent[])
+            setLoadError(null)
+            setLoading(false)
+          } catch {
+            /* ignore malformed */
+          }
+        })
+        es.onmessage = (ev) => {
+          try {
+            const d = JSON.parse(ev.data)
+            merge((d.events ?? []) as TraceEvent[])
+          } catch {
+            /* ignore malformed / heartbeat */
+          }
+        }
+        es.onerror = () => {
+          // SSE dropped (network/CF) — degrade to polling, retry SSE later.
+          if (es) {
+            es.close()
+            es = null
+          }
+          startPollFallback()
+        }
+      } catch {
+        startPollFallback()
+      }
+    }
+
+    load().then(startSse)
+
     return () => {
       mounted.current = false
-      clearInterval(id)
+      if (es) es.close()
+      if (pollId) clearInterval(pollId)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

@@ -73,6 +73,126 @@ export const Route = createFileRoute('/api/flow/events')({
         const tenantInfo = await resolveTenantFromRequest(request)
         const isMally = tenantInfo?.tenant === 'mally'
 
+        const tenantFilterSql = isMally
+          ? `AND (${MALLY_SOURCES.map(() => `LOWER(source) LIKE ?`).join(' OR ')})`
+          : `AND NOT (${MALLY_SOURCES.map(() => `LOWER(source) LIKE ?`).join(' OR ')})`
+        const tenantLikeParams = MALLY_SOURCES.map((s) => `%${s}%`)
+
+        // ── SSE live-stream mode (?stream=1) ──────────────────────────────
+        // Pushes new hermes_findings rows as they land so the LiveFlow canvas
+        // animates in near-real-time instead of 10s client polling. The
+        // existing JSON path below is untouched (initial load / fallback).
+        if (url.searchParams.get('stream') === '1') {
+          const SELECT = (extra: string) => `
+              SELECT id, ts, source, severity AS kind, status, title AS label,
+                     body AS detail, NULL AS model_req, NULL AS model_used,
+                     NULL AS provider, NULL AS input_tokens, NULL AS output_tokens,
+                     NULL AS cost_usd, NULL AS pane_id, NULL AS mcp_server,
+                     NULL AS tool_name,
+                     'hermes_' || strftime('%Y%m%d_%H', ts) AS trace_id
+              FROM hermes_findings
+              WHERE ts >= datetime('now', ?) ${tenantFilterSql} ${extra}`
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let db: any = null
+          try {
+            const Database = (await import('better-sqlite3')).default
+            db = new Database(HERMES_DB_PATH, {
+              readonly: true,
+              fileMustExist: true,
+            })
+          } catch {
+            // DB unavailable → tell client to use JSON fallback, don't 500
+            return new Response('retry: 10000\nevent: nostream\ndata: {}\n\n', {
+              headers: { 'Content-Type': 'text/event-stream' },
+            })
+          }
+          const sdb = db
+          const enc = new TextEncoder()
+          const stmtInit = sdb.prepare(
+            `${SELECT('')} ORDER BY ts DESC LIMIT ?`,
+          )
+          const stmtSince = sdb.prepare(
+            `${SELECT('AND id > ?')} ORDER BY id ASC LIMIT 200`,
+          )
+          let lastId = 0
+          let timer: ReturnType<typeof setInterval> | null = null
+          const stream = new ReadableStream({
+            start(controller) {
+              const send = (s: string) => {
+                try {
+                  controller.enqueue(enc.encode(s))
+                } catch {
+                  /* closed */
+                }
+              }
+              try {
+                const init = (
+                  stmtInit.all(
+                    `-${hours} hours`,
+                    ...tenantLikeParams,
+                    limit,
+                  ) as TraceEvent[]
+                ).reverse()
+                for (const e of init)
+                  if (e.id > lastId) lastId = e.id
+                send(
+                  `event: snapshot\ndata: ${JSON.stringify({ events: init, count: init.length })}\n\n`,
+                )
+              } catch {
+                send(`event: snapshot\ndata: ${JSON.stringify({ events: [] })}\n\n`)
+              }
+              let ticks = 0
+              timer = setInterval(() => {
+                try {
+                  const rows = stmtSince.all(
+                    `-${hours} hours`,
+                    ...tenantLikeParams,
+                    lastId,
+                  ) as TraceEvent[]
+                  if (rows.length) {
+                    for (const r of rows) if (r.id > lastId) lastId = r.id
+                    send(
+                      `data: ${JSON.stringify({ events: rows, count: rows.length })}\n\n`,
+                    )
+                  }
+                  if (++ticks % 5 === 0) send(`: hb\n\n`) // ~15s keepalive
+                } catch {
+                  /* transient query error — keep stream alive */
+                }
+              }, 3000)
+              const onAbort = () => {
+                if (timer) clearInterval(timer)
+                try {
+                  sdb.close()
+                } catch {
+                  /* already closed */
+                }
+                try {
+                  controller.close()
+                } catch {
+                  /* already closed */
+                }
+              }
+              request.signal.addEventListener('abort', onAbort)
+            },
+            cancel() {
+              if (timer) clearInterval(timer)
+              try {
+                sdb.close()
+              } catch {
+                /* already closed */
+              }
+            },
+          })
+          return new Response(stream, {
+            headers: {
+              'Content-Type': 'text/event-stream',
+              'Cache-Control': 'no-cache, no-transform',
+              Connection: 'keep-alive',
+            },
+          })
+        }
+
         try {
           const Database = (await import('better-sqlite3')).default
           const db = new Database(HERMES_DB_PATH, {
