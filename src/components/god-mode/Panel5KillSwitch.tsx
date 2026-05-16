@@ -6,7 +6,7 @@
  * - Hard Stop: requires two clicks within 3s → POST /api/goal/hard-stop { confirm: true }
  */
 import { useEffect, useRef, useState } from 'react'
-import type { GoalSession, GoalStatus } from '@/server/goal-sessions-store'
+import type { GoalSession, GoalStatus } from '@/types/goal-session'
 
 interface Props {
   goalId: string

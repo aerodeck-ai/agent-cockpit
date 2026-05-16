@@ -13,7 +13,7 @@ import { Panel2CurrentSubtask } from '@/components/god-mode/Panel2CurrentSubtask
 import { Panel3LastActions } from '@/components/god-mode/Panel3LastActions'
 import { Panel4ExitConditions } from '@/components/god-mode/Panel4ExitConditions'
 import { Panel5KillSwitch } from '@/components/god-mode/Panel5KillSwitch'
-import type { GoalSession } from '@/server/goal-sessions-store'
+import type { GoalSession } from '@/types/goal-session'
 
 export function GoalPage() {
   const [activeGoal, setActiveGoal] = useState<GoalSession | null>(null)

@@ -5,7 +5,7 @@
  * Shows active task + model tier + status badge.
  */
 import { useEffect, useState } from 'react'
-import type { GoalSession } from '@/server/goal-sessions-store'
+import type { GoalSession } from '@/types/goal-session'
 
 interface Props {
   goalId: string
