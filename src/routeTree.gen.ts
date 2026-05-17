@@ -20,6 +20,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as PromptsRouteImport } from './routes/prompts'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as OperationsRouteImport } from './routes/operations'
+import { Route as OfficeRouteImport } from './routes/office'
 import { Route as ModelsRouteImport } from './routes/models'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -228,6 +229,11 @@ const ProfilesRoute = ProfilesRouteImport.update({
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficeRoute = OfficeRouteImport.update({
+  id: '/office',
+  path: '/office',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModelsRoute = ModelsRouteImport.update({
@@ -1021,6 +1027,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
+  '/office': typeof OfficeRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/prompts': typeof PromptsRoute
@@ -1188,6 +1195,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
+  '/office': typeof OfficeRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/prompts': typeof PromptsRoute
@@ -1355,6 +1363,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/memory': typeof MemoryRoute
   '/models': typeof ModelsRoute
+  '/office': typeof OfficeRoute
   '/operations': typeof OperationsRoute
   '/profiles': typeof ProfilesRoute
   '/prompts': typeof PromptsRoute
@@ -1524,6 +1533,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/memory'
     | '/models'
+    | '/office'
     | '/operations'
     | '/profiles'
     | '/prompts'
@@ -1691,6 +1701,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/memory'
     | '/models'
+    | '/office'
     | '/operations'
     | '/profiles'
     | '/prompts'
@@ -1857,6 +1868,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/memory'
     | '/models'
+    | '/office'
     | '/operations'
     | '/profiles'
     | '/prompts'
@@ -2025,6 +2037,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   MemoryRoute: typeof MemoryRoute
   ModelsRoute: typeof ModelsRoute
+  OfficeRoute: typeof OfficeRoute
   OperationsRoute: typeof OperationsRoute
   ProfilesRoute: typeof ProfilesRoute
   PromptsRoute: typeof PromptsRoute
@@ -2222,6 +2235,13 @@ declare module '@tanstack/react-router' {
       path: '/operations'
       fullPath: '/operations'
       preLoaderRoute: typeof OperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/office': {
+      id: '/office'
+      path: '/office'
+      fullPath: '/office'
+      preLoaderRoute: typeof OfficeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/models': {
@@ -3538,6 +3558,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   MemoryRoute: MemoryRoute,
   ModelsRoute: ModelsRoute,
+  OfficeRoute: OfficeRoute,
   OperationsRoute: OperationsRoute,
   ProfilesRoute: ProfilesRoute,
   PromptsRoute: PromptsRoute,

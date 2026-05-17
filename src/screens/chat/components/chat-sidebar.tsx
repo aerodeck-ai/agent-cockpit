@@ -598,6 +598,7 @@ function ChatSidebarComponent({
   const isPromptsActive = pathname === '/prompts'
   const isFlowActive = pathname === '/flow'
   const isModelsActive = pathname === '/models'
+  const isOfficeActive = pathname === '/office'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
   const knowledgeRoutes = ['/memory', '/skills', '/evals']
   const systemRoutes = ['/settings', '/logs']
@@ -904,8 +905,10 @@ function ChatSidebarComponent({
   ]
 
   // BerlAI — the explicit ATC delta (not in upstream). Flow first (the
-  // differentiator, standalone). Traces is expected-degraded while Laminar
-  // is down (redirect → live.berl.ai 502) — kept intentionally.
+  // differentiator, standalone). Office second — iframe of office.berl.ai,
+  // CSP-allowlisted; same architectural pattern as the Hermes Desktop app's
+  // Office tab (localhost-iframe of fathah/hermes-office). Traces is
+  // expected-degraded while Laminar is down (redirect → live.berl.ai 502).
   const berlaiItems: Array<NavItemDef> = [
     {
       kind: 'link',
@@ -913,6 +916,13 @@ function ChatSidebarComponent({
       icon: Activity01Icon,
       label: 'Flow',
       active: isFlowActive,
+    },
+    {
+      kind: 'link',
+      to: '/office',
+      icon: Building01Icon,
+      label: 'Office',
+      active: isOfficeActive,
     },
     {
       kind: 'link',
