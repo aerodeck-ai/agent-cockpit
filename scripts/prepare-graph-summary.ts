@@ -2,7 +2,7 @@
 /**
  * prepare-graph-summary.ts
  *
- * Reads ~/graphify-fleet/cross-host-graph.json (349k nodes, ~232MB),
+ * Reads ~/graphify-fleet/cross-host-graph.json (349k nodes, ~438MB actual),
  * computes a community-summary view, and writes
  * ~/agent-cockpit/public/graph-summary.json (<1MB target).
  *

@@ -2,7 +2,7 @@
  * GET /api/graph/community/$id
  *
  * Returns up to 5,000 nodes + internal edges for the requested community id.
- * Full graph is cached in module scope after first load (~232MB, one-time 2s parse).
+ * Full graph is cached in module scope after first load (~438MB actual, one-time 2s parse).
  */
 
 import { createFileRoute } from '@tanstack/react-router'
