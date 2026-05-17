@@ -28,6 +28,7 @@ import {
   Activity01Icon,
   KnightShieldIcon,
   CpuIcon,
+  AiNetworkIcon,
 } from '@hugeicons/core-free-icons'
 import { AnimatePresence, motion } from 'motion/react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -597,6 +598,7 @@ function ChatSidebarComponent({
   const isVoiceActive = pathname === '/voice'
   const isPromptsActive = pathname === '/prompts'
   const isFlowActive = pathname === '/flow'
+  const isGraphActive = pathname === '/graph' || pathname === '/graph/'
   const isModelsActive = pathname === '/models'
   const isOfficeActive = pathname === '/office'
   const mainRoutes = ['/chat', '/new', '/files', '/terminal']
@@ -916,6 +918,13 @@ function ChatSidebarComponent({
       icon: Activity01Icon,
       label: 'Flow',
       active: isFlowActive,
+    },
+    {
+      kind: 'link',
+      to: '/graph',
+      icon: AiNetworkIcon,
+      label: 'Graph',
+      active: isGraphActive,
     },
     // /office removed 2026-05-17 (S2 cockpit-v2 cleanup). Iframe surface
     // condemned. isOfficeActive is left dead-set above; can be pruned next pass.

@@ -34,6 +34,7 @@ import { Route as ConductorRouteImport } from './routes/conductor'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as GraphIndexRouteImport } from './routes/graph/index'
 import { Route as FlowIndexRouteImport } from './routes/flow/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
@@ -159,6 +160,7 @@ import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-ta
 import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
 import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
 import { Route as ApiGuardrailsPiiClassifierRouteImport } from './routes/api/guardrails/pii-classifier'
+import { Route as ApiGraphSearchRouteImport } from './routes/api/graph/search'
 import { Route as ApiGoalPauseRouteImport } from './routes/api/goal/pause'
 import { Route as ApiGoalListRouteImport } from './routes/api/goal/list'
 import { Route as ApiGoalHardStopRouteImport } from './routes/api/goal/hard-stop'
@@ -178,6 +180,7 @@ import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sou
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
 import { Route as ApiHermesJobsRun_idRouteImport } from './routes/api/hermes/jobs/$run_id'
+import { Route as ApiGraphCommunityIdRouteImport } from './routes/api/graph/community.$id'
 
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
@@ -304,10 +307,15 @@ const SettingsIndexRoute = SettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SettingsRoute,
 } as any)
+const GraphIndexRoute = GraphIndexRouteImport.update({
+  id: '/graph/',
+  path: '/graph/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FlowIndexRoute = FlowIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => FlowRoute,
+  id: '/flow/',
+  path: '/flow/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ChatIndexRoute = ChatIndexRouteImport.update({
   id: '/chat/',
@@ -932,6 +940,11 @@ const ApiGuardrailsPiiClassifierRoute =
     path: '/api/guardrails/pii-classifier',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiGraphSearchRoute = ApiGraphSearchRouteImport.update({
+  id: '/api/graph/search',
+  path: '/api/graph/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiGoalPauseRoute = ApiGoalPauseRouteImport.update({
   id: '/api/goal/pause',
   path: '/api/goal/pause',
@@ -1028,6 +1041,11 @@ const ApiHermesworldReservationsConfirmRoute =
 const ApiHermesJobsRun_idRoute = ApiHermesJobsRun_idRouteImport.update({
   id: '/api/hermes/jobs/$run_id',
   path: '/api/hermes/jobs/$run_id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGraphCommunityIdRoute = ApiGraphCommunityIdRouteImport.update({
+  id: '/api/graph/community/$id',
+  path: '/api/graph/community/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -1133,6 +1151,7 @@ export interface FileRoutesByFullPath {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/flow/': typeof FlowIndexRoute
+  '/graph/': typeof GraphIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
@@ -1147,6 +1166,7 @@ export interface FileRoutesByFullPath {
   '/api/goal/hard-stop': typeof ApiGoalHardStopRoute
   '/api/goal/list': typeof ApiGoalListRoute
   '/api/goal/pause': typeof ApiGoalPauseRoute
+  '/api/graph/search': typeof ApiGraphSearchRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1195,6 +1215,7 @@ export interface FileRoutesByFullPath {
   '/api/voice/chat': typeof ApiVoiceChatRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/api/graph/community/$id': typeof ApiGraphCommunityIdRoute
   '/api/hermes/jobs/$run_id': typeof ApiHermesJobsRun_idRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
@@ -1303,6 +1324,7 @@ export interface FileRoutesByTo {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
   '/flow': typeof FlowIndexRoute
+  '/graph': typeof GraphIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
@@ -1317,6 +1339,7 @@ export interface FileRoutesByTo {
   '/api/goal/hard-stop': typeof ApiGoalHardStopRoute
   '/api/goal/list': typeof ApiGoalListRoute
   '/api/goal/pause': typeof ApiGoalPauseRoute
+  '/api/graph/search': typeof ApiGraphSearchRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1365,6 +1388,7 @@ export interface FileRoutesByTo {
   '/api/voice/chat': typeof ApiVoiceChatRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/api/graph/community/$id': typeof ApiGraphCommunityIdRoute
   '/api/hermes/jobs/$run_id': typeof ApiHermesJobsRun_idRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
@@ -1475,6 +1499,7 @@ export interface FileRoutesById {
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
   '/flow/': typeof FlowIndexRoute
+  '/graph/': typeof GraphIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
@@ -1489,6 +1514,7 @@ export interface FileRoutesById {
   '/api/goal/hard-stop': typeof ApiGoalHardStopRoute
   '/api/goal/list': typeof ApiGoalListRoute
   '/api/goal/pause': typeof ApiGoalPauseRoute
+  '/api/graph/search': typeof ApiGraphSearchRoute
   '/api/guardrails/pii-classifier': typeof ApiGuardrailsPiiClassifierRoute
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
@@ -1537,6 +1563,7 @@ export interface FileRoutesById {
   '/api/voice/chat': typeof ApiVoiceChatRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/api/graph/community/$id': typeof ApiGraphCommunityIdRoute
   '/api/hermes/jobs/$run_id': typeof ApiHermesJobsRun_idRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
@@ -1648,6 +1675,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/flow/'
+    | '/graph/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
@@ -1662,6 +1690,7 @@ export interface FileRouteTypes {
     | '/api/goal/hard-stop'
     | '/api/goal/list'
     | '/api/goal/pause'
+    | '/api/graph/search'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1710,6 +1739,7 @@ export interface FileRouteTypes {
     | '/api/voice/chat'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/api/graph/community/$id'
     | '/api/hermes/jobs/$run_id'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
@@ -1818,6 +1848,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat'
     | '/flow'
+    | '/graph'
     | '/settings'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
@@ -1832,6 +1863,7 @@ export interface FileRouteTypes {
     | '/api/goal/hard-stop'
     | '/api/goal/list'
     | '/api/goal/pause'
+    | '/api/graph/search'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -1880,6 +1912,7 @@ export interface FileRouteTypes {
     | '/api/voice/chat'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/api/graph/community/$id'
     | '/api/hermes/jobs/$run_id'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
@@ -1989,6 +2022,7 @@ export interface FileRouteTypes {
     | '/settings/providers'
     | '/chat/'
     | '/flow/'
+    | '/graph/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
@@ -2003,6 +2037,7 @@ export interface FileRouteTypes {
     | '/api/goal/hard-stop'
     | '/api/goal/list'
     | '/api/goal/pause'
+    | '/api/graph/search'
     | '/api/guardrails/pii-classifier'
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
@@ -2051,6 +2086,7 @@ export interface FileRouteTypes {
     | '/api/voice/chat'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/api/graph/community/$id'
     | '/api/hermes/jobs/$run_id'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
@@ -2159,6 +2195,8 @@ export interface RootRouteChildren {
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   FlowLoopRoute: typeof FlowLoopRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  FlowIndexRoute: typeof FlowIndexRoute
+  GraphIndexRoute: typeof GraphIndexRoute
   ApiBudgetStatusRoute: typeof ApiBudgetStatusRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiCostRateSseRoute: typeof ApiCostRateSseRoute
@@ -2169,6 +2207,7 @@ export interface RootRouteChildren {
   ApiGoalHardStopRoute: typeof ApiGoalHardStopRoute
   ApiGoalListRoute: typeof ApiGoalListRoute
   ApiGoalPauseRoute: typeof ApiGoalPauseRoute
+  ApiGraphSearchRoute: typeof ApiGraphSearchRoute
   ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
   ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
   ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
@@ -2193,6 +2232,7 @@ export interface RootRouteChildren {
   ApiVoiceChatRoute: typeof ApiVoiceChatRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
+  ApiGraphCommunityIdRoute: typeof ApiGraphCommunityIdRoute
   ApiHermesJobsRun_idRoute: typeof ApiHermesJobsRun_idRoute
 }
 
@@ -2373,12 +2413,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof SettingsRoute
     }
+    '/graph/': {
+      id: '/graph/'
+      path: '/graph'
+      fullPath: '/graph/'
+      preLoaderRoute: typeof GraphIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/flow/': {
       id: '/flow/'
-      path: '/'
+      path: '/flow'
       fullPath: '/flow/'
       preLoaderRoute: typeof FlowIndexRouteImport
-      parentRoute: typeof FlowRoute
+      parentRoute: typeof rootRouteImport
     }
     '/chat/': {
       id: '/chat/'
@@ -3248,6 +3295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGuardrailsPiiClassifierRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/graph/search': {
+      id: '/api/graph/search'
+      path: '/api/graph/search'
+      fullPath: '/api/graph/search'
+      preLoaderRoute: typeof ApiGraphSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/goal/pause': {
       id: '/api/goal/pause'
       path: '/api/goal/pause'
@@ -3379,6 +3433,13 @@ declare module '@tanstack/react-router' {
       path: '/api/hermes/jobs/$run_id'
       fullPath: '/api/hermes/jobs/$run_id'
       preLoaderRoute: typeof ApiHermesJobsRun_idRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/graph/community/$id': {
+      id: '/api/graph/community/$id'
+      path: '/api/graph/community/$id'
+      fullPath: '/api/graph/community/$id'
+      preLoaderRoute: typeof ApiGraphCommunityIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -3703,6 +3764,8 @@ const rootRouteChildren: RootRouteChildren = {
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   FlowLoopRoute: FlowLoopRoute,
   ChatIndexRoute: ChatIndexRoute,
+  FlowIndexRoute: FlowIndexRoute,
+  GraphIndexRoute: GraphIndexRoute,
   ApiBudgetStatusRoute: ApiBudgetStatusRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiCostRateSseRoute: ApiCostRateSseRoute,
@@ -3713,6 +3776,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiGoalHardStopRoute: ApiGoalHardStopRoute,
   ApiGoalListRoute: ApiGoalListRoute,
   ApiGoalPauseRoute: ApiGoalPauseRoute,
+  ApiGraphSearchRoute: ApiGraphSearchRoute,
   ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
   ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
   ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
@@ -3737,6 +3801,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceChatRoute: ApiVoiceChatRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
+  ApiGraphCommunityIdRoute: ApiGraphCommunityIdRoute,
   ApiHermesJobsRun_idRoute: ApiHermesJobsRun_idRoute,
 }
 export const routeTree = rootRouteImport
