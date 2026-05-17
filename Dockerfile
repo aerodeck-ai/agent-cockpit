@@ -14,9 +14,14 @@ FROM node:22-slim AS build
 RUN corepack enable && apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
-# Install deps (cache-friendly: copy only manifests first)
+# Install deps (cache-friendly: copy only manifests first).
+# pnpm 10+ refuses install when native packages have unapproved build
+# scripts. Skip scripts at install (bypasses the strict-builds check),
+# then explicitly `pnpm rebuild` the ones this image actually needs.
+# electron is excluded — desktop-only, never used by the server build.
 COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts \
+ && pnpm rebuild better-sqlite3 esbuild protobufjs unrs-resolver
 
 # Copy sources and build
 COPY . .
