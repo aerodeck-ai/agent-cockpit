@@ -3,6 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Activity01Icon,
   BrainIcon,
+  Building01Icon,
   Cancel01Icon,
   Chat01Icon,
   CheckListIcon,
@@ -136,6 +137,13 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     icon: Activity01Icon,
     to: '/flow',
     match: (p: string) => p.startsWith('/flow'),
+  },
+  {
+    id: 'office',
+    label: 'Office',
+    icon: Building01Icon,
+    to: '/office',
+    match: (p: string) => p.startsWith('/office'),
   },
   {
     id: 'voice',
