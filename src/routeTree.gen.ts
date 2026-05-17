@@ -27,7 +27,6 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as GuardrailsRouteImport } from './routes/guardrails'
 import { Route as GoalRouteImport } from './routes/goal'
-import { Route as FlowRouteImport } from './routes/flow'
 import { Route as FilesRouteImport } from './routes/files'
 import { Route as EvalsRouteImport } from './routes/evals'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -35,8 +34,10 @@ import { Route as ConductorRouteImport } from './routes/conductor'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as FlowIndexRouteImport } from './routes/flow/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
+import { Route as FlowLoopRouteImport } from './routes/flow/loop'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
 import { Route as ApiVoiceWatchdogLogRouteImport } from './routes/api/voice-watchdog-log'
@@ -153,6 +154,7 @@ import { Route as ApiMcpNameRouteImport } from './routes/api/mcp/$name'
 import { Route as ApiHermesworldReservationsRouteImport } from './routes/api/hermesworld/reservations'
 import { Route as ApiHermesPersonalProbeRouteImport } from './routes/api/hermes/personal-probe'
 import { Route as ApiHermesGoalRouteImport } from './routes/api/hermes/goal'
+import { Route as ApiHermesDispatchRouteImport } from './routes/api/hermes/dispatch'
 import { Route as ApiHermesTasksTaskIdRouteImport } from './routes/api/hermes-tasks.$taskId'
 import { Route as ApiGuardrailsTirithRouteImport } from './routes/api/guardrails/tirith'
 import { Route as ApiGuardrailsScopeDenyRouteImport } from './routes/api/guardrails/scope-deny'
@@ -175,6 +177,7 @@ import { Route as ApiSessionsSessionKeyActiveRunRouteImport } from './routes/api
 import { Route as ApiMcpHubSourcesIdRouteImport } from './routes/api/mcp/hub-sources.$id'
 import { Route as ApiMcpNameLogsRouteImport } from './routes/api/mcp/$name.logs'
 import { Route as ApiHermesworldReservationsConfirmRouteImport } from './routes/api/hermesworld/reservations/confirm'
+import { Route as ApiHermesJobsRun_idRouteImport } from './routes/api/hermes/jobs/$run_id'
 
 const VoiceRoute = VoiceRouteImport.update({
   id: '/voice',
@@ -266,11 +269,6 @@ const GoalRoute = GoalRouteImport.update({
   path: '/goal',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FlowRoute = FlowRouteImport.update({
-  id: '/flow',
-  path: '/flow',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FilesRoute = FilesRouteImport.update({
   id: '/files',
   path: '/files',
@@ -306,6 +304,11 @@ const SettingsIndexRoute = SettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SettingsRoute,
 } as any)
+const FlowIndexRoute = FlowIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FlowRoute,
+} as any)
 const ChatIndexRoute = ChatIndexRouteImport.update({
   id: '/chat/',
   path: '/chat/',
@@ -315,6 +318,11 @@ const SettingsProvidersRoute = SettingsProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
   getParentRoute: () => SettingsRoute,
+} as any)
+const FlowLoopRoute = FlowLoopRouteImport.update({
+  id: '/flow/loop',
+  path: '/flow/loop',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
   id: '/chat/$sessionKey',
@@ -898,6 +906,11 @@ const ApiHermesGoalRoute = ApiHermesGoalRouteImport.update({
   path: '/api/hermes/goal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiHermesDispatchRoute = ApiHermesDispatchRouteImport.update({
+  id: '/api/hermes/dispatch',
+  path: '/api/hermes/dispatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHermesTasksTaskIdRoute = ApiHermesTasksTaskIdRouteImport.update({
   id: '/$taskId',
   path: '/$taskId',
@@ -1012,6 +1025,11 @@ const ApiHermesworldReservationsConfirmRoute =
     path: '/confirm',
     getParentRoute: () => ApiHermesworldReservationsRoute,
   } as any)
+const ApiHermesJobsRun_idRoute = ApiHermesJobsRun_idRouteImport.update({
+  id: '/api/hermes/jobs/$run_id',
+  path: '/api/hermes/jobs/$run_id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1020,7 +1038,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
-  '/flow': typeof FlowRoute
   '/goal': typeof GoalRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
@@ -1112,8 +1129,10 @@ export interface FileRoutesByFullPath {
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
+  '/flow/loop': typeof FlowLoopRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
+  '/flow/': typeof FlowIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
@@ -1132,6 +1151,7 @@ export interface FileRoutesByFullPath {
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
+  '/api/hermes/dispatch': typeof ApiHermesDispatchRoute
   '/api/hermes/goal': typeof ApiHermesGoalRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1175,6 +1195,7 @@ export interface FileRoutesByFullPath {
   '/api/voice/chat': typeof ApiVoiceChatRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/api/hermes/jobs/$run_id': typeof ApiHermesJobsRun_idRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1188,7 +1209,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
-  '/flow': typeof FlowRoute
   '/goal': typeof GoalRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
@@ -1279,8 +1299,10 @@ export interface FileRoutesByTo {
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
+  '/flow/loop': typeof FlowLoopRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat': typeof ChatIndexRoute
+  '/flow': typeof FlowIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
@@ -1299,6 +1321,7 @@ export interface FileRoutesByTo {
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
+  '/api/hermes/dispatch': typeof ApiHermesDispatchRoute
   '/api/hermes/goal': typeof ApiHermesGoalRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1342,6 +1365,7 @@ export interface FileRoutesByTo {
   '/api/voice/chat': typeof ApiVoiceChatRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/api/hermes/jobs/$run_id': typeof ApiHermesJobsRun_idRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1356,7 +1380,6 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/evals': typeof EvalsRoute
   '/files': typeof FilesRoute
-  '/flow': typeof FlowRoute
   '/goal': typeof GoalRoute
   '/guardrails': typeof GuardrailsRoute
   '/jobs': typeof JobsRoute
@@ -1448,8 +1471,10 @@ export interface FileRoutesById {
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
+  '/flow/loop': typeof FlowLoopRoute
   '/settings/providers': typeof SettingsProvidersRoute
   '/chat/': typeof ChatIndexRoute
+  '/flow/': typeof FlowIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
@@ -1468,6 +1493,7 @@ export interface FileRoutesById {
   '/api/guardrails/scope-deny': typeof ApiGuardrailsScopeDenyRoute
   '/api/guardrails/tirith': typeof ApiGuardrailsTirithRoute
   '/api/hermes-tasks/$taskId': typeof ApiHermesTasksTaskIdRoute
+  '/api/hermes/dispatch': typeof ApiHermesDispatchRoute
   '/api/hermes/goal': typeof ApiHermesGoalRoute
   '/api/hermes/personal-probe': typeof ApiHermesPersonalProbeRoute
   '/api/hermesworld/reservations': typeof ApiHermesworldReservationsRouteWithChildren
@@ -1511,6 +1537,7 @@ export interface FileRoutesById {
   '/api/voice/chat': typeof ApiVoiceChatRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/api/hermes/jobs/$run_id': typeof ApiHermesJobsRun_idRoute
   '/api/hermesworld/reservations/confirm': typeof ApiHermesworldReservationsConfirmRoute
   '/api/mcp/$name/logs': typeof ApiMcpNameLogsRoute
   '/api/mcp/hub-sources/$id': typeof ApiMcpHubSourcesIdRoute
@@ -1526,7 +1553,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/evals'
     | '/files'
-    | '/flow'
     | '/goal'
     | '/guardrails'
     | '/jobs'
@@ -1618,8 +1644,10 @@ export interface FileRouteTypes {
     | '/api/voice-watchdog-log'
     | '/api/workspace'
     | '/chat/$sessionKey'
+    | '/flow/loop'
     | '/settings/providers'
     | '/chat/'
+    | '/flow/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
@@ -1638,6 +1666,7 @@ export interface FileRouteTypes {
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
     | '/api/hermes-tasks/$taskId'
+    | '/api/hermes/dispatch'
     | '/api/hermes/goal'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
@@ -1681,6 +1710,7 @@ export interface FileRouteTypes {
     | '/api/voice/chat'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/api/hermes/jobs/$run_id'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1694,7 +1724,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/evals'
     | '/files'
-    | '/flow'
     | '/goal'
     | '/guardrails'
     | '/jobs'
@@ -1785,8 +1814,10 @@ export interface FileRouteTypes {
     | '/api/voice-watchdog-log'
     | '/api/workspace'
     | '/chat/$sessionKey'
+    | '/flow/loop'
     | '/settings/providers'
     | '/chat'
+    | '/flow'
     | '/settings'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
@@ -1805,6 +1836,7 @@ export interface FileRouteTypes {
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
     | '/api/hermes-tasks/$taskId'
+    | '/api/hermes/dispatch'
     | '/api/hermes/goal'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
@@ -1848,6 +1880,7 @@ export interface FileRouteTypes {
     | '/api/voice/chat'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/api/hermes/jobs/$run_id'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -1861,7 +1894,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/evals'
     | '/files'
-    | '/flow'
     | '/goal'
     | '/guardrails'
     | '/jobs'
@@ -1953,8 +1985,10 @@ export interface FileRouteTypes {
     | '/api/voice-watchdog-log'
     | '/api/workspace'
     | '/chat/$sessionKey'
+    | '/flow/loop'
     | '/settings/providers'
     | '/chat/'
+    | '/flow/'
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
@@ -1973,6 +2007,7 @@ export interface FileRouteTypes {
     | '/api/guardrails/scope-deny'
     | '/api/guardrails/tirith'
     | '/api/hermes-tasks/$taskId'
+    | '/api/hermes/dispatch'
     | '/api/hermes/goal'
     | '/api/hermes/personal-probe'
     | '/api/hermesworld/reservations'
@@ -2016,6 +2051,7 @@ export interface FileRouteTypes {
     | '/api/voice/chat'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/api/hermes/jobs/$run_id'
     | '/api/hermesworld/reservations/confirm'
     | '/api/mcp/$name/logs'
     | '/api/mcp/hub-sources/$id'
@@ -2030,7 +2066,6 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EvalsRoute: typeof EvalsRoute
   FilesRoute: typeof FilesRoute
-  FlowRoute: typeof FlowRoute
   GoalRoute: typeof GoalRoute
   GuardrailsRoute: typeof GuardrailsRoute
   JobsRoute: typeof JobsRoute
@@ -2122,6 +2157,7 @@ export interface RootRouteChildren {
   ApiVoiceWatchdogLogRoute: typeof ApiVoiceWatchdogLogRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
+  FlowLoopRoute: typeof FlowLoopRoute
   ChatIndexRoute: typeof ChatIndexRoute
   ApiBudgetStatusRoute: typeof ApiBudgetStatusRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
@@ -2136,6 +2172,7 @@ export interface RootRouteChildren {
   ApiGuardrailsPiiClassifierRoute: typeof ApiGuardrailsPiiClassifierRoute
   ApiGuardrailsScopeDenyRoute: typeof ApiGuardrailsScopeDenyRoute
   ApiGuardrailsTirithRoute: typeof ApiGuardrailsTirithRoute
+  ApiHermesDispatchRoute: typeof ApiHermesDispatchRoute
   ApiHermesGoalRoute: typeof ApiHermesGoalRoute
   ApiHermesPersonalProbeRoute: typeof ApiHermesPersonalProbeRoute
   ApiHermesworldReservationsRoute: typeof ApiHermesworldReservationsRouteWithChildren
@@ -2156,6 +2193,7 @@ export interface RootRouteChildren {
   ApiVoiceChatRoute: typeof ApiVoiceChatRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
+  ApiHermesJobsRun_idRoute: typeof ApiHermesJobsRun_idRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2286,13 +2324,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GoalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/flow': {
-      id: '/flow'
-      path: '/flow'
-      fullPath: '/flow'
-      preLoaderRoute: typeof FlowRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/files': {
       id: '/files'
       path: '/files'
@@ -2342,6 +2373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof SettingsRoute
     }
+    '/flow/': {
+      id: '/flow/'
+      path: '/'
+      fullPath: '/flow/'
+      preLoaderRoute: typeof FlowIndexRouteImport
+      parentRoute: typeof FlowRoute
+    }
     '/chat/': {
       id: '/chat/'
       path: '/chat'
@@ -2355,6 +2393,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/providers'
       preLoaderRoute: typeof SettingsProvidersRouteImport
       parentRoute: typeof SettingsRoute
+    }
+    '/flow/loop': {
+      id: '/flow/loop'
+      path: '/flow/loop'
+      fullPath: '/flow/loop'
+      preLoaderRoute: typeof FlowLoopRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/chat/$sessionKey': {
       id: '/chat/$sessionKey'
@@ -3168,6 +3213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHermesGoalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/hermes/dispatch': {
+      id: '/api/hermes/dispatch'
+      path: '/api/hermes/dispatch'
+      fullPath: '/api/hermes/dispatch'
+      preLoaderRoute: typeof ApiHermesDispatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hermes-tasks/$taskId': {
       id: '/api/hermes-tasks/$taskId'
       path: '/$taskId'
@@ -3321,6 +3373,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/hermesworld/reservations/confirm'
       preLoaderRoute: typeof ApiHermesworldReservationsConfirmRouteImport
       parentRoute: typeof ApiHermesworldReservationsRoute
+    }
+    '/api/hermes/jobs/$run_id': {
+      id: '/api/hermes/jobs/$run_id'
+      path: '/api/hermes/jobs/$run_id'
+      fullPath: '/api/hermes/jobs/$run_id'
+      preLoaderRoute: typeof ApiHermesJobsRun_idRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -3551,7 +3610,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EvalsRoute: EvalsRoute,
   FilesRoute: FilesRoute,
-  FlowRoute: FlowRoute,
   GoalRoute: GoalRoute,
   GuardrailsRoute: GuardrailsRoute,
   JobsRoute: JobsRoute,
@@ -3643,6 +3701,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceWatchdogLogRoute: ApiVoiceWatchdogLogRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
+  FlowLoopRoute: FlowLoopRoute,
   ChatIndexRoute: ChatIndexRoute,
   ApiBudgetStatusRoute: ApiBudgetStatusRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
@@ -3657,6 +3716,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiGuardrailsPiiClassifierRoute: ApiGuardrailsPiiClassifierRoute,
   ApiGuardrailsScopeDenyRoute: ApiGuardrailsScopeDenyRoute,
   ApiGuardrailsTirithRoute: ApiGuardrailsTirithRoute,
+  ApiHermesDispatchRoute: ApiHermesDispatchRoute,
   ApiHermesGoalRoute: ApiHermesGoalRoute,
   ApiHermesPersonalProbeRoute: ApiHermesPersonalProbeRoute,
   ApiHermesworldReservationsRoute: ApiHermesworldReservationsRouteWithChildren,
@@ -3677,6 +3737,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceChatRoute: ApiVoiceChatRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
+  ApiHermesJobsRun_idRoute: ApiHermesJobsRun_idRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
