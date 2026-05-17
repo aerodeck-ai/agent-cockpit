@@ -30,6 +30,10 @@ interface DispatchBody {
   idempotency_key: string
   ts: number
   tenant?: string
+  // Phase B Step 2 — HCoS dispatcher's claim SQL requires `assignee IS NOT NULL`.
+  // Default to hermes-chief-of-staff when caller omits. Future Mally enablement
+  // (gated on M2-3): VectOS passes `tenant`, bridge maps to hermes-{tenant}.
+  assignee?: string
 }
 
 const PYTHON_UPSERT = `
@@ -64,12 +68,13 @@ if existing:
     sys.exit(0)
 
 cur.execute(
-    "INSERT INTO tasks (id, title, body, status, tenant, created_by, created_at, idempotency_key) "
-    "VALUES (?, ?, ?, 'ready', ?, ?, ?, ?)",
+    "INSERT INTO tasks (id, title, body, status, assignee, tenant, created_by, created_at, idempotency_key) "
+    "VALUES (?, ?, ?, 'ready', ?, ?, ?, ?, ?)",
     (
         card_id,
         payload["title"],
         payload.get("description") or None,
+        payload.get("assignee") or "hermes-chief-of-staff",
         payload.get("tenant") or "berlai",
         "bridge:vectos",
         now_ms,
@@ -114,6 +119,9 @@ function validateBody(value: unknown): DispatchBody | null {
     idempotency_key: v.idempotency_key,
     ts: typeof v.ts === 'number' ? v.ts : 0,
     tenant: typeof v.tenant === 'string' ? v.tenant : undefined,
+    assignee: typeof v.assignee === 'string' && v.assignee.trim()
+      ? v.assignee.trim()
+      : undefined,
   }
 }
 
