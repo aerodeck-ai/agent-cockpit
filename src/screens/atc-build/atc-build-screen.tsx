@@ -94,6 +94,156 @@ function BuildPane({ paneIndex }: { paneIndex: number }) {
   )
 }
 
+type DispatchEntry = {
+  ts: number
+  prompt: string
+  reply: string
+  ok: boolean
+}
+
+function HcosDispatcher() {
+  const [pane, setPane] = useState(1)
+  const [prompt, setPrompt] = useState('')
+  const [log, setLog] = useState<Array<DispatchEntry>>([])
+  const [busy, setBusy] = useState(false)
+
+  const send = useCallback(async () => {
+    const p = prompt.trim()
+    if (!p || busy) return
+    setBusy(true)
+    try {
+      const res = await fetch('/api/build/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paneIndex: pane, prompt: p }),
+      })
+      const data = (await res.json()) as {
+        ok?: boolean
+        hcos_reply?: string
+        directive?: string
+        error?: string
+      }
+      setLog((l) =>
+        [
+          {
+            ts: Date.now(),
+            prompt: `[pane ${pane}] ${p}`,
+            reply:
+              data.directive ??
+              data.hcos_reply ??
+              data.error ??
+              'no response',
+            ok: Boolean(data.ok),
+          },
+          ...l,
+        ].slice(0, 30),
+      )
+      setPrompt('')
+    } catch (e) {
+      setLog((l) =>
+        [
+          {
+            ts: Date.now(),
+            prompt: `[pane ${pane}] ${p}`,
+            reply: `dispatch failed: ${(e as Error).message}`,
+            ok: false,
+          },
+          ...l,
+        ].slice(0, 30),
+      )
+    } finally {
+      setBusy(false)
+    }
+  }, [prompt, pane, busy])
+
+  return (
+    <div
+      className="flex w-72 shrink-0 flex-col gap-2 rounded-lg border p-3"
+      style={{
+        borderColor: 'var(--theme-border, #2a2a2a)',
+        background: 'rgba(13,13,13,0.82)',
+      }}
+    >
+      <div
+        className="text-xs font-semibold"
+        style={{ color: 'var(--theme-accent, #7ec2ff)' }}
+      >
+        HCoS Dispatcher
+      </div>
+      <div className="flex items-center gap-1 text-[11px]">
+        <span style={{ color: 'var(--theme-muted, #888)' }}>→ pane</span>
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => setPane(n)}
+            className="rounded px-1.5 py-0.5"
+            style={{
+              background:
+                pane === n
+                  ? 'var(--theme-accent, #7ec2ff)'
+                  : 'var(--theme-input, #1a1a1a)',
+              color:
+                pane === n
+                  ? 'var(--theme-bg, #0a0a0a)'
+                  : 'var(--theme-text, #ddd)',
+            }}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+      <textarea
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) send()
+        }}
+        rows={3}
+        placeholder="command for HCoS → pane (⌘/Ctrl+Enter)"
+        className="resize-none rounded p-2 text-xs"
+        style={{
+          background: 'var(--theme-input, #1a1a1a)',
+          color: 'var(--theme-text, #ddd)',
+          border: '1px solid var(--theme-border, #2a2a2a)',
+        }}
+      />
+      <button
+        type="button"
+        onClick={send}
+        disabled={busy}
+        className="rounded px-2 py-1 text-xs font-medium disabled:opacity-50"
+        style={{
+          background: 'var(--theme-accent, #7ec2ff)',
+          color: 'var(--theme-bg, #0a0a0a)',
+        }}
+      >
+        {busy ? 'dispatching…' : 'Dispatch'}
+      </button>
+      <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto text-[11px]">
+        {log.map((e) => (
+          <div
+            key={e.ts}
+            className="rounded p-1.5"
+            style={{
+              background: 'var(--theme-input, #161616)',
+              borderLeft: `2px solid ${e.ok ? 'var(--theme-accent, #7ec2ff)' : '#e0564f'}`,
+            }}
+          >
+            <div style={{ color: 'var(--theme-muted, #888)' }}>{e.prompt}</div>
+            <div
+              style={{ color: 'var(--theme-text, #ddd)' }}
+              className="mt-0.5 break-words font-mono"
+            >
+              {e.reply}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function AtcBuildScreen() {
   const [poolStatus, setPoolStatus] = useState<string>('')
 
@@ -114,12 +264,21 @@ export function AtcBuildScreen() {
     <div
       className="relative flex h-full flex-col gap-3 p-4"
       style={{
-        // Polish #6 cyberpunk wallpaper bleeds through here when the asset
-        // is placed (Henry approval gate 2). Falls back to solid bg.
-        backgroundImage: 'var(--atc-build-wallpaper, none)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        // Polish #6: ships a tasteful default cyberpunk field (layered radial
+        // glows + faint grid). Henry can override with a real AerOS wallpaper
+        // by setting --atc-build-wallpaper to a url(...) — the var takes
+        // precedence over the default gradient when present.
         backgroundColor: 'var(--theme-bg, #0a0a0a)',
+        backgroundImage:
+          // no-op fallback keeps the multi-layer declaration valid when the
+          // var is unset; Henry sets --atc-build-wallpaper: url(...) to override
+          'var(--atc-build-wallpaper, linear-gradient(transparent, transparent)),' +
+          'radial-gradient(circle at 15% 20%, rgba(126,194,255,0.10), transparent 45%),' +
+          'radial-gradient(circle at 85% 75%, rgba(190,120,255,0.10), transparent 45%),' +
+          'linear-gradient(rgba(126,194,255,0.04) 1px, transparent 1px),' +
+          'linear-gradient(90deg, rgba(126,194,255,0.04) 1px, transparent 1px)',
+        backgroundSize: 'cover, cover, cover, 38px 38px, 38px 38px',
+        backgroundPosition: 'center',
       }}
     >
       <div className="flex items-center justify-between">
@@ -152,10 +311,13 @@ export function AtcBuildScreen() {
         </button>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-2 gap-3">
-        {Array.from({ length: PANE_COUNT }, (_, i) => (
-          <BuildPane key={i + 1} paneIndex={i + 1} />
-        ))}
+      <div className="flex min-h-0 flex-1 gap-3">
+        <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-2 gap-3">
+          {Array.from({ length: PANE_COUNT }, (_, i) => (
+            <BuildPane key={i + 1} paneIndex={i + 1} />
+          ))}
+        </div>
+        <HcosDispatcher />
       </div>
     </div>
   )
