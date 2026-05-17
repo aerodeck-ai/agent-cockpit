@@ -39,20 +39,20 @@ interface RawGraph {
 // Module-scope cache — populated on first request
 let cachedGraph: RawGraph | null = null
 let cacheLoading = false
-let cacheWaiters: Array<(g: RawGraph) => void> = []
+let cacheWaiters: Array<{ resolve: (g: RawGraph) => void; reject: (e: Error) => void }> = []
 
 async function getGraph(): Promise<RawGraph> {
   if (cachedGraph) return cachedGraph
 
   if (cacheLoading) {
-    return new Promise<RawGraph>((resolve) => {
-      cacheWaiters.push(resolve)
+    return new Promise<RawGraph>((resolve, reject) => {
+      cacheWaiters.push({ resolve, reject })
     })
   }
 
   cacheLoading = true
-  return new Promise<RawGraph>((resolve) => {
-    cacheWaiters.push(resolve)
+  return new Promise<RawGraph>((resolve, reject) => {
+    cacheWaiters.push({ resolve, reject })
 
     // Load asynchronously to avoid blocking the event loop
     setImmediate(() => {
@@ -63,12 +63,13 @@ async function getGraph(): Promise<RawGraph> {
         const waiters = cacheWaiters
         cacheWaiters = []
         cacheLoading = false
-        for (const w of waiters) w(graph)
+        for (const w of waiters) w.resolve(graph)
       } catch (err) {
         cacheLoading = false
         const waiters = cacheWaiters
         cacheWaiters = []
-        for (const w of waiters) w({ nodes: [], links: [] })
+        const error = err instanceof Error ? err : new Error(String(err))
+        for (const w of waiters) w.reject(error)
       }
     })
   })
@@ -85,7 +86,16 @@ export const Route = createFileRoute('/api/graph/community/$id')({
           return Response.json({ error: 'Invalid community id' }, { status: 400 })
         }
 
-        const graph = await getGraph()
+        let graph: RawGraph
+        try {
+          graph = await getGraph()
+        } catch (err) {
+          const detail = err instanceof Error ? err.message : String(err)
+          return Response.json(
+            { error: 'Graph data unavailable', detail },
+            { status: 500 },
+          )
+        }
         const edges = graph.links ?? graph.edges ?? []
 
         // Filter nodes
