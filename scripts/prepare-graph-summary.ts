@@ -20,7 +20,11 @@ import * as path from 'node:path'
 import * as os from 'node:os'
 
 const GRAPH_PATH = path.join(os.homedir(), 'graphify-fleet', 'cross-host-graph.json')
-const OUT_PATH = path.join(os.homedir(), 'agent-cockpit', 'public', 'graph-summary.json')
+// OUT_PATH: use GRAPH_SUMMARY_OUT env override, else cwd-relative public/graph-summary.json
+// (avoids silently writing to ~/agent-cockpit/ when run from a different checkout location)
+const OUT_PATH = process.env.GRAPH_SUMMARY_OUT
+  ? path.resolve(process.env.GRAPH_SUMMARY_OUT)
+  : path.join(process.cwd(), 'public', 'graph-summary.json')
 
 const TOP_N_COMMUNITIES = 300 // max communities in summary
 const TOP_NODES_PER_COMMUNITY = 5
