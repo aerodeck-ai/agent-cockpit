@@ -1,0 +1,1528 @@
+{
+  "generated_at": "2026-05-17T08:41:37.118244+00:00",
+  "source": "/Users/hberliand/mcp-infra/graphify/combined-2026-05-17/graph.json",
+  "nodes": [
+    {
+      "id": "script:embeddings-outbox-drainer",
+      "label": "embedding-drainer",
+      "type": "script",
+      "file_count": 1,
+      "x": 1880,
+      "y": 60
+    },
+    {
+      "id": "script:meeting-ingest",
+      "label": "meeting-ingest",
+      "type": "script",
+      "file_count": 61,
+      "x": 1880,
+      "y": 170
+    },
+    {
+      "id": "app:vectos",
+      "label": "VectOS",
+      "type": "app",
+      "file_count": 3548,
+      "x": 2240,
+      "y": 60
+    },
+    {
+      "id": "api:vectos:operating-map:live",
+      "label": "operating-map/live",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 2810
+    },
+    {
+      "id": "api:vectos:chat:route",
+      "label": "chat/route",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 720
+    },
+    {
+      "id": "api:vectos:plugins:kanban",
+      "label": "plugins/kanban",
+      "type": "api",
+      "file_count": 23,
+      "x": 1160,
+      "y": 3140
+    },
+    {
+      "id": "api:vectos:deploy:status",
+      "label": "deploy/status",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 1160
+    },
+    {
+      "id": "api:vectos:workflows:route",
+      "label": "workflows/route",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 4130
+    },
+    {
+      "id": "api:vectos:workflows:triage-classify",
+      "label": "workflows/triage-classify",
+      "type": "api",
+      "file_count": 6,
+      "x": 1160,
+      "y": 4240
+    },
+    {
+      "id": "api:vectos:workflows:meeting-ingest",
+      "label": "workflows/meeting-ingest",
+      "type": "api",
+      "file_count": 5,
+      "x": 1160,
+      "y": 4020
+    },
+    {
+      "id": "api:vectos:workflows:id",
+      "label": "workflows/id",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 3910
+    },
+    {
+      "id": "api:vectos:agents:warroom",
+      "label": "agents/warroom",
+      "type": "api",
+      "file_count": 12,
+      "x": 1160,
+      "y": 500
+    },
+    {
+      "id": "api:vectos:agents:detail",
+      "label": "agents/detail",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 60
+    },
+    {
+      "id": "api:vectos:agents:orchestration",
+      "label": "agents/orchestration",
+      "type": "api",
+      "file_count": 10,
+      "x": 1160,
+      "y": 390
+    },
+    {
+      "id": "api:vectos:agents:fleet",
+      "label": "agents/fleet",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 170
+    },
+    {
+      "id": "api:vectos:agents:flows",
+      "label": "agents/flows",
+      "type": "api",
+      "file_count": 9,
+      "x": 1160,
+      "y": 280
+    },
+    {
+      "id": "api:vectos:henry:whatsapp",
+      "label": "henry/whatsapp",
+      "type": "api",
+      "file_count": 8,
+      "x": 1160,
+      "y": 1930
+    },
+    {
+      "id": "api:vectos:mcp:mally",
+      "label": "mcp/mally",
+      "type": "api",
+      "file_count": 13,
+      "x": 1160,
+      "y": 2150
+    },
+    {
+      "id": "api:vectos:meeting-tasks:route",
+      "label": "meeting-tasks/route",
+      "type": "api",
+      "file_count": 5,
+      "x": 1160,
+      "y": 2370
+    },
+    {
+      "id": "api:vectos:meeting-tasks:id",
+      "label": "meeting-tasks/id",
+      "type": "api",
+      "file_count": 8,
+      "x": 1160,
+      "y": 2260
+    },
+    {
+      "id": "api:vectos:decisions:route",
+      "label": "decisions/route",
+      "type": "api",
+      "file_count": 9,
+      "x": 1160,
+      "y": 940
+    },
+    {
+      "id": "api:vectos:decisions:candidates",
+      "label": "decisions/candidates",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 830
+    },
+    {
+      "id": "api:vectos:decisions:triage",
+      "label": "decisions/triage",
+      "type": "api",
+      "file_count": 8,
+      "x": 1160,
+      "y": 1050
+    },
+    {
+      "id": "api:vectos:warroom:respin",
+      "label": "warroom/respin",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 3250
+    },
+    {
+      "id": "api:vectos:warroom:search",
+      "label": "warroom/search",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 3470
+    },
+    {
+      "id": "api:vectos:warroom:rooms",
+      "label": "warroom/rooms",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 3360
+    },
+    {
+      "id": "api:vectos:handbook:mally",
+      "label": "handbook/mally",
+      "type": "api",
+      "file_count": 5,
+      "x": 1160,
+      "y": 1820
+    },
+    {
+      "id": "api:vectos:handbook:henry",
+      "label": "handbook/henry",
+      "type": "api",
+      "file_count": 10,
+      "x": 1160,
+      "y": 1710
+    },
+    {
+      "id": "api:vectos:architecture:status",
+      "label": "architecture/status",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 610
+    },
+    {
+      "id": "api:vectos:github:merge",
+      "label": "github/merge",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 1270
+    },
+    {
+      "id": "api:vectos:github:state",
+      "label": "github/state",
+      "type": "api",
+      "file_count": 26,
+      "x": 1160,
+      "y": 1600
+    },
+    {
+      "id": "api:vectos:github:pr",
+      "label": "github/pr",
+      "type": "api",
+      "file_count": 9,
+      "x": 1160,
+      "y": 1380
+    },
+    {
+      "id": "api:vectos:github:review",
+      "label": "github/review",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 1490
+    },
+    {
+      "id": "api:vectos:milestones:route",
+      "label": "milestones/route",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 2590
+    },
+    {
+      "id": "api:vectos:milestones:subitems",
+      "label": "milestones/subitems",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 2700
+    },
+    {
+      "id": "api:vectos:milestones:id",
+      "label": "milestones/id",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 2480
+    },
+    {
+      "id": "api:vectos:ops:decisions",
+      "label": "ops/decisions",
+      "type": "api",
+      "file_count": 3,
+      "x": 1160,
+      "y": 3030
+    },
+    {
+      "id": "api:vectos:ops:compute",
+      "label": "ops/compute",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 2920
+    },
+    {
+      "id": "api:vectos:work-ledger:tasks",
+      "label": "work-ledger/tasks",
+      "type": "api",
+      "file_count": 4,
+      "x": 1160,
+      "y": 3800
+    },
+    {
+      "id": "api:vectos:work-ledger:source-events",
+      "label": "work-ledger/source-events",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 3690
+    },
+    {
+      "id": "api:vectos:work-ledger:override-rate",
+      "label": "work-ledger/override-rate",
+      "type": "api",
+      "file_count": 2,
+      "x": 1160,
+      "y": 3580
+    },
+    {
+      "id": "api:vectos:hermes:profile",
+      "label": "hermes/profile",
+      "type": "api",
+      "file_count": 5,
+      "x": 1160,
+      "y": 2040
+    },
+    {
+      "id": "mcp:llm-mcp",
+      "label": "llm-mcp",
+      "type": "mcp",
+      "file_count": 167,
+      "x": 1520,
+      "y": 3690
+    },
+    {
+      "id": "mcp:berlos-mcp",
+      "label": "berlos-mcp",
+      "type": "mcp",
+      "file_count": 25,
+      "x": 1520,
+      "y": 830
+    },
+    {
+      "id": "mcp:hermes-mcp",
+      "label": "hermes-mcp",
+      "type": "mcp",
+      "file_count": 25,
+      "x": 1520,
+      "y": 3250
+    },
+    {
+      "id": "mcp:jiddlers-langgraph-mcp",
+      "label": "jiddlers-langgraph-mcp",
+      "type": "mcp",
+      "file_count": 18,
+      "x": 1520,
+      "y": 3470
+    },
+    {
+      "id": "mcp:ba-private-api",
+      "label": "ba-private-api",
+      "type": "mcp",
+      "file_count": 16,
+      "x": 1520,
+      "y": 720
+    },
+    {
+      "id": "mcp:giftcard-tracker-mcp",
+      "label": "giftcard-tracker-mcp",
+      "type": "mcp",
+      "file_count": 157,
+      "x": 1520,
+      "y": 2920
+    },
+    {
+      "id": "mcp:divorce-toolkit",
+      "label": "divorce-toolkit",
+      "type": "mcp",
+      "file_count": 328,
+      "x": 1520,
+      "y": 2370
+    },
+    {
+      "id": "mcp:amadeus-hotel-mcp",
+      "label": "amadeus-hotel-mcp",
+      "type": "mcp",
+      "file_count": 102,
+      "x": 1520,
+      "y": 170
+    },
+    {
+      "id": "mcp:android-puppeteer",
+      "label": "android-puppeteer",
+      "type": "mcp",
+      "file_count": 45,
+      "x": 1520,
+      "y": 280
+    },
+    {
+      "id": "mcp:code-executor",
+      "label": "code-executor",
+      "type": "mcp",
+      "file_count": 16,
+      "x": 1520,
+      "y": 1710
+    },
+    {
+      "id": "mcp:award-flights-mcp",
+      "label": "award-flights-mcp",
+      "type": "mcp",
+      "file_count": 86,
+      "x": 1520,
+      "y": 500
+    },
+    {
+      "id": "mcp:grocery",
+      "label": "grocery",
+      "type": "mcp",
+      "file_count": 43,
+      "x": 1520,
+      "y": 3140
+    },
+    {
+      "id": "mcp:feeld-mcp",
+      "label": "feeld-mcp",
+      "type": "mcp",
+      "file_count": 93,
+      "x": 1520,
+      "y": 2700
+    },
+    {
+      "id": "mcp:feabie-mcp",
+      "label": "feabie-mcp",
+      "type": "mcp",
+      "file_count": 90,
+      "x": 1520,
+      "y": 2590
+    },
+    {
+      "id": "mcp:amadeus-flights-mcp",
+      "label": "amadeus-flights-mcp",
+      "type": "mcp",
+      "file_count": 595,
+      "x": 1520,
+      "y": 60
+    },
+    {
+      "id": "mcp:cashback-tracker-mcp",
+      "label": "cashback-tracker-mcp",
+      "type": "mcp",
+      "file_count": 78,
+      "x": 1520,
+      "y": 1160
+    },
+    {
+      "id": "mcp:dating-sweep",
+      "label": "dating-sweep",
+      "type": "mcp",
+      "file_count": 81,
+      "x": 1520,
+      "y": 2260
+    },
+    {
+      "id": "mcp:custody-calendar",
+      "label": "custody-calendar",
+      "type": "mcp",
+      "file_count": 187,
+      "x": 1520,
+      "y": 2040
+    },
+    {
+      "id": "mcp:emma",
+      "label": "emma",
+      "type": "mcp",
+      "file_count": 63,
+      "x": 1520,
+      "y": 2480
+    },
+    {
+      "id": "mcp:android-uiautomator",
+      "label": "android-uiautomator",
+      "type": "mcp",
+      "file_count": 37,
+      "x": 1520,
+      "y": 390
+    },
+    {
+      "id": "mcp:booking-hotels-mcp",
+      "label": "booking-hotels-mcp",
+      "type": "mcp",
+      "file_count": 44,
+      "x": 1520,
+      "y": 940
+    },
+    {
+      "id": "mcp:frisson-mcp",
+      "label": "frisson-mcp",
+      "type": "mcp",
+      "file_count": 26,
+      "x": 1520,
+      "y": 2810
+    },
+    {
+      "id": "mcp:awardwallet-mcp",
+      "label": "awardwallet-mcp",
+      "type": "mcp",
+      "file_count": 23,
+      "x": 1520,
+      "y": 610
+    },
+    {
+      "id": "mcp:hinge-mcp",
+      "label": "hinge-mcp",
+      "type": "mcp",
+      "file_count": 98,
+      "x": 1520,
+      "y": 3360
+    },
+    {
+      "id": "mcp:dashboard-mcp",
+      "label": "dashboard-mcp",
+      "type": "mcp",
+      "file_count": 65,
+      "x": 1520,
+      "y": 2150
+    },
+    {
+      "id": "mcp:cashback-intelligence",
+      "label": "cashback-intelligence",
+      "type": "mcp",
+      "file_count": 75,
+      "x": 1520,
+      "y": 1050
+    },
+    {
+      "id": "mcp:marianatek-mcp",
+      "label": "marianatek-mcp",
+      "type": "mcp",
+      "file_count": 89,
+      "x": 1520,
+      "y": 3800
+    },
+    {
+      "id": "mcp:claude-design-mcp",
+      "label": "claude-design-mcp",
+      "type": "mcp",
+      "file_count": 40,
+      "x": 1520,
+      "y": 1490
+    },
+    {
+      "id": "hermes:agentic",
+      "label": "hermes-agentic",
+      "type": "hermes",
+      "file_count": 206,
+      "x": 800,
+      "y": 60
+    },
+    {
+      "id": "mcp:chrome-devtools-mcp",
+      "label": "chrome-devtools-mcp",
+      "type": "mcp",
+      "file_count": 1853,
+      "x": 1520,
+      "y": 1270
+    },
+    {
+      "id": "mcp:classpass-mcp",
+      "label": "classpass-mcp",
+      "type": "mcp",
+      "file_count": 106,
+      "x": 1520,
+      "y": 1380
+    },
+    {
+      "id": "mcp:coworking-mcp",
+      "label": "coworking-mcp",
+      "type": "mcp",
+      "file_count": 76,
+      "x": 1520,
+      "y": 1820
+    },
+    {
+      "id": "mcp:claude-projects-mcp",
+      "label": "claude-projects-mcp",
+      "type": "mcp",
+      "file_count": 14,
+      "x": 1520,
+      "y": 1600
+    },
+    {
+      "id": "mcp:cursor-mcp",
+      "label": "cursor-mcp",
+      "type": "mcp",
+      "file_count": 6,
+      "x": 1520,
+      "y": 1930
+    },
+    {
+      "id": "mcp:notebooklm-mcp",
+      "label": "notebooklm-mcp",
+      "type": "mcp",
+      "file_count": 15,
+      "x": 1520,
+      "y": 3910
+    },
+    {
+      "id": "mcp:google-messages-mcp",
+      "label": "google-messages-mcp",
+      "type": "mcp",
+      "file_count": 656,
+      "x": 1520,
+      "y": 3030
+    },
+    {
+      "id": "profile:mally-second",
+      "label": "mally-second",
+      "type": "profile",
+      "file_count": 14229,
+      "x": 440,
+      "y": 940
+    },
+    {
+      "id": "profile:hermes-auditor",
+      "label": "hermes-auditor",
+      "type": "profile",
+      "file_count": 999,
+      "x": 440,
+      "y": 280
+    },
+    {
+      "id": "profile:ares",
+      "label": "ares",
+      "type": "profile",
+      "file_count": 294,
+      "x": 440,
+      "y": 60
+    },
+    {
+      "id": "profile:hermes-chief-of-staff",
+      "label": "hermes-chief-of-staff",
+      "type": "profile",
+      "file_count": 948,
+      "x": 440,
+      "y": 390
+    },
+    {
+      "id": "profile:jiddlers",
+      "label": "jiddlers",
+      "type": "profile",
+      "file_count": 1820,
+      "x": 440,
+      "y": 720
+    },
+    {
+      "id": "profile:mally",
+      "label": "mally",
+      "type": "profile",
+      "file_count": 1143,
+      "x": 440,
+      "y": 830
+    },
+    {
+      "id": "profile:hermes-warden",
+      "label": "hermes-warden",
+      "type": "profile",
+      "file_count": 505,
+      "x": 440,
+      "y": 500
+    },
+    {
+      "id": "profile:code-reviewer",
+      "label": "code-reviewer",
+      "type": "profile",
+      "file_count": 698,
+      "x": 440,
+      "y": 170
+    },
+    {
+      "id": "profile:infra-watcher",
+      "label": "infra-watcher",
+      "type": "profile",
+      "file_count": 702,
+      "x": 440,
+      "y": 610
+    },
+    {
+      "id": "mcp:kanban-mcp",
+      "label": "kanban-mcp",
+      "type": "mcp",
+      "file_count": 33,
+      "x": 1520,
+      "y": 3580
+    }
+  ],
+  "edges": [
+    {
+      "id": "app:vectos__api:vectos:plugins:kanban",
+      "source": "app:vectos",
+      "target": "api:vectos:plugins:kanban",
+      "weight": 2
+    },
+    {
+      "id": "app:vectos__api:vectos:github:state",
+      "source": "app:vectos",
+      "target": "api:vectos:github:state",
+      "weight": 10
+    },
+    {
+      "id": "api:vectos:operating-map:live__app:vectos",
+      "source": "api:vectos:operating-map:live",
+      "target": "app:vectos",
+      "weight": 5
+    },
+    {
+      "id": "api:vectos:plugins:kanban__app:vectos",
+      "source": "api:vectos:plugins:kanban",
+      "target": "app:vectos",
+      "weight": 85
+    },
+    {
+      "id": "api:vectos:workflows:route__app:vectos",
+      "source": "api:vectos:workflows:route",
+      "target": "app:vectos",
+      "weight": 10
+    },
+    {
+      "id": "api:vectos:workflows:triage-classify__app:vectos",
+      "source": "api:vectos:workflows:triage-classify",
+      "target": "app:vectos",
+      "weight": 9
+    },
+    {
+      "id": "api:vectos:workflows:meeting-ingest__app:vectos",
+      "source": "api:vectos:workflows:meeting-ingest",
+      "target": "app:vectos",
+      "weight": 10
+    },
+    {
+      "id": "api:vectos:workflows:meeting-ingest__api:vectos:workflows:triage-classify",
+      "source": "api:vectos:workflows:meeting-ingest",
+      "target": "api:vectos:workflows:triage-classify",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:workflows:id__app:vectos",
+      "source": "api:vectos:workflows:id",
+      "target": "app:vectos",
+      "weight": 25
+    },
+    {
+      "id": "api:vectos:workflows:id__api:vectos:plugins:kanban",
+      "source": "api:vectos:workflows:id",
+      "target": "api:vectos:plugins:kanban",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:plugins:kanban__api:vectos:workflows:id",
+      "source": "api:vectos:plugins:kanban",
+      "target": "api:vectos:workflows:id",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:agents:warroom__app:vectos",
+      "source": "api:vectos:agents:warroom",
+      "target": "app:vectos",
+      "weight": 14
+    },
+    {
+      "id": "api:vectos:agents:warroom__api:vectos:workflows:id",
+      "source": "api:vectos:agents:warroom",
+      "target": "api:vectos:workflows:id",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:agents:detail__app:vectos",
+      "source": "api:vectos:agents:detail",
+      "target": "app:vectos",
+      "weight": 3
+    },
+    {
+      "id": "api:vectos:agents:orchestration__app:vectos",
+      "source": "api:vectos:agents:orchestration",
+      "target": "app:vectos",
+      "weight": 16
+    },
+    {
+      "id": "api:vectos:agents:fleet__app:vectos",
+      "source": "api:vectos:agents:fleet",
+      "target": "app:vectos",
+      "weight": 6
+    },
+    {
+      "id": "api:vectos:agents:flows__app:vectos",
+      "source": "api:vectos:agents:flows",
+      "target": "app:vectos",
+      "weight": 6
+    },
+    {
+      "id": "api:vectos:agents:flows__api:vectos:workflows:id",
+      "source": "api:vectos:agents:flows",
+      "target": "api:vectos:workflows:id",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:workflows:id__api:vectos:agents:flows",
+      "source": "api:vectos:workflows:id",
+      "target": "api:vectos:agents:flows",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:henry:whatsapp__app:vectos",
+      "source": "api:vectos:henry:whatsapp",
+      "target": "app:vectos",
+      "weight": 13
+    },
+    {
+      "id": "api:vectos:mcp:mally__app:vectos",
+      "source": "api:vectos:mcp:mally",
+      "target": "app:vectos",
+      "weight": 15
+    },
+    {
+      "id": "api:vectos:meeting-tasks:route__app:vectos",
+      "source": "api:vectos:meeting-tasks:route",
+      "target": "app:vectos",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:meeting-tasks:id__app:vectos",
+      "source": "api:vectos:meeting-tasks:id",
+      "target": "app:vectos",
+      "weight": 7
+    },
+    {
+      "id": "api:vectos:meeting-tasks:id__api:vectos:meeting-tasks:route",
+      "source": "api:vectos:meeting-tasks:id",
+      "target": "api:vectos:meeting-tasks:route",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:decisions:route__app:vectos",
+      "source": "api:vectos:decisions:route",
+      "target": "app:vectos",
+      "weight": 3
+    },
+    {
+      "id": "api:vectos:decisions:candidates__app:vectos",
+      "source": "api:vectos:decisions:candidates",
+      "target": "app:vectos",
+      "weight": 6
+    },
+    {
+      "id": "api:vectos:decisions:triage__app:vectos",
+      "source": "api:vectos:decisions:triage",
+      "target": "app:vectos",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:warroom:respin__app:vectos",
+      "source": "api:vectos:warroom:respin",
+      "target": "app:vectos",
+      "weight": 11
+    },
+    {
+      "id": "api:vectos:warroom:search__app:vectos",
+      "source": "api:vectos:warroom:search",
+      "target": "app:vectos",
+      "weight": 3
+    },
+    {
+      "id": "api:vectos:warroom:rooms__app:vectos",
+      "source": "api:vectos:warroom:rooms",
+      "target": "app:vectos",
+      "weight": 8
+    },
+    {
+      "id": "api:vectos:warroom:rooms__api:vectos:agents:warroom",
+      "source": "api:vectos:warroom:rooms",
+      "target": "api:vectos:agents:warroom",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:handbook:mally__api:vectos:mcp:mally",
+      "source": "api:vectos:handbook:mally",
+      "target": "api:vectos:mcp:mally",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:handbook:henry__api:vectos:handbook:mally",
+      "source": "api:vectos:handbook:henry",
+      "target": "api:vectos:handbook:mally",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:architecture:status__api:vectos:deploy:status",
+      "source": "api:vectos:architecture:status",
+      "target": "api:vectos:deploy:status",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:github:pr__api:vectos:github:merge",
+      "source": "api:vectos:github:pr",
+      "target": "api:vectos:github:merge",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:github:review__api:vectos:meeting-tasks:id",
+      "source": "api:vectos:github:review",
+      "target": "api:vectos:meeting-tasks:id",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:meeting-tasks:id__api:vectos:github:review",
+      "source": "api:vectos:meeting-tasks:id",
+      "target": "api:vectos:github:review",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:milestones:route__app:vectos",
+      "source": "api:vectos:milestones:route",
+      "target": "app:vectos",
+      "weight": 12
+    },
+    {
+      "id": "api:vectos:milestones:subitems__app:vectos",
+      "source": "api:vectos:milestones:subitems",
+      "target": "app:vectos",
+      "weight": 11
+    },
+    {
+      "id": "api:vectos:milestones:subitems__api:vectos:plugins:kanban",
+      "source": "api:vectos:milestones:subitems",
+      "target": "api:vectos:plugins:kanban",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:milestones:id__app:vectos",
+      "source": "api:vectos:milestones:id",
+      "target": "app:vectos",
+      "weight": 16
+    },
+    {
+      "id": "api:vectos:milestones:id__api:vectos:milestones:subitems",
+      "source": "api:vectos:milestones:id",
+      "target": "api:vectos:milestones:subitems",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:milestones:id__api:vectos:plugins:kanban",
+      "source": "api:vectos:milestones:id",
+      "target": "api:vectos:plugins:kanban",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:ops:decisions__app:vectos",
+      "source": "api:vectos:ops:decisions",
+      "target": "app:vectos",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:ops:decisions__api:vectos:decisions:candidates",
+      "source": "api:vectos:ops:decisions",
+      "target": "api:vectos:decisions:candidates",
+      "weight": 2
+    },
+    {
+      "id": "api:vectos:ops:compute__api:vectos:operating-map:live",
+      "source": "api:vectos:ops:compute",
+      "target": "api:vectos:operating-map:live",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:work-ledger:tasks__app:vectos",
+      "source": "api:vectos:work-ledger:tasks",
+      "target": "app:vectos",
+      "weight": 25
+    },
+    {
+      "id": "api:vectos:work-ledger:tasks__api:vectos:plugins:kanban",
+      "source": "api:vectos:work-ledger:tasks",
+      "target": "api:vectos:plugins:kanban",
+      "weight": 3
+    },
+    {
+      "id": "api:vectos:work-ledger:tasks__api:vectos:workflows:id",
+      "source": "api:vectos:work-ledger:tasks",
+      "target": "api:vectos:workflows:id",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:work-ledger:tasks__api:vectos:milestones:subitems",
+      "source": "api:vectos:work-ledger:tasks",
+      "target": "api:vectos:milestones:subitems",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:workflows:id__api:vectos:work-ledger:tasks",
+      "source": "api:vectos:workflows:id",
+      "target": "api:vectos:work-ledger:tasks",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:plugins:kanban__api:vectos:work-ledger:tasks",
+      "source": "api:vectos:plugins:kanban",
+      "target": "api:vectos:work-ledger:tasks",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:milestones:subitems__api:vectos:work-ledger:tasks",
+      "source": "api:vectos:milestones:subitems",
+      "target": "api:vectos:work-ledger:tasks",
+      "weight": 1
+    },
+    {
+      "id": "api:vectos:work-ledger:source-events__app:vectos",
+      "source": "api:vectos:work-ledger:source-events",
+      "target": "app:vectos",
+      "weight": 3
+    },
+    {
+      "id": "api:vectos:work-ledger:override-rate__app:vectos",
+      "source": "api:vectos:work-ledger:override-rate",
+      "target": "app:vectos",
+      "weight": 5
+    },
+    {
+      "id": "api:vectos:hermes:profile__app:vectos",
+      "source": "api:vectos:hermes:profile",
+      "target": "app:vectos",
+      "weight": 10
+    },
+    {
+      "id": "app:vectos__api:vectos:agents:flows",
+      "source": "app:vectos",
+      "target": "api:vectos:agents:flows",
+      "weight": 2
+    },
+    {
+      "id": "app:vectos__api:vectos:mcp:mally",
+      "source": "app:vectos",
+      "target": "api:vectos:mcp:mally",
+      "weight": 3
+    },
+    {
+      "id": "app:vectos__api:vectos:chat:route",
+      "source": "app:vectos",
+      "target": "api:vectos:chat:route",
+      "weight": 1
+    },
+    {
+      "id": "mcp:divorce-toolkit__mcp:giftcard-tracker-mcp",
+      "source": "mcp:divorce-toolkit",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:giftcard-tracker-mcp__mcp:divorce-toolkit",
+      "source": "mcp:giftcard-tracker-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 26
+    },
+    {
+      "id": "mcp:amadeus-hotel-mcp__mcp:giftcard-tracker-mcp",
+      "source": "mcp:amadeus-hotel-mcp",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:award-flights-mcp__mcp:giftcard-tracker-mcp",
+      "source": "mcp:award-flights-mcp",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:award-flights-mcp__mcp:amadeus-hotel-mcp",
+      "source": "mcp:award-flights-mcp",
+      "target": "mcp:amadeus-hotel-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:feeld-mcp__mcp:giftcard-tracker-mcp",
+      "source": "mcp:feeld-mcp",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:feeld-mcp__mcp:amadeus-hotel-mcp",
+      "source": "mcp:feeld-mcp",
+      "target": "mcp:amadeus-hotel-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:feabie-mcp__mcp:giftcard-tracker-mcp",
+      "source": "mcp:feabie-mcp",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:feabie-mcp__mcp:amadeus-hotel-mcp",
+      "source": "mcp:feabie-mcp",
+      "target": "mcp:amadeus-hotel-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:cashback-tracker-mcp__mcp:giftcard-tracker-mcp",
+      "source": "mcp:cashback-tracker-mcp",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 7
+    },
+    {
+      "id": "mcp:dating-sweep__mcp:divorce-toolkit",
+      "source": "mcp:dating-sweep",
+      "target": "mcp:divorce-toolkit",
+      "weight": 11
+    },
+    {
+      "id": "mcp:dating-sweep__mcp:giftcard-tracker-mcp",
+      "source": "mcp:dating-sweep",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:giftcard-tracker-mcp__mcp:dating-sweep",
+      "source": "mcp:giftcard-tracker-mcp",
+      "target": "mcp:dating-sweep",
+      "weight": 6
+    },
+    {
+      "id": "mcp:custody-calendar__mcp:divorce-toolkit",
+      "source": "mcp:custody-calendar",
+      "target": "mcp:divorce-toolkit",
+      "weight": 31
+    },
+    {
+      "id": "mcp:custody-calendar__mcp:dating-sweep",
+      "source": "mcp:custody-calendar",
+      "target": "mcp:dating-sweep",
+      "weight": 1
+    },
+    {
+      "id": "mcp:custody-calendar__mcp:giftcard-tracker-mcp",
+      "source": "mcp:custody-calendar",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:giftcard-tracker-mcp__mcp:custody-calendar",
+      "source": "mcp:giftcard-tracker-mcp",
+      "target": "mcp:custody-calendar",
+      "weight": 9
+    },
+    {
+      "id": "mcp:hinge-mcp__mcp:giftcard-tracker-mcp",
+      "source": "mcp:hinge-mcp",
+      "target": "mcp:giftcard-tracker-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:hinge-mcp__mcp:amadeus-hotel-mcp",
+      "source": "mcp:hinge-mcp",
+      "target": "mcp:amadeus-hotel-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:google-messages-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:google-messages-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 12
+    },
+    {
+      "id": "mcp:llm-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:llm-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 18
+    },
+    {
+      "id": "mcp:llm-mcp__mcp:feabie-mcp",
+      "source": "mcp:llm-mcp",
+      "target": "mcp:feabie-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:berlos-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:berlos-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:hermes-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:hermes-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:hermes-mcp__mcp:feabie-mcp",
+      "source": "mcp:hermes-mcp",
+      "target": "mcp:feabie-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:jiddlers-langgraph-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:jiddlers-langgraph-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 8
+    },
+    {
+      "id": "mcp:ba-private-api__mcp:chrome-devtools-mcp",
+      "source": "mcp:ba-private-api",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:giftcard-tracker-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:giftcard-tracker-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:giftcard-tracker-mcp__mcp:feabie-mcp",
+      "source": "mcp:giftcard-tracker-mcp",
+      "target": "mcp:feabie-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:android-puppeteer__mcp:chrome-devtools-mcp",
+      "source": "mcp:android-puppeteer",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 13
+    },
+    {
+      "id": "mcp:code-executor__mcp:chrome-devtools-mcp",
+      "source": "mcp:code-executor",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:award-flights-mcp__mcp:divorce-toolkit",
+      "source": "mcp:award-flights-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 1
+    },
+    {
+      "id": "mcp:grocery__mcp:feabie-mcp",
+      "source": "mcp:grocery",
+      "target": "mcp:feabie-mcp",
+      "weight": 6
+    },
+    {
+      "id": "mcp:feeld-mcp__mcp:divorce-toolkit",
+      "source": "mcp:feeld-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 1
+    },
+    {
+      "id": "mcp:feabie-mcp__mcp:divorce-toolkit",
+      "source": "mcp:feabie-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 1
+    },
+    {
+      "id": "mcp:amadeus-flights-mcp__mcp:divorce-toolkit",
+      "source": "mcp:amadeus-flights-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 1
+    },
+    {
+      "id": "mcp:cashback-tracker-mcp__mcp:divorce-toolkit",
+      "source": "mcp:cashback-tracker-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 1
+    },
+    {
+      "id": "mcp:emma__mcp:feabie-mcp",
+      "source": "mcp:emma",
+      "target": "mcp:feabie-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:emma__mcp:chrome-devtools-mcp",
+      "source": "mcp:emma",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:android-uiautomator__mcp:chrome-devtools-mcp",
+      "source": "mcp:android-uiautomator",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:booking-hotels-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:booking-hotels-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:frisson-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:frisson-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:awardwallet-mcp__mcp:feabie-mcp",
+      "source": "mcp:awardwallet-mcp",
+      "target": "mcp:feabie-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:awardwallet-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:awardwallet-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:hinge-mcp__mcp:divorce-toolkit",
+      "source": "mcp:hinge-mcp",
+      "target": "mcp:divorce-toolkit",
+      "weight": 1
+    },
+    {
+      "id": "mcp:dashboard-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:dashboard-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:cashback-intelligence__mcp:chrome-devtools-mcp",
+      "source": "mcp:cashback-intelligence",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 1
+    },
+    {
+      "id": "mcp:marianatek-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:marianatek-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:claude-design-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:claude-design-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "hermes:agentic__mcp:chrome-devtools-mcp",
+      "source": "hermes:agentic",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 7
+    },
+    {
+      "id": "mcp:chrome-devtools-mcp__mcp:dating-sweep",
+      "source": "mcp:chrome-devtools-mcp",
+      "target": "mcp:dating-sweep",
+      "weight": 2
+    },
+    {
+      "id": "mcp:classpass-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:classpass-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 4
+    },
+    {
+      "id": "mcp:coworking-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:coworking-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 3
+    },
+    {
+      "id": "mcp:claude-projects-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:claude-projects-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:cursor-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:cursor-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 2
+    },
+    {
+      "id": "mcp:notebooklm-mcp__mcp:chrome-devtools-mcp",
+      "source": "mcp:notebooklm-mcp",
+      "target": "mcp:chrome-devtools-mcp",
+      "weight": 7
+    },
+    {
+      "id": "mcp:google-messages-mcp__mcp:feabie-mcp",
+      "source": "mcp:google-messages-mcp",
+      "target": "mcp:feabie-mcp",
+      "weight": 6
+    },
+    {
+      "id": "mcp:google-messages-mcp__mcp:custody-calendar",
+      "source": "mcp:google-messages-mcp",
+      "target": "mcp:custody-calendar",
+      "weight": 2
+    },
+    {
+      "id": "profile:hermes-auditor__profile:mally-second",
+      "source": "profile:hermes-auditor",
+      "target": "profile:mally-second",
+      "weight": 986
+    },
+    {
+      "id": "profile:mally-second__profile:hermes-auditor",
+      "source": "profile:mally-second",
+      "target": "profile:hermes-auditor",
+      "weight": 19
+    },
+    {
+      "id": "profile:ares__profile:mally-second",
+      "source": "profile:ares",
+      "target": "profile:mally-second",
+      "weight": 32
+    },
+    {
+      "id": "profile:hermes-chief-of-staff__profile:mally-second",
+      "source": "profile:hermes-chief-of-staff",
+      "target": "profile:mally-second",
+      "weight": 965
+    },
+    {
+      "id": "profile:mally-second__profile:hermes-chief-of-staff",
+      "source": "profile:mally-second",
+      "target": "profile:hermes-chief-of-staff",
+      "weight": 19
+    },
+    {
+      "id": "profile:jiddlers__profile:ares",
+      "source": "profile:jiddlers",
+      "target": "profile:ares",
+      "weight": 1
+    },
+    {
+      "id": "profile:jiddlers__profile:mally-second",
+      "source": "profile:jiddlers",
+      "target": "profile:mally-second",
+      "weight": 986
+    },
+    {
+      "id": "profile:mally-second__profile:jiddlers",
+      "source": "profile:mally-second",
+      "target": "profile:jiddlers",
+      "weight": 19
+    },
+    {
+      "id": "profile:mally__profile:ares",
+      "source": "profile:mally",
+      "target": "profile:ares",
+      "weight": 1
+    },
+    {
+      "id": "profile:mally__profile:mally-second",
+      "source": "profile:mally",
+      "target": "profile:mally-second",
+      "weight": 41
+    },
+    {
+      "id": "profile:hermes-warden__profile:mally-second",
+      "source": "profile:hermes-warden",
+      "target": "profile:mally-second",
+      "weight": 966
+    },
+    {
+      "id": "profile:mally-second__profile:hermes-warden",
+      "source": "profile:mally-second",
+      "target": "profile:hermes-warden",
+      "weight": 19
+    },
+    {
+      "id": "profile:code-reviewer__profile:mally-second",
+      "source": "profile:code-reviewer",
+      "target": "profile:mally-second",
+      "weight": 966
+    },
+    {
+      "id": "profile:mally-second__profile:code-reviewer",
+      "source": "profile:mally-second",
+      "target": "profile:code-reviewer",
+      "weight": 19
+    },
+    {
+      "id": "profile:infra-watcher__profile:ares",
+      "source": "profile:infra-watcher",
+      "target": "profile:ares",
+      "weight": 1
+    },
+    {
+      "id": "profile:infra-watcher__profile:mally-second",
+      "source": "profile:infra-watcher",
+      "target": "profile:mally-second",
+      "weight": 966
+    },
+    {
+      "id": "profile:mally-second__profile:infra-watcher",
+      "source": "profile:mally-second",
+      "target": "profile:infra-watcher",
+      "weight": 19
+    }
+  ],
+  "stats": {
+    "nodes": 88,
+    "edges": 134,
+    "by_type": {
+      "script": 2,
+      "app": 1,
+      "api": 39,
+      "mcp": 36,
+      "hermes": 1,
+      "profile": 9
+    }
+  }
+}
