@@ -577,10 +577,12 @@ function GraphInner() {
             `[graph] community ${cid} loaded ${data.nodes?.length} nodes in ${(performance.now() - t0).toFixed(0)}ms (server: ${data.meta?.elapsed_ms ?? '?'}ms)`,
           )
           memberNodesByComm.current.set(cid, data.nodes ?? [])
-          const next = new Set(expandedCommunities)
-          next.add(cid)
-          setExpandedCommunities(next)
-          rebuildNodes(next, summary)
+          setExpandedCommunities((prev) => {
+            const next = new Set(prev)
+            next.add(cid)
+            rebuildNodes(next, summary)
+            return next
+          })
         })
         .catch((err) => {
           loadingCommunities.current.delete(cid)
