@@ -39,6 +39,7 @@ import { Route as ChatIndexRouteImport } from './routes/chat/index'
 import { Route as SettingsProvidersRouteImport } from './routes/settings/providers'
 import { Route as FlowLoopRouteImport } from './routes/flow/loop'
 import { Route as ChatSessionKeyRouteImport } from './routes/chat/$sessionKey'
+import { Route as AtcBuildRouteImport } from './routes/atc/build'
 import { Route as ApiWorkspaceRouteImport } from './routes/api/workspace'
 import { Route as ApiVoiceWatchdogLogRouteImport } from './routes/api/voice-watchdog-log'
 import { Route as ApiVoiceFleetRouteImport } from './routes/api/voice-fleet'
@@ -170,6 +171,7 @@ import { Route as ApiCostRateSseRouteImport } from './routes/api/cost-rate/sse'
 import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-tasks.$taskId'
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
+import { Route as ApiBuildPoolStatusRouteImport } from './routes/api/build/pool-status'
 import { Route as ApiBudgetStatusRouteImport } from './routes/api/budget/status'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
@@ -305,9 +307,9 @@ const SettingsIndexRoute = SettingsIndexRouteImport.update({
   getParentRoute: () => SettingsRoute,
 } as any)
 const FlowIndexRoute = FlowIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => FlowRoute,
+  id: '/flow/',
+  path: '/flow/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ChatIndexRoute = ChatIndexRouteImport.update({
   id: '/chat/',
@@ -327,6 +329,11 @@ const FlowLoopRoute = FlowLoopRouteImport.update({
 const ChatSessionKeyRoute = ChatSessionKeyRouteImport.update({
   id: '/chat/$sessionKey',
   path: '/chat/$sessionKey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtcBuildRoute = AtcBuildRouteImport.update({
+  id: '/atc/build',
+  path: '/atc/build',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiWorkspaceRoute = ApiWorkspaceRouteImport.update({
@@ -987,6 +994,11 @@ const ApiClaudeJobsJobIdRoute = ApiClaudeJobsJobIdRouteImport.update({
   path: '/$jobId',
   getParentRoute: () => ApiClaudeJobsRoute,
 } as any)
+const ApiBuildPoolStatusRoute = ApiBuildPoolStatusRouteImport.update({
+  id: '/api/build/pool-status',
+  path: '/api/build/pool-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiBudgetStatusRoute = ApiBudgetStatusRouteImport.update({
   id: '/api/budget/status',
   path: '/api/budget/status',
@@ -1128,6 +1140,7 @@ export interface FileRoutesByFullPath {
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
+  '/atc/build': typeof AtcBuildRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/flow/loop': typeof FlowLoopRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1136,6 +1149,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
+  '/api/build/pool-status': typeof ApiBuildPoolStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
@@ -1298,6 +1312,7 @@ export interface FileRoutesByTo {
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
+  '/atc/build': typeof AtcBuildRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/flow/loop': typeof FlowLoopRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1306,6 +1321,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
+  '/api/build/pool-status': typeof ApiBuildPoolStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
@@ -1470,6 +1486,7 @@ export interface FileRoutesById {
   '/api/voice-fleet': typeof ApiVoiceFleetRoute
   '/api/voice-watchdog-log': typeof ApiVoiceWatchdogLogRoute
   '/api/workspace': typeof ApiWorkspaceRoute
+  '/atc/build': typeof AtcBuildRoute
   '/chat/$sessionKey': typeof ChatSessionKeyRoute
   '/flow/loop': typeof FlowLoopRoute
   '/settings/providers': typeof SettingsProvidersRoute
@@ -1478,6 +1495,7 @@ export interface FileRoutesById {
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
+  '/api/build/pool-status': typeof ApiBuildPoolStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
   '/api/claude-tasks/$taskId': typeof ApiClaudeTasksTaskIdRoute
@@ -1643,6 +1661,7 @@ export interface FileRouteTypes {
     | '/api/voice-fleet'
     | '/api/voice-watchdog-log'
     | '/api/workspace'
+    | '/atc/build'
     | '/chat/$sessionKey'
     | '/flow/loop'
     | '/settings/providers'
@@ -1651,6 +1670,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
+    | '/api/build/pool-status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
@@ -1813,6 +1833,7 @@ export interface FileRouteTypes {
     | '/api/voice-fleet'
     | '/api/voice-watchdog-log'
     | '/api/workspace'
+    | '/atc/build'
     | '/chat/$sessionKey'
     | '/flow/loop'
     | '/settings/providers'
@@ -1821,6 +1842,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
+    | '/api/build/pool-status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
@@ -1984,6 +2006,7 @@ export interface FileRouteTypes {
     | '/api/voice-fleet'
     | '/api/voice-watchdog-log'
     | '/api/workspace'
+    | '/atc/build'
     | '/chat/$sessionKey'
     | '/flow/loop'
     | '/settings/providers'
@@ -1992,6 +2015,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
+    | '/api/build/pool-status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
     | '/api/claude-tasks/$taskId'
@@ -2156,10 +2180,13 @@ export interface RootRouteChildren {
   ApiVoiceFleetRoute: typeof ApiVoiceFleetRoute
   ApiVoiceWatchdogLogRoute: typeof ApiVoiceWatchdogLogRoute
   ApiWorkspaceRoute: typeof ApiWorkspaceRoute
+  AtcBuildRoute: typeof AtcBuildRoute
   ChatSessionKeyRoute: typeof ChatSessionKeyRoute
   FlowLoopRoute: typeof FlowLoopRoute
   ChatIndexRoute: typeof ChatIndexRoute
+  FlowIndexRoute: typeof FlowIndexRoute
   ApiBudgetStatusRoute: typeof ApiBudgetStatusRoute
+  ApiBuildPoolStatusRoute: typeof ApiBuildPoolStatusRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiCostRateSseRoute: typeof ApiCostRateSseRoute
   ApiDashboardOverviewRoute: typeof ApiDashboardOverviewRoute
@@ -2375,10 +2402,10 @@ declare module '@tanstack/react-router' {
     }
     '/flow/': {
       id: '/flow/'
-      path: '/'
+      path: '/flow'
       fullPath: '/flow/'
       preLoaderRoute: typeof FlowIndexRouteImport
-      parentRoute: typeof FlowRoute
+      parentRoute: typeof rootRouteImport
     }
     '/chat/': {
       id: '/chat/'
@@ -2406,6 +2433,13 @@ declare module '@tanstack/react-router' {
       path: '/chat/$sessionKey'
       fullPath: '/chat/$sessionKey'
       preLoaderRoute: typeof ChatSessionKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atc/build': {
+      id: '/atc/build'
+      path: '/atc/build'
+      fullPath: '/atc/build'
+      preLoaderRoute: typeof AtcBuildRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/workspace': {
@@ -3325,6 +3359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiClaudeJobsJobIdRouteImport
       parentRoute: typeof ApiClaudeJobsRoute
     }
+    '/api/build/pool-status': {
+      id: '/api/build/pool-status'
+      path: '/api/build/pool-status'
+      fullPath: '/api/build/pool-status'
+      preLoaderRoute: typeof ApiBuildPoolStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/budget/status': {
       id: '/api/budget/status'
       path: '/api/budget/status'
@@ -3700,10 +3741,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceFleetRoute: ApiVoiceFleetRoute,
   ApiVoiceWatchdogLogRoute: ApiVoiceWatchdogLogRoute,
   ApiWorkspaceRoute: ApiWorkspaceRoute,
+  AtcBuildRoute: AtcBuildRoute,
   ChatSessionKeyRoute: ChatSessionKeyRoute,
   FlowLoopRoute: FlowLoopRoute,
   ChatIndexRoute: ChatIndexRoute,
+  FlowIndexRoute: FlowIndexRoute,
   ApiBudgetStatusRoute: ApiBudgetStatusRoute,
+  ApiBuildPoolStatusRoute: ApiBuildPoolStatusRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiCostRateSseRoute: ApiCostRateSseRoute,
   ApiDashboardOverviewRoute: ApiDashboardOverviewRoute,
