@@ -21,11 +21,27 @@ function formatCount(n: number): string {
 export function ActiveModelKpi({
   modelInfo,
   analytics,
+  status,
 }: {
   modelInfo: DashboardOverview['modelInfo']
   analytics: DashboardOverview['analytics']
+  status?: DashboardOverview['status']
 }) {
-  const connected = !!modelInfo
+  // Connection signal: gateway runtime state is the truth-source when
+  // it's available. The tile previously gated "Online" on `!!modelInfo`
+  // alone, which read Offline whenever the /api/model/info call dropped
+  // even though the gateway itself was running.
+  const gatewayState = status?.gatewayState ?? null
+  const gatewayRunning = gatewayState === 'running'
+  const gatewayKnown = gatewayState !== null
+  const stateLabel: 'Online' | 'Degraded' | 'Offline' = gatewayRunning
+    ? 'Online'
+    : gatewayKnown
+      ? 'Degraded'
+      : modelInfo
+        ? 'Online'
+        : 'Offline'
+  const connected = stateLabel === 'Online'
   const display = modelInfo ? formatModelName(modelInfo.model) : '—'
   const provider = modelInfo?.provider ?? '—'
 
@@ -46,7 +62,12 @@ export function ActiveModelKpi({
     return match?.sessions ?? null
   })()
 
-  const tone = connected ? 'var(--theme-success)' : 'var(--theme-danger)'
+  const tone =
+    stateLabel === 'Online'
+      ? 'var(--theme-success)'
+      : stateLabel === 'Degraded'
+        ? 'var(--theme-warning, var(--theme-accent))'
+        : 'var(--theme-danger)'
 
   return (
     <div
@@ -80,14 +101,13 @@ export function ActiveModelKpi({
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold"
           style={{
-            background: connected
-              ? 'color-mix(in srgb, var(--theme-success) 14%, transparent)'
-              : 'color-mix(in srgb, var(--theme-danger) 14%, transparent)',
+            background: `color-mix(in srgb, ${tone} 14%, transparent)`,
             color: tone,
           }}
+          title={gatewayState ? `gateway: ${gatewayState}` : undefined}
         >
           <span className="size-1.5 rounded-full" style={{ background: tone }} />
-          {connected ? 'Online' : 'Offline'}
+          {stateLabel}
         </span>
       </div>
 

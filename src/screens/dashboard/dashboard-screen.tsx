@@ -1076,6 +1076,7 @@ export function DashboardScreen() {
         extraTile={
           <ActiveModelKpi
             modelInfo={overview?.modelInfo ?? null}
+            status={overview?.status ?? null}
             analytics={overview?.analytics ?? null}
           />
         }
