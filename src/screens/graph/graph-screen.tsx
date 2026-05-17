@@ -66,7 +66,7 @@ interface SearchResult {
   ok: boolean
   query: string
   elapsed_ms: number
-  result?: unknown
+  result?: { raw?: string; query?: string } | unknown
   error?: string
 }
 
@@ -364,7 +364,9 @@ function SearchPanel({ onSearch, results, searching }: SearchPanelProps) {
                     overflowY: 'auto',
                   }}
                 >
-                  {JSON.stringify(results.result, null, 2)}
+                  {results.result != null && typeof results.result === 'object' && 'raw' in results.result && typeof (results.result as { raw?: string }).raw === 'string'
+                    ? (results.result as { raw: string }).raw
+                    : JSON.stringify(results.result, null, 2)}
                 </pre>
               </>
             ) : (
