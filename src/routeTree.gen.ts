@@ -172,6 +172,7 @@ import { Route as ApiClaudeTasksTaskIdRouteImport } from './routes/api/claude-ta
 import { Route as ApiClaudeProxySplatRouteImport } from './routes/api/claude-proxy/$'
 import { Route as ApiClaudeJobsJobIdRouteImport } from './routes/api/claude-jobs.$jobId'
 import { Route as ApiBuildPoolStatusRouteImport } from './routes/api/build/pool-status'
+import { Route as ApiBuildDispatchRouteImport } from './routes/api/build/dispatch'
 import { Route as ApiBudgetStatusRouteImport } from './routes/api/budget/status'
 import { Route as ApiArtifactsArtifactIdRouteImport } from './routes/api/artifacts.$artifactId'
 import { Route as ApiSessionsSessionKeyStatusRouteImport } from './routes/api/sessions/$sessionKey.status'
@@ -999,6 +1000,11 @@ const ApiBuildPoolStatusRoute = ApiBuildPoolStatusRouteImport.update({
   path: '/api/build/pool-status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBuildDispatchRoute = ApiBuildDispatchRouteImport.update({
+  id: '/api/build/dispatch',
+  path: '/api/build/dispatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiBudgetStatusRoute = ApiBudgetStatusRouteImport.update({
   id: '/api/budget/status',
   path: '/api/budget/status',
@@ -1149,6 +1155,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
+  '/api/build/dispatch': typeof ApiBuildDispatchRoute
   '/api/build/pool-status': typeof ApiBuildPoolStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1321,6 +1328,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
+  '/api/build/dispatch': typeof ApiBuildDispatchRoute
   '/api/build/pool-status': typeof ApiBuildPoolStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1495,6 +1503,7 @@ export interface FileRoutesById {
   '/settings/': typeof SettingsIndexRoute
   '/api/artifacts/$artifactId': typeof ApiArtifactsArtifactIdRoute
   '/api/budget/status': typeof ApiBudgetStatusRoute
+  '/api/build/dispatch': typeof ApiBuildDispatchRoute
   '/api/build/pool-status': typeof ApiBuildPoolStatusRoute
   '/api/claude-jobs/$jobId': typeof ApiClaudeJobsJobIdRoute
   '/api/claude-proxy/$': typeof ApiClaudeProxySplatRoute
@@ -1670,6 +1679,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
+    | '/api/build/dispatch'
     | '/api/build/pool-status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -1842,6 +1852,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
+    | '/api/build/dispatch'
     | '/api/build/pool-status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -2015,6 +2026,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/api/artifacts/$artifactId'
     | '/api/budget/status'
+    | '/api/build/dispatch'
     | '/api/build/pool-status'
     | '/api/claude-jobs/$jobId'
     | '/api/claude-proxy/$'
@@ -2186,6 +2198,7 @@ export interface RootRouteChildren {
   ChatIndexRoute: typeof ChatIndexRoute
   FlowIndexRoute: typeof FlowIndexRoute
   ApiBudgetStatusRoute: typeof ApiBudgetStatusRoute
+  ApiBuildDispatchRoute: typeof ApiBuildDispatchRoute
   ApiBuildPoolStatusRoute: typeof ApiBuildPoolStatusRoute
   ApiClaudeProxySplatRoute: typeof ApiClaudeProxySplatRoute
   ApiCostRateSseRoute: typeof ApiCostRateSseRoute
@@ -3366,6 +3379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBuildPoolStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/build/dispatch': {
+      id: '/api/build/dispatch'
+      path: '/api/build/dispatch'
+      fullPath: '/api/build/dispatch'
+      preLoaderRoute: typeof ApiBuildDispatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/budget/status': {
       id: '/api/budget/status'
       path: '/api/budget/status'
@@ -3747,6 +3767,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatIndexRoute: ChatIndexRoute,
   FlowIndexRoute: FlowIndexRoute,
   ApiBudgetStatusRoute: ApiBudgetStatusRoute,
+  ApiBuildDispatchRoute: ApiBuildDispatchRoute,
   ApiBuildPoolStatusRoute: ApiBuildPoolStatusRoute,
   ApiClaudeProxySplatRoute: ApiClaudeProxySplatRoute,
   ApiCostRateSseRoute: ApiCostRateSseRoute,
