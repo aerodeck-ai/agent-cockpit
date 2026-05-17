@@ -917,13 +917,8 @@ function ChatSidebarComponent({
       label: 'Flow',
       active: isFlowActive,
     },
-    {
-      kind: 'link',
-      to: '/office',
-      icon: Building01Icon,
-      label: 'Office',
-      active: isOfficeActive,
-    },
+    // /office removed 2026-05-17 (S2 cockpit-v2 cleanup). Iframe surface
+    // condemned. isOfficeActive is left dead-set above; can be pruned next pass.
     {
       kind: 'link',
       to: '/voice',

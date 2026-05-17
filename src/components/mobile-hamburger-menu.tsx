@@ -138,13 +138,9 @@ export const MOBILE_HAMBURGER_NAV_ITEMS = [
     to: '/flow',
     match: (p: string) => p.startsWith('/flow'),
   },
-  {
-    id: 'office',
-    label: 'Office',
-    icon: Building01Icon,
-    to: '/office',
-    match: (p: string) => p.startsWith('/office'),
-  },
+  // Office removed 2026-05-17 per cockpit-v2 spec (S2 wiring). Iframe surface
+  // was architecturally condemned. The /office route file is left in place
+  // for one sprint then will be deleted.
   {
     id: 'voice',
     label: 'Voice',
