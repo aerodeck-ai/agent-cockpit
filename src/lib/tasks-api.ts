@@ -206,6 +206,49 @@ export async function launchSession(taskId: string): Promise<{ sessionId: string
   return res.json()
 }
 
+// --- Meeting tasks cross-link (M4 RED #3) -----------------------------------
+//
+// `/api/meeting-tasks` surfaces VectOS `meeting_tasks` rows from Oracle's
+// canonical berlai.db. These are read-only here — write-back happens through
+// VectOS approvals / the kanban_tasks dispatch path, not the cockpit UI.
+
+export type MeetingTask = {
+  id: number
+  meeting_id: string
+  meeting_title: string | null
+  meeting_dt: string | null
+  client_id: string | null
+  track: 'dev' | 'business' | 'unknown'
+  who: string | null
+  action: string
+  due_hint: string | null
+  status: 'open' | 'in_progress' | 'done' | 'dropped'
+  classifier_v1: string | null
+  confidence_v1: number | null
+  classifier_v2: string | null
+  confidence_v2: number | null
+  dashboard_surface: string
+  review_status: string | null
+  created_at: string
+  completed_at: string | null
+}
+
+export async function fetchMeetingTasks(params?: {
+  status?: MeetingTask['status']
+  track?: MeetingTask['track']
+  limit?: number
+}): Promise<Array<MeetingTask>> {
+  const q = new URLSearchParams()
+  if (params?.status) q.set('status', params.status)
+  if (params?.track) q.set('track', params.track)
+  if (params?.limit) q.set('limit', String(params.limit))
+  const url = q.toString() ? `/api/meeting-tasks?${q}` : '/api/meeting-tasks'
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Failed to fetch meeting tasks: ${res.status}`)
+  const data = await res.json()
+  return data.tasks ?? []
+}
+
 export async function moveTask(taskId: string, column: TaskColumn, movedBy = 'user'): Promise<ClaudeTask> {
   const { base } = await resolveBackend()
   const res = await fetch(`${base}/${taskId}?action=move`, {
