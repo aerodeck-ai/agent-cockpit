@@ -22,8 +22,8 @@ def main() -> int:
     except Exception:
         hook_data = {}
 
-    hook_type = os.environ.get("CLAUDE_HOOK_NAME", "Unknown")
-    session_id = os.environ.get("CLAUDE_SESSION_ID", "unknown")
+    hook_type = hook_data.get("hook_event_name") or os.environ.get("CLAUDE_HOOK_NAME") or "Unknown"
+    session_id = hook_data.get("session_id") or os.environ.get("CLAUDE_SESSION_ID") or "unknown"
     parent_session_id = os.environ.get("CLAUDE_PARENT_SESSION_ID") or None
 
     tool_name = hook_data.get("tool_name") or hook_data.get("tool", "")
