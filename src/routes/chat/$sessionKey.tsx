@@ -6,6 +6,7 @@ import {
   reconcileSessionDraft,
 } from '../../screens/chat/chat-queries'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { FlowStrip } from '../../screens/home/FlowStrip'
 
 const ChatScreen = lazy(async () => {
   const module = await import('../../screens/chat/chat-screen')
@@ -130,24 +131,30 @@ function ChatRoute() {
 
   return (
     <ErrorBoundary>
-      <Suspense
-        fallback={
-          <div className="flex h-full items-center justify-center text-primary-400">
-            Loading chat…
-          </div>
-        }
-      >
-        <ChatScreen
-          activeFriendlyId={activeFriendlyId}
-          isNewChat={isNewChat}
-          forcedSessionKey={forcedSessionKey}
-          onSessionResolved={
-            isNewChat || activeFriendlyId === 'main'
-              ? handleSessionResolved
-              : undefined
-          }
-        />
-      </Suspense>
+      <div className="flex h-full flex-col">
+        <div className="flex-1 min-h-0">
+          <Suspense
+            fallback={
+              <div className="flex h-full items-center justify-center text-primary-400">
+                Loading chat…
+              </div>
+            }
+          >
+            <ChatScreen
+              embedded={true}
+              activeFriendlyId={activeFriendlyId}
+              isNewChat={isNewChat}
+              forcedSessionKey={forcedSessionKey}
+              onSessionResolved={
+                isNewChat || activeFriendlyId === 'main'
+                  ? handleSessionResolved
+                  : undefined
+              }
+            />
+          </Suspense>
+        </div>
+        <FlowStrip />
+      </div>
     </ErrorBoundary>
   )
 }

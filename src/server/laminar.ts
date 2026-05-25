@@ -21,6 +21,18 @@ function ensureInitialized(): boolean {
   if (initialized) return true
   const apiKey = process.env.LAMINAR_PROJECT_API_KEY
   const baseUrl = process.env.LAMINAR_BASE_URL || "http://127.0.0.1:5667"
+  // FIX 2026-05-13: Laminar SDK defaults grpcPort to 8443 which is not our
+  // local Laminar (gRPC is :8001 per docker compose lmnr-app-server).
+  // Without overriding this, the BatchSpanProcessor exporter loops on
+  // ECONNREFUSED 127.0.0.1:8443 and floods pm2 logs.
+  const grpcPort = parseInt(
+    process.env.LAMINAR_GRPC_PORT || "8001",
+    10,
+  )
+  const httpPort = parseInt(
+    process.env.LAMINAR_HTTP_PORT || "8000",
+    10,
+  )
   if (!apiKey) {
     console.warn(
       "[laminar] LAMINAR_PROJECT_API_KEY not set — tracing disabled",
@@ -31,10 +43,12 @@ function ensureInitialized(): boolean {
     Laminar.initialize({
       projectApiKey: apiKey,
       baseUrl,
+      grpcPort,
+      httpPort,
       instrumentModules: {},
     } as Parameters<typeof Laminar.initialize>[0])
     initialized = true
-    console.log("[laminar] initialized — base:", baseUrl)
+    console.log("[laminar] initialized — base:", baseUrl, "grpc:", grpcPort, "http:", httpPort)
     return true
   } catch (err) {
     console.warn("[laminar] init failed:", err instanceof Error ? err.message : err)

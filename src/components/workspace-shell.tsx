@@ -200,7 +200,7 @@ export function WorkspaceShell({ children }: WorkspaceShellProps) {
   const isEmbeddedSurface =
     search?.embed === '1' || search?.embed === 'true' || search?.mode === 'embed'
   const isChromeFreeSurface = isEmbeddedSurface
-  const hideChatSidebar = isOnChatRoute && chatFocusMode
+  const hideChatSidebar = true // FIX 2026-05-13 always hide legacy ChatSidebar — LeftNav is the navigation
   const showDesktopSidebarBackdrop =
     !isChromeFreeSurface && !isMobile && !isOnChatRoute && !sidebarCollapsed
 

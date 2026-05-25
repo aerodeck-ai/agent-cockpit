@@ -23,6 +23,9 @@ const McpScreenLazy = lazy(() =>
 const SkillsScreenLazy = lazy(() =>
   import('@/screens/skills/skills-screen').then((m) => ({ default: m.SkillsScreen })),
 )
+const ProfilesScreenLazy = lazy(() =>
+  import('@/screens/profiles/profiles-screen').then((m) => ({ default: m.ProfilesScreen })),
+)
 
 // Wrapper for PromptsScreen that owns its own tab state
 function PromptsWrapper() {
@@ -82,6 +85,9 @@ function StubSection({ label }: { label: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-10 text-center px-4">
       <p className="text-sm font-medium text-ink">{label}</p>
+      <span className="cp-status-pill cp-status-disconnected text-xs px-2 py-0.5">
+        PLACEHOLDER — not wired yet
+      </span>
       <p className="text-xs text-primary-400">Full UI coming in v1.1</p>
     </div>
   )
@@ -197,6 +203,12 @@ function SectionContent({ id, label }: { id: SectionId; label: string }) {
       return (
         <div className="px-4 pb-4 overflow-y-auto max-h-[500px]">
           <SkillsScreenLazy />
+        </div>
+      )
+    case 'profiles':
+      return (
+        <div className="px-4 pb-4 overflow-y-auto max-h-[500px]">
+          <ProfilesScreenLazy />
         </div>
       )
     case 'env':

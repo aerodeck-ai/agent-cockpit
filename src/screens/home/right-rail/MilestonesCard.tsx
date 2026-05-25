@@ -71,9 +71,8 @@ export function MilestonesCard() {
   const { data, isLoading, error } = useQuery<MilestonesResponse>({
     queryKey: ['vectos', 'milestones', tenant],
     queryFn: async () => {
-      const resp = await fetch('https://vectos.berl.ai/api/milestones', {
-        credentials: 'include',
-      })
+      // Use server-side proxy to bypass CF Access CORS restriction
+      const resp = await fetch('/api/milestones')
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
       return resp.json()
     },

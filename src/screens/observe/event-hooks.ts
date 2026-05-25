@@ -189,7 +189,8 @@ export function useEventStream(
  * Ported from disler/claude-code-hooks-multi-agent-observability:
  *   apps/client/src/composables/useEventColors.ts
  */
-function hashString(str: string): number {
+function hashString(str: string | undefined | null): number {
+  if (!str) return 0
   let hash = 7151
   for (let i = 0; i < str.length; i++) {
     hash = ((hash << 5) + hash) + str.charCodeAt(i)

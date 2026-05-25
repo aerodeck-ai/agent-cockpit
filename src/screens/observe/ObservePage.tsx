@@ -16,15 +16,19 @@ import { BudgetsTab } from './BudgetsTab'
 import { EvalsTab } from './EvalsTab'
 import { CostTab } from './CostTab'
 import { ErrorsTab } from './ErrorsTab'
+import TraceView from './TraceView'
+import WorkflowView from './WorkflowView'
 
-type ObserveTab = 'flow' | 'budgets' | 'evals' | 'cost' | 'errors'
+type ObserveTab = 'flow' | 'trace' | 'workflow' | 'budgets' | 'evals' | 'cost' | 'errors'
 
 const TABS: { id: ObserveTab; label: string; emoji: string }[] = [
-  { id: 'flow',    label: 'Flow',    emoji: '🔵' },
-  { id: 'budgets', label: 'Budgets', emoji: '💰' },
-  { id: 'evals',   label: 'Evals',   emoji: '✅' },
-  { id: 'cost',    label: 'Cost',    emoji: '📊' },
-  { id: 'errors',  label: 'Errors',  emoji: '🚨' },
+  { id: 'flow',     label: 'Flow',     emoji: '🔵' },
+  { id: 'trace',    label: 'Trace',    emoji: '🌳' },
+  { id: 'workflow', label: 'Workflow', emoji: '⚙️' },
+  { id: 'budgets',  label: 'Budgets',  emoji: '💰' },
+  { id: 'evals',    label: 'Evals',    emoji: '✅' },
+  { id: 'cost',     label: 'Cost',     emoji: '📊' },
+  { id: 'errors',   label: 'Errors',   emoji: '🚨' },
 ]
 
 export function ObservePage() {
@@ -61,10 +65,10 @@ export function ObservePage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px flex items-center gap-1.5',
+                'px-4 py-3 text-sm font-medium border-b-2 -mb-px flex items-center gap-1.5 atc-interactive observe-tab-btn',
                 activeTab === tab.id
-                  ? 'border-primary text-foreground'
-                  : 'border-transparent text-muted-foreground hover:text-foreground',
+                  ? 'border-primary text-foreground observe-tab-active'
+                  : 'border-transparent text-muted-foreground hover:text-foreground observe-tab-inactive',
               )}
             >
               <span>{tab.emoji}</span>
@@ -76,8 +80,10 @@ export function ObservePage() {
 
       {/* Tab content */}
       <div className="flex-1 overflow-hidden relative">
-        {activeTab === 'flow'    && <FlowTab />}
-        {activeTab === 'budgets' && <BudgetsTab />}
+        {activeTab === 'flow'     && <FlowTab />}
+        {activeTab === 'trace'    && <TraceView />}
+        {activeTab === 'workflow' && <WorkflowView />}
+        {activeTab === 'budgets'  && <BudgetsTab />}
         {activeTab === 'evals'   && <EvalsTab />}
         {activeTab === 'cost'    && <CostTab />}
         {activeTab === 'errors'  && <ErrorsTab />}
