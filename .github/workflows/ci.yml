@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Build & Lint
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, aerodeck]
 
     steps:
       - name: Checkout code
@@ -55,7 +55,7 @@ jobs:
 
   test:
     name: Run Tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, aerodeck]
     needs: build
 
     steps:
