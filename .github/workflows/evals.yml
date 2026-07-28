@@ -16,7 +16,7 @@ on:
 jobs:
   evals:
     name: "Promptfoo regression suite"
-    runs-on: [self-hosted, ci-aeros]
+    runs-on: ubuntu-latest
     timeout-minutes: 20
 
     env:
