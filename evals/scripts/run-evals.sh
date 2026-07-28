@@ -73,6 +73,17 @@ for DATASET in "${DATASETS[@]}"; do
     echo "[eval] WARNING: Dataset $DATASET had failures"
   fi
 
+  # Push results into LangFuse as scores. LangFuse records what happened but
+  # never whether it was right; promptfoo knows, and otherwise throws the
+  # answer away in /tmp. The bridge verifies its own writes by reading them
+  # back and exits non-zero if they are not visible, so a silent drop cannot
+  # look like a success. Non-fatal here: a telemetry failure must not mask the
+  # eval result itself.
+  if [[ -x /home/ubuntu/bin/promptfoo-to-langfuse && -f "$OUTPUT_FILE" ]]; then
+    /home/ubuntu/bin/promptfoo-to-langfuse "$OUTPUT_FILE" --dataset "$DATASET" \
+      || echo "[eval] WARNING: LangFuse score push failed for $DATASET (rc=$?)"
+  fi
+
   # Parse results
   if [[ -f "$OUTPUT_FILE" ]]; then
     PASS=$(python3 -c "
