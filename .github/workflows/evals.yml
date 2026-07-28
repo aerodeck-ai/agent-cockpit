@@ -78,10 +78,15 @@ jobs:
         working-directory: evals
         continue-on-error: true
         run: |
-          promptfoo eval \
-            --config promptfooconfig.yaml \
-            --output /tmp/full-eval-result.json \
-            --no-cache
+          # promptfooconfig.yaml holds shared defaults only — it contains no
+          # tests, so it cannot be evaluated directly. Loop the datasets, which
+          # is what scripts/run-evals.sh already does nightly.
+          for d in henry-cos-smoke mally-cos-smoke jiddlers-ingest; do
+            promptfoo eval \
+              --config "datasets/${d}.yaml" \
+              --output "/tmp/${d}-result.json" \
+              --no-cache || echo "[eval] ${d} had failures (non-blocking)"
+          done
         env:
           EVAL_BYPASS_TOKEN: ${{ env.EVAL_BYPASS_TOKEN }}
 
