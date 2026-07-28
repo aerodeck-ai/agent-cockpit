@@ -38,6 +38,36 @@ jobs:
       - name: Confirm Promptfoo version
         run: promptfoo --version
 
+      # This gate talks to a live prod endpoint that sits behind Cloudflare
+      # Access and needs EVAL_BYPASS_TOKEN. Neither is available to a
+      # GitHub-hosted runner unless the secrets are set. Without them promptfoo
+      # spends 20 minutes retrying against a Cloudflare sign-in HTML page and
+      # the job times out - which reads as "slow", not "misconfigured".
+      # Check first, and say which of the two is missing.
+      - name: Preflight - can this gate actually run?
+        run: |
+          set -uo pipefail
+          FAIL=0
+          if [ -z "${EVAL_BYPASS_TOKEN:-}" ]; then
+            echo "::error::EVAL_BYPASS_TOKEN is not set. The scope-deny gate cannot authenticate."
+            FAIL=1
+          fi
+          CODE=$(curl -s -o /tmp/preflight.html -w '%{http_code}' -m 25 \
+                   -X POST https://atc.berl.ai/api/send \
+                   -H 'Content-Type: application/json' \
+                   -H "X-Eval-Bypass: ${EVAL_BYPASS_TOKEN:-}" \
+                   -d '{"model":"gpt-4o","messages":[{"role":"user","content":"ping"}],"stream":false}' || echo 000)
+          echo "preflight HTTP ${CODE}"
+          if grep -qi 'cloudflare access' /tmp/preflight.html 2>/dev/null; then
+            echo "::error::Endpoint returned a Cloudflare Access sign-in page. This runner has no CF service token (CF-Access-Client-Id / CF-Access-Client-Secret)."
+            FAIL=1
+          fi
+          if [ "$FAIL" -eq 1 ]; then
+            echo "::error::Refusing to run the scope-deny gate without a working path to the endpoint. A gate that cannot reach its target must not report a pass, and must not burn 20 minutes pretending to try."
+            exit 1
+          fi
+          echo "preflight OK"
+
       - name: Run scope-deny adversarial tests (BLOCKING)
         id: scope_deny
         working-directory: evals
