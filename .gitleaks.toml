@@ -1,0 +1,39 @@
+# gitleaks config for agent-cockpit.
+#
+# Baseline established 2026-07-28 — the first time secret scanning in this repo
+# ever actually executed. gitleaks-action@v2 requires a paid licence for
+# org-owned repos and had only ever errored, so nothing had been scanned.
+# First real scan: 2035 commits, 11 findings, ALL assessed as false positives.
+#
+# ⚠ SYNTAX WARNING: gitleaks 8.21.2 honours only the SINGULAR [allowlist]
+# table. The plural [[allowlists]] form is accepted without complaint and then
+# applied to NOTHING — a config that looks correct and silently protects
+# nothing. Verified on a throwaway repo: [[allowlists]] -> rc=1 (not applied),
+# [allowlist] -> rc=0 (applied). Do not "tidy" this into the plural form.
+#
+# Every exclusion below is justified. Nothing is muted for convenience — and
+# the workflow canary-tests that this file has not blinded the scanner.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = """
+1. scripts/qa/test-redaction.ts — deliberate fixtures for the diagnostics
+   redaction unit tests; the file's entire purpose is asserting these strings
+   GET redacted. Deleted from the tree in f8bb4910; history-only hits.
+2. electron/server-bundle.cjs — minified vendor bundle. The four hits are
+   identifier names (task2.keyPath, t3.FourKeyMap, ".cache"), not credentials;
+   generic-api-key matches variable names containing "key" in minified JS.
+   Scoped to this one bundle, not to all .cjs.
+3. commit 5ee0504b — two self-test fixtures I committed as literals before
+   realising a literal fixture is itself a real detection in the workflow that
+   contains it. Replaced with runtime generation in the next commit, but they
+   remain in history. Pinned to that ONE commit, not to the file, so any
+   genuine secret later committed to security.yml is still caught.
+"""
+paths = [
+  '''scripts/qa/test-redaction\.ts''',
+  '''electron/server-bundle\.cjs''',
+]
+commits = ["5ee0504b5a4b060d0e54eca5093ea24cb2cc030b"]

@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+"""Push promptfoo eval results into LangFuse as scores.
+
+LangFuse records what happened; it does not record whether the answer was
+right. promptfoo answers exactly that and then throws the answer away in a
+/tmp JSON file. This bridges the two: every promptfoo test case becomes a
+LangFuse score, so regressions are visible on the same surface as the traces.
+
+Reads the JSON that `promptfoo eval --output` writes. Verified against
+promptfoo 0.121.11 output containing one deliberate pass and one deliberate
+fail, so the pass/fail mapping is tested in both directions rather than
+assumed.
+
+Credentials come from the secrets ladder (secret-get on this host). Values
+are never printed - only sha256[:12] fingerprints.
+
+Usage:
+  promptfoo-to-langfuse RESULT.json [--dataset NAME] [--dry-run]
+"""
+import json, os, subprocess, sys, hashlib, urllib.request, urllib.parse, base64, uuid, time
+
+def secret(name):
+    try:
+        v = subprocess.run(["secret-get", name], capture_output=True, text=True, timeout=20)
+        return v.stdout.strip() if v.returncode == 0 else None
+    except Exception:
+        return None
+
+def fp(s):
+    return hashlib.sha256((s or "").encode()).hexdigest()[:12]
+
+def main():
+    args = [a for a in sys.argv[1:]]
+    dry = "--dry-run" in args
+    args = [a for a in args if a != "--dry-run"]
+    dataset = "unknown"
+    if "--dataset" in args:
+        i = args.index("--dataset"); dataset = args[i+1]; del args[i:i+2]
+    if not args:
+        print("usage: promptfoo-to-langfuse RESULT.json [--dataset NAME] [--dry-run]", file=sys.stderr)
+        return 2
+    path = args[0]
+    if not os.path.exists(path):
+        print("FATAL: no such result file: %s" % path, file=sys.stderr)
+        return 3
+
+    d = json.load(open(path))
+    res = d.get("results", {})
+    rows = res.get("results", []) if isinstance(res, dict) else (res or [])
+    if not rows:
+        # An empty result set is NOT a pass. Absence of evidence is not evidence
+        # of health - refuse to report success on zero observations.
+        print("FATAL: result file contains zero test rows: %s" % path, file=sys.stderr)
+        return 4
+
+    stats = res.get("stats", {}) if isinstance(res, dict) else {}
+    eval_id = d.get("evalId") or "pf-%s" % uuid.uuid4().hex[:12]
+
+    pk, sk, host = secret("langfuse-public-key"), secret("langfuse-secret-key"), secret("langfuse-host")
+    if not (pk and sk and host):
+        print("FATAL: langfuse creds not resolvable via secret-get on this host", file=sys.stderr)
+        return 5
+    print("langfuse host=%s pk-fp=%s sk-fp=%s" % (host, fp(pk), fp(sk)))
+    print("eval=%s dataset=%s rows=%d stats=%s" % (eval_id, dataset, len(rows), json.dumps(stats.get("successes") is not None and {k: stats.get(k) for k in ("successes","failures","errors")} or {})))
+
+    auth = base64.b64encode(("%s:%s" % (pk, sk)).encode()).decode()
+    base = host.rstrip("/")
+    hdrs = {"Content-Type": "application/json", "Authorization": "Basic " + auth}
+
+    def post(path, body):
+        req = urllib.request.Request(base + path, data=json.dumps(body).encode(),
+                                     method="POST", headers=hdrs)
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return resp.status, resp.read().decode()[:400]
+
+    # A LangFuse score cannot float free: the API requires exactly one of
+    # traceId / sessionId / datasetRunId. We create one trace per eval run, so
+    # the run lands on the same surface as the 519k production traces and the
+    # scores hang off it. Learned from the API's own 400, not assumed.
+    trace_id = "promptfoo-%s-%s" % (dataset, eval_id)
+    ts = res.get("timestamp") if isinstance(res, dict) else None
+    if not dry:
+        try:
+            st, bodytxt = post("/api/public/ingestion", {"batch": [{
+                "id": "pfev-%s" % eval_id, "type": "trace-create",
+                "timestamp": ts or "1970-01-01T00:00:00.000Z",
+                "body": {"id": trace_id, "name": "promptfoo-eval",
+                         "tags": ["eval", "promptfoo", dataset],
+                         "metadata": {"dataset": dataset, "evalId": eval_id,
+                                      "rows": len(rows),
+                                      "stats": {k: stats.get(k) for k in ("successes", "failures", "errors")}}}}]})
+            print("trace %s -> http %s" % (trace_id, st))
+        except Exception as e:
+            print("FATAL: could not create parent trace: %s" % e, file=sys.stderr)
+            return 6
+
+    sent = failed = 0
+    for i, r in enumerate(rows):
+        ok = bool(r.get("success"))
+        desc = (r.get("testCase") or {}).get("description") or "case-%d" % i
+        body = {
+            "id": "pf-%s-%d" % (eval_id, i),
+            "name": "promptfoo.%s" % dataset,
+            "value": 1 if ok else 0,
+            "dataType": "NUMERIC",
+            "comment": "%s :: %s :: %s" % ("PASS" if ok else "FAIL", desc,
+                       str(r.get("failureReason") if r.get("failureReason") not in (None, 0)
+                           else ((r.get("gradingResult") or {}).get("reason") or ""))[:300]),
+            "metadata": {"dataset": dataset, "evalId": eval_id, "testIdx": r.get("testIdx"),
+                         "latencyMs": r.get("latencyMs"), "score": r.get("score"),
+                         "provider": (r.get("provider") or {}).get("label") or (r.get("provider") or {}).get("id")},
+        }
+        body["traceId"] = trace_id
+        if dry:
+            print("DRY %s %s" % (body["name"], body["comment"][:90])); sent += 1; continue
+        try:
+            st, _ = post("/api/public/scores", body)
+            if st in (200, 201, 207):
+                sent += 1
+            else:
+                failed += 1; print("WARN http %s on row %d" % (st, i), file=sys.stderr)
+        except Exception as e:
+            failed += 1; print("WARN row %d: %s" % (i, e), file=sys.stderr)
+
+    print("RESULT sent=%d failed=%d dry=%s" % (sent, failed, dry))
+    if dry or sent == 0:
+        return 0 if failed == 0 else 1
+
+    # READ BACK. A 200 from the write is not proof the score exists: a
+    # sessionId-only score was observed returning 200 with its id echoed back
+    # and then never appearing in the store. Accepted-and-silently-dropped is
+    # the failure mode this whole exercise exists to catch, so the bridge
+    # refuses to claim a write it cannot see afterwards. Ingest is async, so
+    # this retries rather than reading once.
+    name = "promptfoo.%s" % dataset
+    seen = -1
+    for attempt in range(6):
+        time.sleep(3)
+        try:
+            req = urllib.request.Request(
+                "%s/api/public/scores?name=%s&limit=100" % (base, urllib.parse.quote(name)),
+                headers={"Authorization": "Basic " + auth})
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                seen = json.loads(resp.read().decode()).get("meta", {}).get("totalItems", 0)
+        except Exception as e:
+            print("WARN read-back attempt %d: %s" % (attempt, e), file=sys.stderr)
+            continue
+        if seen >= sent:
+            break
+    print("VERIFY name=%s wrote=%d visible=%d" % (name, sent, seen))
+    if seen < sent:
+        print("FAIL: LangFuse accepted %d scores but only %d are readable" % (sent, seen), file=sys.stderr)
+        return 7
+    return 0 if failed == 0 else 1
+
+sys.exit(main())

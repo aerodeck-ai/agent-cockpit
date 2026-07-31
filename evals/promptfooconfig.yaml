@@ -1,17 +1,25 @@
-# Promptfoo eval configuration for Hermes agent fleet
-# Runs smoke tests through the cockpit /api/send proxy so requests
-# flow through the real production pipeline.
+# Promptfoo shared defaults for the Hermes agent fleet.
 #
-# EVAL_BYPASS_TOKEN is read from environment — never committed.
+# This file holds ONLY the defaults every dataset inherits. The actual tests
+# live in datasets/*.yaml, and each of those is a complete, runnable config.
+# Run them with:  promptfoo eval -c datasets/<name>.yaml   (see scripts/run-evals.sh)
+#
+# It does NOT aggregate the datasets. The previous version tried to, using a
+# `testSuite:` key under `tests:` — that key does not exist in promptfoo and
+# never has, so this config had never once validated. Because promptfoo
+# auto-loads promptfooconfig.yaml from the working directory, the broken file
+# was also failing every per-dataset validation run from this folder.
+#
+# EVAL_BYPASS_TOKEN is read from the environment — never committed.
 # Eval spans are tagged eval=true to keep them out of production cost tracking.
 
-description: "Hermes agent fleet regression suite"
+description: "Hermes agent fleet regression suite — shared defaults"
 
-# Default provider: cockpit /api/send (OpenAI-compatible proxy)
 defaultTest:
   options:
-    transformVars:
-      eval_bypass_token: "{{env.EVAL_BYPASS_TOKEN}}"
+    # Must be a JS expression returning the vars object. The old mapping form
+    # ({eval_bypass_token: "{{env....}}"}) is not valid under transformVars.
+    transformVars: "{ ...vars, eval_bypass_token: process.env.EVAL_BYPASS_TOKEN }"
 
 providers:
   - id: "https://atc.berl.ai/api/send"
@@ -27,17 +35,3 @@ providers:
         messages: "{{messages}}"
         stream: false
       responseParser: "json.choices[0].message.content"
-
-# Individual dataset test suites
-tests:
-  - description: "Henry CoS smoke — daily prompts"
-    testSuite: datasets/henry-cos-smoke.yaml
-
-  - description: "Mally CoS smoke — daily prompts"
-    testSuite: datasets/mally-cos-smoke.yaml
-
-  - description: "Mally scope deny — adversarial"
-    testSuite: datasets/mally-scope-deny.yaml
-
-  - description: "Jiddlers ingest routing"
-    testSuite: datasets/jiddlers-ingest.yaml

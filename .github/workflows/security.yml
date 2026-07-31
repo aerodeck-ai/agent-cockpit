@@ -8,6 +8,11 @@ on:
     branches: [main, production]
   pull_request:
     branches: [main, production]
+  # A gate that only runs on PR/push never re-checks history against NEW rules,
+  # and can never be fired by hand when something looks wrong.
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,18 +21,62 @@ permissions:
 jobs:
   secrets-scan:
     name: Scan for Secrets
-    runs-on: [self-hosted, aerodeck]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # gitleaks-action@v2 requires a PAID licence for org-owned repos and
+      # hard-errors without one ("[aerodeck-ai] is an organization. License key
+      # is required."). It has therefore never scanned a single commit here - it
+      # only ever failed. The gitleaks BINARY is free and unlicensed, so we run
+      # that directly and get a scan that actually happens.
       - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # No additional secrets required - uses built-in GITHUB_TOKEN
+        run: |
+          set -euo pipefail
+          VER=8.21.2
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${VER}/gitleaks_${VER}_linux_x64.tar.gz" \
+            | tar -xz -C /tmp gitleaks
+          /tmp/gitleaks version
+
+          # Prove the scanner works before trusting a clean result. A scanner
+          # that cannot find a planted secret is not a scanner.
+          mkdir -p /tmp/gl-selftest
+          # The fixture is GENERATED at runtime, never written literally here.
+          # A literal would be a real detection in this very file, and
+          # allowlisting the workflow to silence it would blind the scanner to
+          # any genuine secret later committed to the same file.
+          #
+          # It must also be realistic, not a vendor doc example:
+          # AKIAIOSFODNN7EXAMPLE is AWS's published sample and is allowlisted by
+          # gitleaks, and a ghp_ token needs exactly 36 trailing chars. Either
+          # mistake makes the self-test pass while detecting nothing.
+          python3 - > /tmp/gl-selftest/planted.txt <<'PYEOF'
+          import random, string
+          r = random.Random(20260728)
+          aws = ''.join(r.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567') for _ in range(16))
+          pat = ''.join(r.choice(string.ascii_letters + string.digits) for _ in range(36))
+          print('aws_access_key_id = "AKIA%s"' % aws)
+          print('github_pat = "%s_%s"' % ('ghp', pat))
+          PYEOF
+          if /tmp/gitleaks detect --source /tmp/gl-selftest --no-git --exit-code 1 >/dev/null 2>&1; then
+            echo "::error::gitleaks self-test FAILED - it did not flag a planted secret. Refusing to report a clean scan."
+            exit 1
+          fi
+          echo "gitleaks self-test passed (planted secret detected)"
+
+          # Full-history scan on push/schedule; on a PR scan only the range the
+          # PR actually introduces. Scanning 2000+ commits on every PR is slow
+          # and re-reports history the PR did not touch.
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            git fetch -q --no-tags origin "${GITHUB_BASE_REF}" || true
+            /tmp/gitleaks detect --source . --redact --exit-code 1 --verbose \
+              --log-opts "origin/${GITHUB_BASE_REF}..HEAD"
+          else
+            /tmp/gitleaks detect --source . --redact --exit-code 1 --verbose
+          fi
 
       - name: Grep for common patterns (fallback)
         if: always()
