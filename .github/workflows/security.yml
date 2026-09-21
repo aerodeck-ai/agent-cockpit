@@ -21,7 +21,7 @@ permissions:
 jobs:
   secrets-scan:
     name: Scan for Secrets
-    runs-on: [self-hosted, ci-aeros]
+    runs-on: ci-public
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
