@@ -16,7 +16,7 @@ on:
 jobs:
   evals:
     name: "Promptfoo regression suite"
-    runs-on: [self-hosted, ci-aeros]
+    runs-on: ci-public
     timeout-minutes: 20
 
     env:
@@ -30,7 +30,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # promptfoo@latest (2026-09) refuses to start below Node 22.22.
+          node-version: "22"
 
       - name: Install Promptfoo
         run: npm install -g promptfoo@latest
@@ -123,6 +124,8 @@ jobs:
       - name: Upload eval results
         if: always()
         uses: actions/upload-artifact@v4
+        # non-fatal until the artifact quota resets (~1 Oct), R18.4, Spec #48
+        continue-on-error: true
         with:
           name: eval-results
           path: /tmp/*-result.json
