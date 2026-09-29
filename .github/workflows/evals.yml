@@ -124,6 +124,8 @@ jobs:
       - name: Upload eval results
         if: always()
         uses: actions/upload-artifact@v4
+        # non-fatal until the artifact quota resets (~1 Oct), R18.4, Spec #48
+        continue-on-error: true
         with:
           name: eval-results
           path: /tmp/*-result.json
