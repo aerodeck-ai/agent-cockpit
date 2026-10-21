@@ -19,7 +19,9 @@ WORKDIR /app
 # scripts. Skip scripts at install (bypasses the strict-builds check),
 # then explicitly `pnpm rebuild` the ones this image actually needs.
 # electron is excluded — desktop-only, never used by the server build.
-COPY package.json pnpm-lock.yaml* ./
+# pnpm 12 reads the build allow-list from pnpm-workspace.yaml (allowBuilds); the older
+# package.json onlyBuiltDependencies key is no longer enough, so both are kept.
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile --ignore-scripts \
  && pnpm rebuild better-sqlite3 esbuild protobufjs unrs-resolver
 
